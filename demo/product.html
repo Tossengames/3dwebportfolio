@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luxury Product Demo</title>
+<style>
+body, html { margin:0; padding:0; font-family:Arial; background:#f0f0f5; color:#333; overflow-x:hidden; }
+header { text-align:center; padding:60px 20px; }
+header h1 { font-size:2.5em; color:#3b2f2f; margin-bottom:10px; }
+header p { color:#555; font-size:1.2em; }
+.main-content { width:90%; max-width:900px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:space-around; gap:30px; }
+.product-card { width:250px; background:#fff; padding:20px; border-radius:15px; box-shadow:0 10px 25px rgba(0,0,0,0.2); transition: transform 0.3s, box-shadow 0.3s; cursor:pointer; }
+.product-card img { width:100%; border-radius:10px; transition: transform 0.3s; }
+.product-card:hover { transform:translateY(-10px); box-shadow:0 15px 35px rgba(0,0,0,0.3); }
+.product-card:hover img { transform:scale(1.05); }
+.product-card h3 { margin:10px 0; color:#6c4b3a; }
+.product-card p { font-size:0.9em; color:#555; }
+.back { display:block; margin:40px auto 0; text-align:center; text-decoration:none; color:#3b2f2f; font-weight:bold; }
+.back:hover { color:#6c4b3a; }
+</style>
+</head>
+<body>
+<header>
+<h1>Luxury Product Showcase</h1>
+<p>Interactive 3D-style product presentation with premium feel.</p>
+</header>
+
+<div class="main-content">
+  <div class="product-card">
+    <img src="https://images.pexels.com/photos/715688/pexels-photo-715688.jpeg" alt="Product 1">
+    <h3>Handmade Watch</h3>
+    <p>Classic design with ethnic craftsmanship.</p>
+  </div>
+  <div class="product-card">
+    <img src="https://images.pexels.com/photos/1661477/pexels-photo-1661477.jpeg" alt="Product 2">
+    <h3>Leather Bag</h3>
+    <p>Premium leather with detailed embroidery.</p>
+  </div>
+  <div class="product-card">
+    <img src="https://images.pexels.com/photos/715688/pexels-photo-715688.jpeg" alt="Product 3">
+    <h3>Perfume Bottle</h3>
+    <p>Elegant fragrance packaging with artisanal style.</p>
+  </div>
+</div>
+
+<a class="back" href="../index.html">← Back to Portfolio</a>
+
+<script>
+const cards = document.querySelectorAll('.product-card');
+cards.forEach(card=>{
+  card.addEventListener('click', ()=>{ alert("Clicked: " + card.querySelector('h3').innerText); });
+});
+</script>
+</body>
+</html>
