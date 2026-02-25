@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Food Demo</title>
+<style>
+body, html { margin:0; padding:0; font-family:Arial; background:#fdf6e3; color:#333; overflow-x:hidden; }
+header { text-align:center; padding:60px 20px; }
+header h1 { font-size:2.5em; margin-bottom:10px; color:#6b4226; }
+header p { color:#555; font-size:1.2em; }
+.main-content { width:90%; max-width:900px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:space-around; gap:30px; }
+.food-card { width:250px; background:#fff3e0; padding:20px; border-radius:15px; box-shadow:0 10px 25px rgba(0,0,0,0.2); transition: transform 0.3s, box-shadow 0.3s; cursor:pointer; }
+.food-card img { width:100%; border-radius:10px; transition: transform 0.3s; }
+.food-card:hover { transform:translateY(-10px); box-shadow:0 15px 35px rgba(0,0,0,0.3); }
+.food-card:hover img { transform:scale(1.05); }
+.food-card h3 { margin:10px 0; color:#a64b2a; }
+.food-card p { font-size:0.9em; color:#555; }
+.back { display:block; margin:40px auto 0; text-align:center; text-decoration:none; color:#6b4226; font-weight:bold; }
+.back:hover { color:#a64b2a; }
+</style>
+</head>
+<body>
+<header>
+<h1>Ethnic Food Experience</h1>
+<p>Interactive menu showcasing traditional and modern dishes.</p>
+</header>
+
+<div class="main-content">
+  <div class="food-card">
+    <img src="https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg" alt="Dish 1">
+    <h3>Spicy Curry</h3>
+    <p>Aromatic spices from traditional recipes.</p>
+  </div>
+  <div class="food-card">
+    <img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg" alt="Dish 2">
+    <h3>Grilled Vegetables</h3>
+    <p>Freshly grilled with authentic flavors.</p>
+  </div>
+  <div class="food-card">
+    <img src="https://images.pexels.com/photos/5938/food-salad-healthy-lunch.jpg" alt="Dish 3">
+    <h3>Salad Bowl</h3>
+    <p>Colorful mix of fresh local produce.</p>
+  </div>
+</div>
+
+<a class="back" href="../index.html">← Back to Portfolio</a>
+
+<script>
+// Simple interactive hover effect
+const cards = document.querySelectorAll('.food-card');
+cards.forEach(card=>{
+  card.addEventListener('click', ()=>{ alert("Clicked: " + card.querySelector('h3').innerText); });
+});
+</script>
+</body>
+</html>
