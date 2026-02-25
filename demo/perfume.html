@@ -1,0 +1,2543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>🐔 Backyard Chickens</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{
+  --gold:#ffc94a;--gold2:#ff9f1c;--rust:#c0392b;--cream:#fff8e7;--bark:#6b3a2a;
+  --grass:#4a8f2a;--sky:#87ceeb;--night:#0a0a1e;--panel:#1a120a;
+  --panelborder:rgba(255,200,100,0.25);--textmain:#fff8e7;--textmuted:#c8b49a;
+  --green:#4caf50;--red:#f44336;--orange:#ff9800;--blue:#2196f3;
+  --safe:rgba(80,220,80,0.15);--danger:rgba(255,80,50,0.15);
+}
+body{font-family:'Nunito',sans-serif;background:var(--night);overflow:hidden;width:100vw;height:100vh;color:var(--textmain);user-select:none;}
+canvas{display:block;touch-action:none;}
+#gc{position:fixed;inset:0;z-index:0;}
+
+/* ── SCREENS ── */
+.screen{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .4s;}
+.screen.off{opacity:0;pointer-events:none;}
+
+/* ── MAIN MENU ── */
+#smenu{background:radial-gradient(ellipse at 50% 80%,#1a3a0a 0%,#0d1f2d 55%,#0a0a1e 100%);}
+.stars{position:absolute;inset:0;background:radial-gradient(circle,#fff 1px,transparent 1px) 0 0/120px 120px,radial-gradient(circle,#ffd70066 1px,transparent 1px) 40px 40px/80px 80px;opacity:.35;animation:twinkle 4s ease-in-out infinite alternate;}
+@keyframes twinkle{from{opacity:.25}to{opacity:.55}}
+.mlogo{font-size:clamp(64px,16vw,128px);animation:bob 2.2s ease-in-out infinite;filter:drop-shadow(0 0 24px rgba(255,200,50,.5));}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-12px) rotate(4deg)}}
+.mtitle{font-family:'Fredoka One',cursive;font-size:clamp(28px,7vw,60px);color:var(--gold);text-shadow:3px 3px 0 #7a3010,0 0 40px rgba(255,200,50,.4);letter-spacing:3px;text-align:center;margin:8px 0 4px;}
+.msub{font-size:clamp(11px,2.8vw,15px);color:var(--textmuted);margin-bottom:36px;font-weight:700;letter-spacing:1px;text-align:center;}
+.bgroup{display:flex;flex-direction:column;gap:10px;width:min(290px,85vw);}
+.btn{padding:13px 22px;border:none;border-radius:50px;font-family:'Fredoka One',cursive;font-size:17px;cursor:pointer;transition:transform .15s,box-shadow .15s;letter-spacing:1px;position:relative;overflow:hidden;}
+.btn:active{transform:scale(.95);}
+.btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,.1);opacity:0;transition:opacity .2s;}
+.btn:hover::after{opacity:1;}
+.bprimary{background:linear-gradient(135deg,#ff9a3c,#e05b1a);color:#fff;box-shadow:0 4px 20px rgba(255,100,30,.45),inset 0 1px 0 rgba(255,255,255,.25);}
+.bsecondary{background:linear-gradient(135deg,#3d7a32,#245c1e);color:#b8e6b0;box-shadow:0 4px 14px rgba(60,140,50,.3),inset 0 1px 0 rgba(255,255,255,.1);}
+.boutline{background:transparent;color:var(--textmuted);border:2px solid rgba(200,180,140,.3);font-size:15px;padding:10px 20px;}
+.bdanger{background:linear-gradient(135deg,#c0392b,#922013);color:#fff;box-shadow:0 4px 14px rgba(192,57,43,.4);}
+
+/* ── CARD / INFO ── */
+.card{background:rgba(20,12,5,.92);border:1px solid var(--panelborder);border-radius:20px;padding:24px;max-width:580px;width:100%;max-height:82vh;overflow-y:auto;backdrop-filter:blur(12px);}
+.card h2{font-family:'Fredoka One',cursive;font-size:26px;color:var(--gold);margin-bottom:14px;text-align:center;}
+.card p,.card li{color:var(--textmuted);line-height:1.75;margin-bottom:9px;font-size:13.5px;}
+.card ul{padding-left:18px;}
+.stitle{font-family:'Fredoka One',cursive;font-size:17px;color:var(--gold2);margin:14px 0 7px;}
+.warnbox{background:rgba(255,90,40,.12);border:1px solid rgba(255,90,40,.3);border-radius:12px;padding:11px 15px;margin:10px 0;font-size:12.5px;color:#ffb080;}
+
+/* ── NEW GAME ── */
+#snew{background:radial-gradient(ellipse at 50% 100%,#1a3a0a 0%,#0d1520 100%);}
+.cprow{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:16px 0;}
+.cpcard{background:rgba(255,255,255,.05);border:2px solid rgba(255,200,100,.2);border-radius:16px;padding:14px 10px;text-align:center;width:110px;transition:border-color .2s,transform .2s;cursor:default;}
+.cpcard:hover{border-color:var(--gold);transform:translateY(-3px);}
+.cpemoji{font-size:34px;display:block;margin-bottom:6px;}
+.cpname{font-family:'Fredoka One',cursive;font-size:13px;color:var(--gold);}
+.cpbreed{font-size:10px;color:var(--textmuted);margin-top:3px;}
+.cptrait{font-size:10px;color:#80cbc4;margin-top:3px;}
+.namerow{display:flex;gap:8px;align-items:center;margin-top:8px;}
+.nameinput{background:rgba(255,255,255,.07);border:1px solid var(--panelborder);border-radius:10px;color:var(--textmain);font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;padding:7px 12px;flex:1;outline:none;transition:border-color .2s;}
+.nameinput:focus{border-color:var(--gold);}
+
+/* ── HUD ── */
+#hud{position:fixed;inset:0;z-index:50;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;}
+#hud.off{display:none;}
+#topbar{pointer-events:all;display:flex;justify-content:space-between;align-items:flex-start;padding:10px 14px;background:linear-gradient(to bottom,rgba(0,0,0,.65),transparent);}
+.rchip{background:rgba(0,0,0,.52);border:1px solid rgba(255,200,100,.28);border-radius:20px;padding:6px 11px;font-size:12.5px;font-weight:800;display:flex;align-items:center;gap:5px;backdrop-filter:blur(4px);}
+.rrow{display:flex;gap:7px;flex-wrap:wrap;}
+.tdisp{background:rgba(0,0,0,.52);border:1px solid rgba(255,200,100,.28);border-radius:12px;padding:7px 13px;text-align:right;backdrop-filter:blur(4px);}
+.tdisp .tday{font-family:'Fredoka One',cursive;font-size:17px;color:var(--gold);}
+.tdisp .tclock{font-size:11.5px;color:var(--textmuted);}
+.tdisp .tseason{font-size:11px;color:#80cbc4;}
+
+/* MODE TOGGLE */
+
+
+
+
+
+
+/* BOTTOM PANEL */
+#bpanel{pointer-events:all;}
+#ppeek{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:linear-gradient(to top,rgba(0,0,0,.65),transparent);}
+.picons{display:flex;gap:7px;}
+.picon{background:rgba(0,0,0,.52);border:1px solid rgba(255,200,100,.28);border-radius:50px;padding:8px 11px;font-size:15px;cursor:pointer;backdrop-filter:blur(4px);transition:all .2s;position:relative;}
+.picon:hover{border-color:var(--gold);background:rgba(255,200,100,.14);}
+.badge{position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;font-size:9px;font-weight:900;border-radius:10px;padding:1px 5px;min-width:16px;text-align:center;}
+#pdrawer{background:rgba(18,10,4,.94);border-top:1px solid var(--panelborder);border-radius:20px 20px 0 0;padding:0 14px 20px;max-height:0;overflow:hidden;transition:max-height .38s cubic-bezier(.4,0,.2,1);backdrop-filter:blur(14px);}
+#pdrawer.open{max-height:62vh;overflow-y:auto;}
+.phandle{width:38px;height:4px;background:rgba(255,200,100,.28);border-radius:2px;margin:11px auto 14px;cursor:pointer;}
+.ptabs{display:flex;gap:5px;margin-bottom:14px;overflow-x:auto;padding-bottom:3px;scrollbar-width:none;}
+.ptabs::-webkit-scrollbar{display:none;}
+.ptab{background:transparent;border:1px solid rgba(255,200,100,.18);border-radius:20px;padding:6px 13px;color:var(--textmuted);font-family:'Nunito',sans-serif;font-weight:800;font-size:12px;cursor:pointer;white-space:nowrap;transition:all .2s;}
+.ptab.active{background:rgba(255,200,100,.14);border-color:var(--gold);color:var(--gold);}
+.pcontent{display:none;}
+.pcontent.active{display:block;}
+
+/* FLOCK LIST */
+.clist{display:flex;flex-direction:column;gap:9px;}
+.crow{background:rgba(255,255,255,.04);border:1px solid rgba(255,200,100,.14);border-radius:14px;padding:11px;display:flex;align-items:center;gap:11px;cursor:pointer;transition:border-color .2s;}
+.crow:hover{border-color:rgba(255,200,100,.38);}
+.cemoji{font-size:26px;}
+.cinfo{flex:1;}
+.cname{font-family:'Fredoka One',cursive;font-size:14px;color:var(--gold);}
+.cdetail{font-size:10.5px;color:var(--textmuted);margin-top:2px;}
+.hbwrap{width:56px;}
+.hb{height:6px;background:rgba(255,255,255,.09);border-radius:3px;overflow:hidden;margin-top:3px;}
+.hbf{height:100%;border-radius:3px;transition:width .3s;}
+.sdot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+
+/* STORE */
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.sitem{background:rgba(255,255,255,.04);border:1px solid rgba(255,200,100,.13);border-radius:14px;padding:11px;cursor:pointer;transition:all .2s;text-align:center;}
+.sitem:hover{border-color:var(--gold);background:rgba(255,200,100,.07);}
+.sitem.noafford{opacity:.44;cursor:default;}
+.sicon{font-size:26px;margin-bottom:5px;}
+.sname{font-size:11.5px;font-weight:800;color:var(--textmain);}
+.sprice{font-size:13px;color:var(--gold);font-weight:900;margin-top:3px;}
+.sdesc{font-size:10px;color:var(--textmuted);margin-top:3px;line-height:1.4;}
+
+/* INVENTORY */
+.igrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(82px,1fr));gap:7px;}
+.iitem{background:rgba(255,255,255,.04);border:1px solid rgba(255,200,100,.13);border-radius:12px;padding:11px 7px;text-align:center;cursor:pointer;transition:border-color .2s;}
+.iitem:hover{border-color:var(--gold);}
+.iiicon{font-size:22px;}
+.iiname{font-size:9.5px;color:var(--textmuted);margin-top:3px;}
+.iiqty{font-size:13px;font-weight:900;color:var(--gold);}
+
+/* TASKS */
+.tlist{display:flex;flex-direction:column;gap:7px;}
+.titem{background:rgba(255,255,255,.04);border:1px solid rgba(255,200,100,.13);border-radius:12px;padding:9px 13px;display:flex;align-items:center;gap:9px;}
+.titem.urg{border-color:rgba(255,80,50,.4);background:rgba(255,60,30,.05);}
+.titem.done{opacity:.45;}
+.tico{font-size:18px;}
+.ttxt{flex:1;font-size:12.5px;color:var(--textmuted);}
+.tchk{font-size:15px;}
+
+/* CUSTOMER FEEDBACK */
+.cfcard{background:rgba(255,255,255,.04);border:1px solid rgba(255,200,100,.18);border-radius:14px;padding:13px;margin-bottom:10px;}
+.cfname{font-family:'Fredoka One',cursive;font-size:14px;color:var(--gold);}
+.cfstars{font-size:14px;margin:4px 0;}
+.cfmsg{font-size:12px;color:var(--textmuted);line-height:1.6;}
+
+/* STAT BARS */
+.statrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.statblock{background:rgba(255,255,255,.05);border-radius:10px;padding:9px 11px;}
+.statlabel{font-size:10.5px;color:var(--textmuted);margin-bottom:5px;}
+.statbar{height:7px;background:rgba(255,255,255,.09);border-radius:4px;overflow:hidden;}
+.statfill{height:100%;border-radius:4px;transition:width .3s;}
+.statval{font-size:10px;margin-top:3px;}
+
+/* NOTIFICATIONS */
+#notifs{position:fixed;top:78px;left:50%;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:7px;width:min(360px,92vw);pointer-events:none;}
+.notif{background:rgba(18,8,3,.96);border:1px solid rgba(255,200,100,.38);border-radius:13px;padding:11px 15px;display:flex;align-items:center;gap:9px;backdrop-filter:blur(10px);animation:nfSlide .28s ease;pointer-events:all;}
+.notif.urg{border-color:rgba(255,70,40,.6);}
+.notif.good{border-color:rgba(80,200,80,.5);}
+@keyframes nfSlide{from{transform:translateY(-18px);opacity:0}to{transform:translateY(0);opacity:1}}
+.nficon{font-size:21px;flex-shrink:0;}
+.nftxt{font-size:12.5px;color:var(--textmain);line-height:1.45;}
+
+/* MODAL */
+#moverlay{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(5px);}
+#moverlay.off{display:none;}
+.mbox{background:rgba(18,10,4,.96);border:1px solid var(--panelborder);border-radius:20px;padding:22px;max-width:420px;width:100%;max-height:82vh;overflow-y:auto;backdrop-filter:blur(14px);}
+.mtitle{font-family:'Fredoka One',cursive;font-size:21px;color:var(--gold);margin-bottom:11px;text-align:center;}
+.mbody{font-size:13.5px;color:var(--textmuted);line-height:1.72;}
+.mactions{display:flex;gap:9px;margin-top:18px;flex-wrap:wrap;}
+.mactions .btn{flex:1;min-width:100px;}
+
+
+
+
+
+
+
+/* PREDATOR ALERT */
+#predalert{position:fixed;inset:0;z-index:250;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(120,0,0,.6);backdrop-filter:blur(3px);}
+#predalert.off{display:none;}
+.paalert{background:rgba(20,0,0,.92);border:2px solid #c0392b;border-radius:20px;padding:28px 24px;max-width:380px;width:100%;text-align:center;}
+.paalert h2{font-family:'Fredoka One',cursive;font-size:30px;color:#ff4444;margin-bottom:10px;animation:danger .5s ease-in-out infinite alternate;}
+@keyframes danger{from{color:#ff4444}to{color:#ff9944}}
+.paalert p{font-size:14px;color:#ffb3b3;line-height:1.7;margin-bottom:18px;}
+
+/* VFX */
+.vfx{position:fixed;pointer-events:none;z-index:400;font-size:22px;animation:vfxFloat 1.4s ease forwards;}
+@keyframes vfxFloat{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-70px) scale(1.4)}}
+
+/* NAME LABEL (3D overlay) */
+#namelabels{position:fixed;inset:0;z-index:40;pointer-events:none;}
+.nlabel{position:absolute;font-family:'Fredoka One',cursive;font-size:13px;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.8),0 0 8px rgba(255,200,50,.5);transform:translate(-50%,-100%);white-space:nowrap;background:rgba(0,0,0,.42);border-radius:8px;padding:2px 7px;}
+
+/* RETURN WARNING */
+#retoverlay{position:fixed;inset:0;z-index:248;background:rgba(0,0,0,.82);display:flex;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(6px);}
+#retoverlay.off{display:none;}
+.retcard{background:rgba(18,6,2,.96);border:1px solid rgba(255,90,50,.4);border-radius:20px;padding:26px 22px;max-width:400px;width:100%;}
+.retcard h2{font-family:'Fredoka One',cursive;font-size:24px;color:#ff6535;margin-bottom:14px;}
+.retcard p{font-size:13px;color:var(--textmuted);line-height:1.7;margin-bottom:16px;}
+.retevents{display:flex;flex-direction:column;gap:7px;margin-bottom:18px;}
+.retevent{background:rgba(255,80,40,.09);border:1px solid rgba(255,80,40,.2);border-radius:10px;padding:8px 12px;font-size:12.5px;color:#ffb080;display:flex;align-items:center;gap:7px;}
+
+/* GAME OVER */
+#sgo{background:rgba(0,0,0,.92);backdrop-filter:blur(8px);}
+.gocard{text-align:center;max-width:400px;padding:38px 22px;background:rgba(18,6,2,.96);border:1px solid rgba(255,90,50,.3);border-radius:20px;}
+.gocard h1{font-family:'Fredoka One',cursive;font-size:46px;color:#ff6535;text-shadow:0 0 28px rgba(255,80,30,.5);margin-bottom:14px;}
+
+/* YARD UPGRADE */
+.upgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.upitem{background:rgba(255,255,255,.04);border:1px solid rgba(255,200,100,.15);border-radius:14px;padding:13px;text-align:center;cursor:pointer;transition:all .2s;}
+.upitem:hover{border-color:var(--gold);background:rgba(255,200,100,.07);}
+.upicon{font-size:30px;margin-bottom:6px;}
+.upname{font-size:12px;font-weight:800;color:var(--textmain);}
+.upprice{font-size:13px;color:var(--gold);font-weight:900;margin-top:3px;}
+.updesc{font-size:10px;color:var(--textmuted);margin-top:3px;line-height:1.4;}
+
+/* PAUSE BTN */
+#pausebtn{position:fixed;bottom:18px;right:18px;z-index:51;background:rgba(0,0,0,.52);border:1px solid rgba(255,200,100,.28);border-radius:50%;width:44px;height:44px;font-size:17px;cursor:pointer;display:none;align-items:center;justify-content:center;backdrop-filter:blur(5px);pointer-events:all;transition:all .2s;}
+#pausebtn:hover{border-color:var(--gold);}
+#pausebtn.on{display:flex;}
+
+/* MUSIC BTN */
+#musicbtn{position:fixed;bottom:18px;left:18px;z-index:51;background:rgba(0,0,0,.52);border:1px solid rgba(255,200,100,.28);border-radius:50%;width:44px;height:44px;font-size:17px;cursor:pointer;display:none;align-items:center;justify-content:center;backdrop-filter:blur(5px);pointer-events:all;transition:all .2s;}
+#musicbtn.on{display:flex;}
+#musicbtn:hover{border-color:var(--gold);}
+
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(255,200,100,.28);border-radius:2px;}
+</style>
+</head>
+<body>
+<div id="gc"><canvas id="cv"></canvas></div>
+<div id="namelabels"></div>
+<div id="notifs"></div>
+</div>
+</div>
+
+<!-- MAIN MENU -->
+<div class="screen" id="smenu">
+  <div class="stars"></div>
+  <div class="mlogo">🐔</div>
+  <div class="mtitle">Backyard Chickens</div>
+  <div class="msub">Real Chickens. Real Challenges. Real Skills.</div>
+  <div class="bgroup">
+    <button class="btn bprimary" onclick="startNewGame()">🌱 New Flock</button>
+    <button class="btn bsecondary" id="cbtn" onclick="continueGame()" style="display:none">🏡 Continue Farm</button>
+    <button class="btn boutline" onclick="showScreen('sinfo')">📖 About</button>
+    <button class="btn boutline" onclick="showScreen('stut')">🎓 How to Play</button>
+  </div>
+</div>
+
+<!-- INFO -->
+<div class="screen off" id="sinfo" style="background:linear-gradient(160deg,#1a2a0a,#0d1a1a);padding:20px;">
+  <div class="card">
+    <h2>📖 About Backyard Chickens</h2>
+    <p>A realistic sim to prepare you for real backyard chicken keeping — before you buy your first hen.</p>
+    <div class="stitle">🎯 What You'll Learn</div>
+    <ul>
+      <li>Daily care routines hens really need</li>
+      <li>Real costs — feed, bedding, vet care, equipment</li>
+      <li>Common health problems and early detection</li>
+      <li>Predator prevention and coop security</li>
+      <li>Seasonal differences in care and egg production</li>
+      <li>Pecking order dynamics and flock behavior</li>
+      <li>Running a small egg business with real customers</li>
+    </ul>
+    <div class="stitle">⚠️ Consequences of Neglect</div>
+    <div class="warnbox">🚨 In real life, chickens without water for 24h in summer can die. Hens neglected at night become prey. This game enforces real consequences — check in daily!</div>
+    <div class="stitle">⏰ Time</div>
+    <p>1 real minute ≈ 1 in-game hour. A full day takes 24 real minutes. Seasons change every 7 real-time days of gameplay.</p>
+    <div style="margin-top:16px"><button class="btn boutline" onclick="showScreen('smenu')">← Back</button></div>
+  </div>
+</div>
+
+<!-- TUTORIAL -->
+<div class="screen off" id="stut" style="background:linear-gradient(160deg,#1a2a0a,#0d1a1a);padding:20px;">
+  <div class="card">
+    <h2>🎓 How to Play</h2>
+    <div class="stitle">🌍 Overview Mode</div>
+    <p>Your default view — rotate by dragging, pinch to zoom. Tap any object to interact. See your whole flock at once.</p>
+    <div class="stitle">👁️ First Person Mode</div>
+    <p>Drop into your yard. <strong style="color:var(--gold)">Left joystick</strong> to walk. <strong style="color:var(--gold)">Right side swipe</strong> to look around. <strong style="color:var(--gold)">Tap</strong> nearby objects to interact. WASD + mouse on desktop.</p>
+    <div class="stitle">📋 Daily Tasks</div>
+    <p>Check Tasks every session. Hens need water, food, and the coop locked at dusk. Collect eggs daily or laying slows.</p>
+    <div class="stitle">💰 Customers</div>
+    <p>Build a customer base. Keep them happy with fresh, quality eggs. Neglect = bad reviews = less income!</p>
+    <div class="stitle">🦊 Predator Attacks</div>
+    <p>If a predator comes, switch to First Person and chase it away! Then lock the coop immediately.</p>
+    <div class="stitle">🏗️ Yard Upgrades</div>
+    <p>As your flock grows, upgrade the yard for more space and better equipment.</p>
+    <div style="margin-top:16px"><button class="btn boutline" onclick="showScreen('smenu')">← Back</button></div>
+  </div>
+</div>
+
+<!-- NEW GAME -->
+<div class="screen off" id="snew" style="padding:18px;">
+  <div class="card" style="max-width:520px">
+    <h2>🌱 Your Starting Flock</h2>
+    <p style="font-size:12.5px;color:var(--textmuted);text-align:center;margin-bottom:6px">3 hens, a basic coop, $200 budget. Name your chickens — keep names short!</p>
+    <div class="cprow" id="cprow"></div>
+    <div id="namefields"></div>
+    <div class="warnbox" style="font-size:11.5px">💡 Real cost: Starter setup (3 hens + coop) = $150–300. Monthly feed for 3 hens ≈ $15–20.</div>
+    <div class="mactions">
+      <button class="btn boutline" onclick="rerollStarters()">🎲 Reroll Hens</button>
+      <button class="btn bprimary" onclick="confirmNewGame()">Start Farm! 🐔</button>
+    </div>
+    <div style="margin-top:8px;text-align:center"><button class="btn boutline" style="font-size:12px;padding:7px 15px" onclick="showScreen('smenu')">← Back</button></div>
+  </div>
+</div>
+
+<!-- RETURN WARNING -->
+<div id="retoverlay" class="off">
+  <div class="retcard">
+    <h2>⚠️ You Were Away!</h2>
+    <p id="rettext"></p>
+    <div class="retevents" id="retlist"></div>
+    <button class="btn bprimary" onclick="dismissReturn()" style="width:100%">Check on My Flock →</button>
+  </div>
+</div>
+
+<!-- PREDATOR ALERT -->
+<div id="predalert" class="off">
+  <div class="paalert">
+    <div style="font-size:60px;margin-bottom:8px" id="predicon">🦊</div>
+    <h2 id="predtitle">PREDATOR ATTACK!</h2>
+    <p id="predmsg">A fox is in your yard!</p>
+    <p style="color:#ffd080;font-size:14px;font-weight:800;margin:12px 0">👆 TAP THE ANIMAL in your yard to chase it away!</p>
+    <button class="btn bdanger" onclick="dismissPredator(false)" style="width:100%;font-size:13px;margin-top:8px">I can't deal with it (hen at risk!)</button>
+  </div>
+</div>
+
+<!-- HUD -->
+<div id="hud" class="off">
+  <div id="topbar">
+    <div class="rrow">
+      <div class="rchip">💰 <span id="hmoney">$200</span></div>
+      <div class="rchip">🥚 <span id="heggs">0</span></div>
+      <div class="rchip">🌾 <span id="hfeed">50lb</span></div>
+      <div class="rchip">😊 <span id="hcusts">0</span> customers</div>
+    </div>
+    <div class="tdisp">
+      <div class="tday">Day <span id="hday">1</span></div>
+      <div class="tclock"><span id="htime">Morning</span></div>
+      <div class="tseason"><span id="hseason">🌸 Spring</span></div>
+    </div>
+  </div>
+  <div id="bpanel">
+    <div id="ppeek">
+      <div class="picons">
+        <div class="picon" onclick="openPanel('flock')">🐔<span id="bflock" class="badge" style="display:none">!</span></div>
+        <div class="picon" onclick="openPanel('tasks')">📋<span id="btasks" class="badge" style="display:none">!</span></div>
+        <div class="picon" onclick="openPanel('market')">🛒</div>
+        <div class="picon" onclick="openPanel('inv')">🎒</div>
+        <div class="picon" onclick="openPanel('customers')">👥<span id="bcusts" class="badge" style="display:none">!</span></div>
+        <div class="picon" onclick="openPanel('yard')">🏗️</div>
+        <div class="picon" onclick="openPanel('learn')">📖</div>
+      </div>
+      <div style="display:flex;gap:6px">
+        <button id="closepanel-btn" class="btn boutline" style="font-size:11.5px;padding:6px 13px;pointer-events:all;display:none;" onclick="closePanel()">✕</button>
+        <button class="btn boutline" style="font-size:11.5px;padding:6px 13px;pointer-events:all" onclick="showPause()">⏸</button>
+      </div>
+    </div>
+    <div id="pdrawer">
+      <div class="phandle" onclick="togglePanel()"></div>
+      <div class="ptabs">
+        <button class="ptab active" onclick="switchTab('flock')">🐔 Flock</button>
+        <button class="ptab" onclick="switchTab('tasks')">📋 Tasks</button>
+        <button class="ptab" onclick="switchTab('market')">🛒 Market</button>
+        <button class="ptab" onclick="switchTab('inv')">🎒 Inventory</button>
+        <button class="ptab" onclick="switchTab('customers')">👥 Customers</button>
+        <button class="ptab" onclick="switchTab('yard')">🏗️ Yard</button>
+        <button class="ptab" onclick="switchTab('learn')">📖 Learn</button>
+      </div>
+      <div id="tab-flock" class="pcontent active"><div class="clist" id="flockList"></div></div>
+      <div id="tab-tasks" class="pcontent"><div class="tlist" id="taskList"></div></div>
+      <div id="tab-market" class="pcontent"><div class="sgrid" id="storeGrid"></div></div>
+      <div id="tab-inv" class="pcontent">
+        <div style="display:flex;gap:7px;margin-bottom:10px">
+          <button class="btn bsecondary" style="flex:1;font-size:12px;padding:9px" onclick="sellAllEggs()">🥚 Sell All Eggs</button>
+          <button class="btn bsecondary" style="flex:1;font-size:12px;padding:9px" onclick="sellFertilized()">⭐ Sell Fert. Eggs</button>
+        </div>
+        <div class="igrid" id="invGrid"></div>
+      </div>
+      <div id="tab-customers" class="pcontent"><div id="custContent"></div></div>
+      <div id="tab-yard" class="pcontent"><div class="upgrid" id="yardGrid"></div></div>
+      <div id="tab-learn" class="pcontent"><div id="learnContent"></div></div>
+    </div>
+  </div>
+</div>
+
+</div></div>
+</div>
+
+<!-- PAUSE BTN -->
+<button id="pausebtn" onclick="showPause()">⏸</button>
+<!-- MUSIC BTN -->
+<button id="musicbtn" onclick="toggleMusic()">🎵</button>
+
+<!-- MODAL -->
+<div id="moverlay" class="off">
+  <div class="mbox">
+    <div class="mtitle" id="mtitle"></div>
+    <div class="mbody" id="mbody"></div>
+    <div class="mactions" id="mactions"></div>
+  </div>
+</div>
+
+<!-- GAME OVER -->
+<div class="screen off" id="sgo">
+  <div class="gocard">
+    <div style="font-size:58px;margin-bottom:14px">😢</div>
+    <h1>Flock Lost</h1>
+    <p id="gomsg" style="color:var(--textmuted);font-size:13.5px;line-height:1.75;margin-bottom:22px"></p>
+    <div style="background:rgba(255,200,100,.07);border:1px solid rgba(255,200,100,.18);border-radius:12px;padding:14px;margin-bottom:22px;font-size:12.5px;color:var(--textmuted)">
+      <strong style="color:var(--gold)">📚 Real Life Lesson:</strong> Most flock losses are preventable with consistent daily care. Morning and evening checks — water, food, coop lock — save lives.
+    </div>
+    <button class="btn bprimary" onclick="showScreen('smenu')" style="width:100%">Try Again 🌱</button>
+  </div>
+</div>
+
+<script src="three.min.js"></script>
+<script>
+// ═══════════════════════════════════════════════════════
+//  AUDIO ENGINE (procedural SFX + background music)
+// ═══════════════════════════════════════════════════════
+const AC = new (window.AudioContext || window.webkitAudioContext)();
+let musicNode = null, musicGain = null, musicPlaying = true;
+
+function resumeAC(){ if(AC.state==='suspended') AC.resume(); }
+document.addEventListener('click', resumeAC, {once:true});
+document.addEventListener('touchstart', resumeAC, {once:true});
+
+function playTone(freq, type='sine', dur=0.18, vol=0.15, delay=0){
+  const osc = AC.createOscillator();
+  const g = AC.createGain();
+  osc.connect(g); g.connect(AC.destination);
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, AC.currentTime+delay);
+  g.gain.setValueAtTime(0, AC.currentTime+delay);
+  g.gain.linearRampToValueAtTime(vol, AC.currentTime+delay+0.01);
+  g.gain.linearRampToValueAtTime(0, AC.currentTime+delay+dur);
+  osc.start(AC.currentTime+delay);
+  osc.stop(AC.currentTime+delay+dur+0.05);
+}
+
+function sfxCluck(){
+  [300,350,280,320].forEach((f,i)=>playTone(f+Math.random()*40,'square',0.09+Math.random()*0.06,0.09,i*0.07));
+}
+// Soft footstep cluck for walking chickens - quieter, random pitch variation
+let _stepTimer=0;
+function sfxChickenStep(){
+  if(AC.state==='suspended') return;
+  // Soft bock-bock footstep
+  const f=220+Math.random()*80;
+  playTone(f,'square',0.06,0.055);
+  if(Math.random()<0.3) playTone(f*1.15,'square',0.04,0.04,0.07);
+}
+function sfxCrow(){
+  [500,700,600,800,500].forEach((f,i)=>playTone(f,'sawtooth',0.15,0.12,i*0.12));
+}
+function sfxEgg(){
+  playTone(880,'sine',0.1,0.2);
+  playTone(1100,'sine',0.08,0.15,0.1);
+  playTone(1400,'sine',0.06,0.1,0.18);
+}
+function sfxCoin(){
+  playTone(1200,'sine',0.1,0.2);
+  playTone(1500,'sine',0.08,0.18,0.12);
+}
+function sfxBad(){
+  playTone(200,'sawtooth',0.25,0.2);
+  playTone(150,'sawtooth',0.2,0.18,0.2);
+}
+function sfxAlert(){
+  [600,800,600,800].forEach((f,i)=>playTone(f,'square',0.1,0.18,i*0.12));
+}
+function sfxPredator(){
+  [150,120,100,80].forEach((f,i)=>playTone(f,'sawtooth',0.22,0.25,i*0.15));
+}
+function sfxWater(){
+  [1800,2000,1600,1900].forEach((f,i)=>playTone(f,'sine',0.07,0.08,i*0.06));
+}
+function sfxBtn(){
+  playTone(600,'sine',0.07,0.1);
+}
+
+// Music: morningbg.mp3 for day (6–20), nightbg.mp3 for night (20–6)
+let dayAudio=null, nightAudio=null, currentTrack=null;
+let musicEnabled=true;
+
+function loadAudioSilently(src, cb){
+  const a=new Audio();
+  a.loop=true; a.volume=0.32;
+  a.addEventListener('canplaythrough',()=>cb(a),{once:true});
+  a.addEventListener('error',()=>cb(null),{once:true});
+  a.src=src;
+}
+
+function tryLoadBGMusic(){
+  loadAudioSilently('bgmusic/morningbg.mp3',a=>{ dayAudio=a; });
+  loadAudioSilently('bgmusic/nightbg.mp3',a=>{ nightAudio=a; });
+}
+
+function updateMusicTrack(){
+  if(!musicEnabled) return;
+  const isDay = G.hour>=6 && G.hour<20;
+  const want = isDay ? dayAudio : nightAudio;
+  if(!want || want===currentTrack) return;
+  if(currentTrack){ currentTrack.pause(); currentTrack.currentTime=0; }
+  currentTrack=want;
+  currentTrack.play().catch(()=>{});
+  document.getElementById('musicbtn').textContent='🎵';
+}
+
+function toggleMusic(){
+  sfxBtn();
+  musicEnabled=!musicEnabled;
+  if(!musicEnabled){
+    if(currentTrack){ currentTrack.pause(); }
+    document.getElementById('musicbtn').textContent='🔇';
+  } else {
+    updateMusicTrack();
+    document.getElementById('musicbtn').textContent='🎵';
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  VFX SYSTEM
+// ═══════════════════════════════════════════════════════
+function vfx(emoji, x, y){
+  const el = document.createElement('div');
+  el.className = 'vfx';
+  el.textContent = emoji;
+  el.style.left = (x||window.innerWidth/2-20)+'px';
+  el.style.top = (y||window.innerHeight/2-20)+'px';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(), 1500);
+}
+
+function vfxAtChicken(chicken, emoji){
+  if(!chicken.mesh) return;
+  const pos = chicken.mesh.position.clone();
+  pos.y += 1.5;
+  const v = worldToScreen(pos);
+  if(v) vfx(emoji, v.x, v.y);
+}
+
+function worldToScreen(worldPos){
+  if(!camera||!renderer) return null;
+  const v = worldPos.clone().project(camera);
+  return { x:(v.x+1)/2*window.innerWidth, y:(-v.y+1)/2*window.innerHeight };
+}
+
+// ═══════════════════════════════════════════════════════
+//  GAME DATA
+// ═══════════════════════════════════════════════════════
+const BREEDS=[
+  {name:'Rhode Island Red',emoji:'🐔',color:0xb22222,comb:0xff2222,layRate:5,cold:true,heat:false,temp:'calm',epw:5,eggCol:'brown'},
+  {name:'White Leghorn',emoji:'🐓',color:0xf0f0f0,comb:0xff3333,layRate:6,cold:false,heat:true,temp:'nervous',epw:6,eggCol:'white'},
+  {name:'Australorp',emoji:'🦤',color:0x1c1c2e,comb:0xff2222,layRate:5,cold:true,heat:false,temp:'gentle',epw:5,eggCol:'brown'},
+  {name:'Plymouth Rock',emoji:'🐦',color:0x888888,comb:0xff3333,layRate:4,cold:true,heat:false,temp:'docile',epw:4,eggCol:'brown'},
+  {name:'Silkie',emoji:'🐣',color:0xfffaf0,comb:0x880000,layRate:2,cold:false,heat:false,temp:'broody',epw:2,eggCol:'cream'},
+  {name:'Easter Egger',emoji:'🌈',color:0x6aab6a,comb:0xff3333,layRate:4,cold:true,heat:true,temp:'curious',epw:4,eggCol:'blue'},
+];
+const PERSOS=[
+  {name:'Bold Explorer',desc:'Always first to investigate. May escape.',emoji:'🔍',trait:'escape'},
+  {name:'Gentle Soul',desc:'Calm, easy to handle. Lowest pecking order.',emoji:'💚',trait:'gentle'},
+  {name:'Flock Bully',desc:'Dominant. Pecks newcomers.',emoji:'😤',trait:'bully'},
+  {name:'Broody Mama',desc:'Goes broody often. Sits on eggs stubbornly.',emoji:'🪺',trait:'broody'},
+  {name:'Skittish Sally',desc:'Easily spooked. Stress reduces laying.',emoji:'😱',trait:'skittish'},
+  {name:'Curious Cluck',desc:'Friendly and investigative.',emoji:'🤔',trait:'curious'},
+];
+const CUSTOMER_NAMES=['Mrs. Patterson','Dave & Family','The Garcias','Chef Rousseau','Sunrise Café','Mike Next Door','The Hendersons','Lakeside Diner','Maria from Church','The Chens'];
+const SEASONS=[['🌸','Spring'],['☀️','Summer'],['🍂','Fall'],['❄️','Winter']];
+const LEARN_TIPS=[
+  {title:'Pecking Order is Real',body:'Chickens have a strict hierarchy. Adding new hens causes 1–2 weeks of pecking drama while they sort the new order.'},
+  {title:'Water is Critical',body:'Each laying hen drinks up to 2 cups/day — more in summer. No water for 24h in heat = health crash. In winter water freezes fast.'},
+  {title:'Molt Season',body:'Fall: hens shed feathers and regrow them (6–12 weeks). Most stop laying entirely. Give extra protein — mealworms, scrambled eggs.'},
+  {title:'Signs of Illness',body:'Watch for: puffed-up posture, discharge, wheezing, watery droppings, pale comb, limping. Isolate sick hens immediately.'},
+  {title:'Predator Prevention',body:'Raccoons can open simple latches. Foxes dig under fences. Use hardware cloth — not chicken wire. Lock every single night.'},
+  {title:'Broody Hens',body:'A broody hen sits on eggs refusing to move for weeks. She stops laying, loses weight. Break broodiness with daily nest-box removal.'},
+  {title:'Winter Care',body:'Most breeds handle cold if the coop is dry and draft-free. Frostbite hits combs — apply petroleum jelly. Shorter days = fewer eggs.'},
+  {title:'Egg Basics',body:'Hens lay at 18–24 weeks. Peak production years 1–2. Eggs stay fresh 2 weeks unwashed at room temp or 3 months refrigerated.'},
+  {title:'Feed Quality Matters',body:'Layer feed with 16% protein keeps hens healthy and eggs nutritious. Supplement with grit and oyster shell. Customers can taste the difference!'},
+];
+
+// ═══════════════════════════════════════════════════════
+//  GAME STATE
+// ═══════════════════════════════════════════════════════
+let G={
+  chickens:[],money:200,day:1,hour:6,season:0,mode:'ov',
+  inv:{eggs:0,fertEggs:0,feed:50,grit:5,oyster:5,bedding:1,waterer:0,heatLamp:0,nestBox:1,medResp:0,medMites:0,medBumble:0},
+  tasks:{},coopLocked:false,waterFilled:true,feedFilled:true,
+  savedAt:Date.now(),hasRooster:false,customers:[],
+  yardSize:1, yardUpgrades:{fence:1,coop:1,run:false,heater:false,auto:false},
+  predatorActive:false,predatorType:'',predatorChased:false,
+  dayGreeting:false, morningRun:false,
+};
+let pendingReturn=[];
+let scene, renderer, ovCam, camera;
+let chickenMeshes=[],predatorMesh=null;
+let gameRunning=false;
+let keys={};
+let lookDelta={x:0,y:0};
+let lastT=Date.now(),slowAcc=0;
+let ovTheta=0.8,ovPhi=0.55,ovR=20;
+let activeTab='flock',panelOpen=false;
+
+// TIME: 1 real minute = 1 game hour → full day = 24 real minutes
+// Multiplier applied in tick
+const GAME_SPEED = 1/360; // 1 real second = 1/360 game hour → full day = ~24 real minutes
+
+// ═══════════════════════════════════════════════════════
+//  CHICKEN GENERATOR
+// ═══════════════════════════════════════════════════════
+function makeChicken(idx, forceName){
+  const b=BREEDS[Math.floor(Math.random()*BREEDS.length)];
+  const p=PERSOS[Math.floor(Math.random()*PERSOS.length)];
+  return {
+    id:'hen_'+Date.now()+'_'+idx,
+    name: forceName||'Hen'+(idx+1),
+    breed:b.name,bdata:b,
+    persona:p.name,pdata:p,
+    age:20+Math.floor(Math.random()*30),
+    health:90+Math.floor(Math.random()*10),
+    hunger:80,thirst:80,stress:10,happiness:80,
+    isRooster:false,isMolting:false,isBroody:false,isSick:false,
+    sickType:null,daysSick:0,
+    lastLay:G.day,totalEggs:0,alive:true,
+    color:b.color,combc:b.comb,
+    pos:{x:(idx-1)*2.2,z:(Math.random()-.5)*2},
+    target:{x:0,z:0},walkT:Math.random()*3,
+    bobOffset:Math.random()*Math.PI*2,
+    state:'wander',stateCd:0,
+    eggReady:false,mesh:null,
+    runAtPlayer:false,runTimer:0,
+    feedFed:false,qualityFed:1.0,
+    isChick:false,hatchDay:0, // chick fields
+  };
+}
+
+function makeChick(broodMom){
+  const b=BREEDS[Math.floor(Math.random()*BREEDS.length)];
+  const p=PERSOS[Math.floor(Math.random()*PERSOS.length)];
+  const name='Chick'+(G.chickens.length+1);
+  return {
+    id:'chick_'+Date.now(),
+    name,breed:b.name,bdata:b,persona:p.name,pdata:p,
+    age:0,health:85,hunger:70,thirst:70,stress:5,happiness:90,
+    isRooster:false,isMolting:false,isBroody:false,isSick:false,
+    sickType:null,daysSick:0,lastLay:G.day,totalEggs:0,alive:true,
+    color:0xffe066, // yellow chick
+    combc:0xff2222,
+    pos:{x:broodMom.pos.x+(Math.random()-.5)*1.5,z:broodMom.pos.z+(Math.random()-.5)*1.5},
+    target:{x:0,z:0},walkT:0,bobOffset:Math.random()*Math.PI*2,
+    state:'wander',stateCd:0,eggReady:false,mesh:null,
+    runAtPlayer:false,runTimer:0,feedFed:false,qualityFed:1.0,
+    isChick:true,hatchDay:G.day, // grows into adult at hatchDay+21
+  };
+}
+
+function rerollStarters(){
+  sfxBtn();
+  G.chickens=[makeChicken(0),makeChicken(1),makeChicken(2)];
+  renderNewGameUI();
+}
+
+function renderNewGameUI(){
+  const row=document.getElementById('cprow');
+  const fields=document.getElementById('namefields');
+  row.innerHTML=G.chickens.map((c,i)=>`
+    <div class="cpcard">
+      <span class="cpemoji">${c.bdata.emoji}</span>
+      <div class="cpname">Hen ${i+1}</div>
+      <div class="cpbreed">${c.breed}</div>
+      <div class="cptrait">${c.pdata.emoji} ${c.persona}</div>
+    </div>
+  `).join('');
+  fields.innerHTML=G.chickens.map((c,i)=>`
+    <div class="namerow">
+      <span style="font-size:20px">${c.bdata.emoji}</span>
+      <input class="nameinput" id="name${i}" maxlength="10" placeholder="Name hen ${i+1}..." value="${c.name}">
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════════════════════════════
+//  SAVE / LOAD
+// ═══════════════════════════════════════════════════════
+function save(){
+  try{
+    const sv={G:JSON.parse(JSON.stringify(G)),at:Date.now()};
+    sv.G.chickens.forEach(c=>{delete c.mesh;});
+    localStorage.setItem('bc_save',JSON.stringify(sv));
+  }catch(e){}
+}
+function load(){
+  try{ const r=localStorage.getItem('bc_save'); return r?JSON.parse(r):null; }catch(e){return null;}
+}
+function hasSave(){ return !!localStorage.getItem('bc_save'); }
+
+// ═══════════════════════════════════════════════════════
+//  SCREEN MANAGEMENT
+// ═══════════════════════════════════════════════════════
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.add('off'));
+  if(id){ const el=document.getElementById(id); if(el) el.classList.remove('off'); }
+}
+
+function init(){
+  if(hasSave()) document.getElementById('cbtn').style.display='block';
+  showScreen('smenu');
+  tryLoadBGMusic();
+}
+
+// ═══════════════════════════════════════════════════════
+//  GAME START
+// ═══════════════════════════════════════════════════════
+function startNewGame(){
+  sfxBtn();
+  G={
+    chickens:[],money:200,day:1,hour:6,season:0,mode:'ov',
+    inv:{eggs:0,fertEggs:0,feed:50,grit:5,oyster:5,bedding:1,waterer:0,heatLamp:0,nestBox:1,medResp:0,medMites:0,medBumble:0},
+    tasks:{},coopLocked:false,waterFilled:true,feedFilled:true,
+    savedAt:Date.now(),hasRooster:false,customers:[],
+    yardSize:1,yardUpgrades:{fence:1,coop:1,run:false,heater:false,auto:false},
+    predatorActive:false,predatorType:'',predatorChased:false,
+    dayGreeting:false,morningRun:false,
+  };
+  rerollStarters();
+  showScreen('snew');
+}
+
+function confirmNewGame(){
+  sfxBtn();
+  // Save names
+  G.chickens.forEach((c,i)=>{
+    const inp=document.getElementById('name'+i);
+    if(inp&&inp.value.trim()) c.name=inp.value.trim().slice(0,10);
+  });
+  G.savedAt=Date.now();
+  // Generate initial customers
+  generateCustomers(3);
+  save();
+  launchGame();
+}
+
+function continueGame(){
+  sfxBtn();
+  const sv=load();
+  if(!sv){startNewGame();return;}
+  G=sv.G;
+  G.mode='ov'; // always overview camera — restore computed fields that don't survive JSON
+  G.chickens.forEach(c=>{
+    if(!c.pos) c.pos={x:0,z:0};
+    if(!c.target) c.target={x:0,z:0};
+    if(!c.state) c.state='wander';
+    if(c.stateCd===undefined) c.stateCd=0;
+    if(c.bobOffset===undefined) c.bobOffset=Math.random()*Math.PI*2;
+    if(c.qualityFed===undefined) c.qualityFed=1.0;
+    if(c.runAtPlayer===undefined) c.runAtPlayer=false;
+    if(c.runTimer===undefined) c.runTimer=0;
+    // Restore breed/persona data objects from name strings
+    c.bdata=BREEDS.find(b=>b.name===c.breed)||BREEDS[0];
+    c.pdata=PERSOS.find(p=>p.name===c.persona)||PERSOS[0];
+    c.mesh=null;
+  });
+  const elapsed=(Date.now()-sv.at)/1000;
+  const gameHours=elapsed*GAME_SPEED;
+  const gameDays=Math.floor(gameHours/24);
+  if(gameDays>=1) computeReturnConsequences(gameDays, gameHours);
+  launchGame();
+}
+
+function generateCustomers(n){
+  for(let i=0;i<n;i++){
+    G.customers.push({
+      id:'cust_'+Date.now()+'_'+i,
+      name:CUSTOMER_NAMES[Math.floor(Math.random()*CUSTOMER_NAMES.length)],
+      happiness:80,ordersPerWeek:2+Math.floor(Math.random()*4),
+      lastOrder:G.day,pending:true,totalBought:0,
+      review:'',stars:4,lostAt:0,
+    });
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  RETURN CONSEQUENCES
+// ═══════════════════════════════════════════════════════
+function computeReturnConsequences(days, gameHours){
+  pendingReturn=[];
+  G.chickens.forEach(c=>{
+    if(!c.alive) return;
+    const td=Math.min(days*28,100), hd=Math.min(days*18,100);
+    c.thirst=Math.max(0,c.thirst-td);
+    c.hunger=Math.max(0,c.hunger-hd);
+    c.health=Math.max(0,c.health-(td*0.5)-(hd*0.25));
+    if(c.thirst<20) pendingReturn.push({icon:'💧',txt:`${c.name} is severely dehydrated!`});
+    if(c.health<=0){ c.alive=false; pendingReturn.push({icon:'💀',txt:`${c.name} didn't survive while you were away.`}); }
+  });
+  if(!G.coopLocked&&Math.random()<0.45*Math.min(days,3)){
+    const alive=G.chickens.filter(c=>c.alive);
+    if(alive.length){
+      const v=alive[Math.floor(Math.random()*alive.length)];
+      v.alive=false;
+      pendingReturn.push({icon:'🦊',txt:`A predator got ${v.name} — coop wasn't locked!`});
+    }
+  }
+  G.inv.feed=Math.max(0,G.inv.feed-days*1.8);
+  if(G.inv.feed<5) pendingReturn.push({icon:'🌾',txt:`Feed critically low! (${G.inv.feed.toFixed(0)}lb left)`});
+  const uncoll=Math.floor(days*1.5);
+  if(uncoll>0) pendingReturn.push({icon:'🥚',txt:`${uncoll} eggs went uncollected.`});
+  G.day+=days; G.hour=(G.hour+gameHours*24)%24; G.season=Math.floor(G.day/28)%4;
+  if(pendingReturn.length>0) showReturnUI(days);
+}
+
+function showReturnUI(days){
+  document.getElementById('rettext').textContent=`You were away for ${days} in-game day${days!==1?'s':''}. Here's what happened:`;
+  document.getElementById('retlist').innerHTML=pendingReturn.map(e=>`<div class="retevent">${e.icon} ${e.txt}</div>`).join('');
+  document.getElementById('retoverlay').classList.remove('off');
+}
+function dismissReturn(){
+  sfxBtn();
+  document.getElementById('retoverlay').classList.add('off');
+  pendingReturn=[];
+}
+
+// ═══════════════════════════════════════════════════════
+//  LAUNCH GAME
+// ═══════════════════════════════════════════════════════
+function launchGame(){
+  showScreen(null);
+  document.getElementById('hud').classList.remove('off');
+  document.getElementById('pausebtn').classList.add('on');
+  document.getElementById('musicbtn').classList.add('on');
+  initThreeJS();
+  gameRunning=true;
+  lastT=Date.now();
+  gameTick();
+  updateAllUI();
+}
+
+// ═══════════════════════════════════════════════════════
+//  THREE.JS SETUP
+// ═══════════════════════════════════════════════════════
+function initThreeJS(){
+  const cv=document.getElementById('cv');
+  scene=new THREE.Scene();
+  scene.fog=new THREE.Fog(0x87ceeb,22,85);
+  renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.shadowMap.enabled=true;
+  renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  doResize();
+  window.addEventListener('resize',doResize);
+
+  // OVERVIEW CAMERA
+  ovCam=new THREE.PerspectiveCamera(58,cv.width/cv.height,0.1,200);
+  updateOvCam();
+
+
+  camera=ovCam;
+  buildScene();
+  buildAllChickenMeshes();
+  setupControls();
+  setTimeout(updateCoopDoorVisual, 100); // after scene is fully built
+}
+
+
+
+function doResize(){
+  const cv=document.getElementById('cv');
+  cv.width=innerWidth; cv.height=innerHeight;
+  renderer.setSize(innerWidth,innerHeight);
+  if(ovCam){ovCam.aspect=innerWidth/innerHeight;ovCam.updateProjectionMatrix();}
+}
+
+// ═══════════════════════════════════════════════════════
+//  SCENE BUILD
+// ═══════════════════════════════════════════════════════
+let sunLight, ambLight;
+function buildScene(){
+  scene.background=new THREE.Color(0x87ceeb);
+  ambLight=new THREE.AmbientLight(0xfff8e8,0.55);
+  ambLight.name='amb';
+  scene.add(ambLight);
+  sunLight=new THREE.DirectionalLight(0xffe8c0,1.2);
+  sunLight.name='sun';
+  sunLight.position.set(12,22,10);
+  sunLight.castShadow=true;
+  sunLight.shadow.camera.near=0.5;sunLight.shadow.camera.far=100;
+  sunLight.shadow.camera.left=-25;sunLight.shadow.camera.right=25;
+  sunLight.shadow.camera.top=25;sunLight.shadow.camera.bottom=-25;
+  sunLight.shadow.mapSize.set(1024,1024);
+  scene.add(sunLight);
+
+  // Ground
+  const gGeo=new THREE.PlaneGeometry(50,50,30,30);
+  const gMat=new THREE.MeshLambertMaterial({color:0x4a8a28});
+  const g=new THREE.Mesh(gGeo,gMat);
+  g.rotation.x=-Math.PI/2; g.receiveShadow=true; g.name='ground';
+  scene.add(g);
+
+  // Dirt patches
+  for(let i=0;i<10;i++){
+    const dm=new THREE.Mesh(new THREE.CircleGeometry(.35+Math.random()*.7,7),new THREE.MeshLambertMaterial({color:0x8b5e3c}));
+    dm.rotation.x=-Math.PI/2; dm.position.set((Math.random()-.5)*18,0.01,(Math.random()-.5)*14);
+    scene.add(dm);
+  }
+
+  buildCoop();
+  buildFeeder();
+  buildWaterer();
+  buildFence(G.yardSize);
+  buildNestArea();
+  for(let i=0;i<6;i++) buildTree(-16+i*2,(Math.random()-.5)*2,.5+Math.random()*.45);
+
+  // Make feeder/waterer/coop interactable
+  makeInteractable(scene.getObjectByName('feeder'),'feeder','Check Feeder');
+  makeInteractable(scene.getObjectByName('waterer'),'waterer','Check Waterer');
+  makeInteractable(scene.getObjectByName('coop'),'coop','Coop Door');
+  makeInteractable(scene.getObjectByName('nestmark'),'nest','Collect Eggs');
+}
+
+function makeInteractable(obj, name, label){
+  if(!obj) return;
+  obj.traverse(c=>{ c.userData.interactable=name; c.userData.label=label; });
+  obj.userData.interactable=name; obj.userData.label=label;
+}
+
+function buildCoop(){
+  const g=new THREE.Group(); g.name='coop';
+
+  // Main body — warm wood color, wider cartoon proportions
+  const wm=new THREE.MeshLambertMaterial({color:0xc8813c});
+  const body=new THREE.Mesh(new THREE.BoxGeometry(5.5,2.8,4.5),wm);
+  body.position.set(0,1.4,0); body.castShadow=true; body.receiveShadow=true; g.add(body);
+
+  // Roof — bright red, chunky
+  const rm=new THREE.MeshLambertMaterial({color:0xcc2222});
+  const roof=new THREE.Mesh(new THREE.ConeGeometry(4.1,1.9,4),rm);
+  roof.position.set(0,3.7,0); roof.rotation.y=Math.PI/4; roof.castShadow=true; g.add(roof);
+
+  // Roof overhang stripe
+  const ovhm=new THREE.MeshLambertMaterial({color:0x8b1a1a});
+  const ovh=new THREE.Mesh(new THREE.BoxGeometry(5.8,0.18,4.8),ovhm);
+  ovh.position.set(0,2.79,0); g.add(ovh);
+
+  // Front face planks detail — vertical stripes
+  const plankM=new THREE.MeshLambertMaterial({color:0xb06a28});
+  [-1.8,-0.6,0.6,1.8].forEach(px=>{
+    const plank=new THREE.Mesh(new THREE.BoxGeometry(0.15,2.8,0.05),plankM);
+    plank.position.set(px,1.4,2.28); g.add(plank);
+  });
+
+  // Windows — big cartoon style with X cross
+  const wm2=new THREE.MeshLambertMaterial({color:0x87ceeb,transparent:true,opacity:.75});
+  [-1.6,1.6].forEach(wx=>{
+    const win=new THREE.Mesh(new THREE.BoxGeometry(.88,.75,.06),wm2);
+    win.position.set(wx,1.9,2.28); g.add(win);
+    // Window frame cross
+    const fm=new THREE.MeshLambertMaterial({color:0x6b3a1a});
+    const fh=new THREE.Mesh(new THREE.BoxGeometry(.88,.06,.08),fm);
+    fh.position.set(wx,1.9,2.32); g.add(fh);
+    const fv=new THREE.Mesh(new THREE.BoxGeometry(.06,.75,.08),fm);
+    fv.position.set(wx,1.9,2.32); g.add(fv);
+  });
+
+  // Door frame
+  const dfm=new THREE.MeshLambertMaterial({color:0x5c3010});
+  const dframe=new THREE.Mesh(new THREE.BoxGeometry(1.1,1.7,0.1),dfm);
+  dframe.position.set(0,0.85,2.29); g.add(dframe);
+
+  // Door panel — pivot from top-left edge (will animate open/closed)
+  const doorGroup=new THREE.Group();
+  doorGroup.position.set(-0.52,1.7,2.32); // pivot point top of door
+  doorGroup.name='coop_door_pivot';
+  const dm=new THREE.MeshLambertMaterial({color:0x8b4513});
+  const doorPanel=new THREE.Mesh(new THREE.BoxGeometry(1.0,1.55,0.09),dm);
+  doorPanel.position.set(0.5,-0.77,0); // offset from pivot so it rotates correctly
+  // Door details
+  const ddet=new THREE.MeshLambertMaterial({color:0x6b3010});
+  const dbar=new THREE.Mesh(new THREE.BoxGeometry(0.9,0.06,0.11),ddet);
+  dbar.position.set(0.5,-0.4,0.02); doorGroup.add(dbar);
+  const dbar2=new THREE.Mesh(new THREE.BoxGeometry(0.9,0.06,0.11),ddet);
+  dbar2.position.set(0.5,-1.1,0.02); doorGroup.add(dbar2);
+  // Door knob
+  const knobM=new THREE.MeshLambertMaterial({color:0xffd700});
+  const knob=new THREE.Mesh(new THREE.SphereGeometry(0.055,6,6),knobM);
+  knob.position.set(0.88,-0.77,0.08); doorGroup.add(knob);
+  doorGroup.add(doorPanel);
+  g.add(doorGroup);
+
+  // Ramp below door
+  const rampM=new THREE.MeshLambertMaterial({color:0xa07030});
+  const ramp=new THREE.Mesh(new THREE.BoxGeometry(1.0,0.06,1.2),rampM);
+  ramp.position.set(0,0.03,2.9); ramp.rotation.x=-0.18; g.add(ramp);
+
+  // Chimney
+  const chM=new THREE.MeshLambertMaterial({color:0x888888});
+  const ch=new THREE.Mesh(new THREE.BoxGeometry(0.5,0.9,0.5),chM);
+  ch.position.set(1.4,3.9,-0.8); g.add(ch);
+  const chTop=new THREE.Mesh(new THREE.BoxGeometry(0.65,0.1,0.65),new THREE.MeshLambertMaterial({color:0x666666}));
+  chTop.position.set(1.4,4.36,-0.8); g.add(chTop);
+
+  // Sign above door
+  const signM=new THREE.MeshLambertMaterial({color:0xdeb887});
+  const sign=new THREE.Mesh(new THREE.BoxGeometry(1.4,0.45,0.06),signM);
+  sign.position.set(0,2.42,2.32); g.add(sign);
+
+  g.position.set(-5,0,-7);
+  scene.add(g);
+
+  // Apply door state immediately
+  updateCoopDoorVisual();
+}
+
+function updateCoopDoorVisual(){
+  const coop=scene.getObjectByName('coop');
+  if(!coop) return;
+  const pivot=coop.getObjectByName('coop_door_pivot');
+  if(!pivot) return;
+  // Locked = door closed (rotation 0), Open = door swings open (rotation -PI/2)
+  const targetRot = G.coopLocked ? 0 : -Math.PI/2;
+  // Smooth animate
+  pivot._targetRot = targetRot;
+}
+
+// Called in gameTick to animate door
+function animCoopDoor(dt){
+  const coop=scene.getObjectByName('coop');
+  if(!coop) return;
+  const pivot=coop.getObjectByName('coop_door_pivot');
+  if(!pivot||pivot._targetRot===undefined) return;
+  const diff=pivot._targetRot - pivot.rotation.y;
+  if(Math.abs(diff)>0.005) pivot.rotation.y+=diff*Math.min(dt*4, 0.15);
+  else pivot.rotation.y=pivot._targetRot;
+}
+
+function buildFeeder(){
+  const g=new THREE.Group(); g.name='feeder';
+  const bm=new THREE.MeshLambertMaterial({color:0xc8a428});
+  const base=new THREE.Mesh(new THREE.CylinderGeometry(.42,.52,.32,8),bm);
+  base.position.set(0,.16,0); g.add(base);
+  const tm=new THREE.MeshLambertMaterial({color:0xdbb83a});
+  const tube=new THREE.Mesh(new THREE.CylinderGeometry(.22,.28,.82,8),tm);
+  tube.position.set(0,.72,0); g.add(tube);
+  const fi=new THREE.Mesh(new THREE.SphereGeometry(.13,8,8),new THREE.MeshLambertMaterial({color:0x00cc00}));
+  fi.position.set(0,1.22,0); fi.name='findicator'; g.add(fi);
+  g.position.set(3,0,0);
+  scene.add(g);
+}
+
+function buildWaterer(){
+  const g=new THREE.Group(); g.name='waterer';
+  const bm=new THREE.MeshLambertMaterial({color:0x87ceeb});
+  const tray=new THREE.Mesh(new THREE.CylinderGeometry(.46,.46,.22,8),bm);
+  tray.position.set(0,.11,0); g.add(tray);
+  const tm=new THREE.MeshLambertMaterial({color:0x4682b4});
+  const tank=new THREE.Mesh(new THREE.CylinderGeometry(.26,.32,.72,8),tm);
+  tank.position.set(0,.56,0); g.add(tank);
+  const wi=new THREE.Mesh(new THREE.SphereGeometry(.13,8,8),new THREE.MeshLambertMaterial({color:0x00aaff}));
+  wi.position.set(0,1.08,0); wi.name='windicator'; g.add(wi);
+  g.position.set(3,0,2.5);
+  scene.add(g);
+}
+
+function buildFence(size=1){
+  // Remove old fences
+  scene.children.filter(c=>c.name&&c.name.startsWith('fence')).forEach(c=>scene.remove(c));
+  const W=12+size*4, D=10+size*3;
+  const pm=new THREE.MeshLambertMaterial({color:0x8b6914});
+  const rm=new THREE.MeshLambertMaterial({color:0xa07818});
+  [[-W,-D],[W,-D],[W,D],[-W,D]].forEach((pt,i,arr)=>{
+    const nx=arr[(i+1)%4];
+    const posts=6+size*2;
+    for(let j=0;j<posts;j++){
+      const t=j/posts;
+      const p=new THREE.Mesh(new THREE.BoxGeometry(.15,1.22,.15),pm);
+      p.position.set(pt[0]+(nx[0]-pt[0])*t,.61,pt[1]+(nx[1]-pt[1])*t);
+      p.name='fence'+i+j; scene.add(p);
+    }
+    const dx=nx[0]-pt[0],dz=nx[1]-pt[1],len=Math.sqrt(dx*dx+dz*dz);
+    for(let r=0;r<2;r++){
+      const rail=new THREE.Mesh(new THREE.BoxGeometry(len,.08,.08),rm);
+      rail.position.set((pt[0]+nx[0])/2,.5+r*.42,(pt[1]+nx[1])/2);
+      rail.rotation.y=Math.atan2(dz,dx); rail.name='fence_rail'+i+r;
+      scene.add(rail);
+    }
+  });
+}
+
+function buildNestArea(){
+  const nm=new THREE.Mesh(new THREE.CircleGeometry(.6,7),new THREE.MeshLambertMaterial({color:0xc19a6b}));
+  nm.rotation.x=-Math.PI/2; nm.position.set(-4.2,.02,-7.5); nm.name='nestmark';
+  nm.userData.interactable='nest'; nm.userData.label='Collect Eggs';
+  scene.add(nm);
+}
+
+function buildTree(x,z,s){
+  const tr=new THREE.Mesh(new THREE.CylinderGeometry(.15*s,.2*s,1.5*s,6),new THREE.MeshLambertMaterial({color:0x5c3317}));
+  tr.position.set(x,.75*s,z); tr.castShadow=true; scene.add(tr);
+  const fo=new THREE.Mesh(new THREE.SphereGeometry(1.0*s,8,6),new THREE.MeshLambertMaterial({color:0x268a26}));
+  fo.position.set(x,2.1*s,z); fo.castShadow=true; scene.add(fo);
+}
+
+// ═══════════════════════════════════════════════════════
+//  CHICKEN MESHES
+// ═══════════════════════════════════════════════════════
+function buildChickenMesh(c){
+  const g=new THREE.Group();
+  const col=c.color, det=c.bdata.comb||0xff2222;
+  const bm=new THREE.MeshLambertMaterial({color:col});
+  const dm=new THREE.MeshLambertMaterial({color:det});
+  const am=new THREE.MeshLambertMaterial({color:0xffa500});
+
+  // Body
+  const bg=new THREE.SphereGeometry(.3,10,8);
+  bg.scale(1.22,1.02,1.32);
+  const body=new THREE.Mesh(bg,bm);
+  body.position.y=.42; body.castShadow=true; g.add(body);
+
+  // Head
+  const hd=new THREE.Mesh(new THREE.SphereGeometry(.18,8,8),bm);
+  hd.position.set(0,.72,.32); hd.castShadow=true; g.add(hd);
+
+  // Comb
+  const cg=new THREE.BoxGeometry(.09,.13,.11);
+  const comb=new THREE.Mesh(cg,dm);
+  comb.position.set(0,.92,.32); g.add(comb);
+
+  // Beak
+  const beak=new THREE.Mesh(new THREE.ConeGeometry(.05,.1,4),am);
+  beak.rotation.x=Math.PI/2; beak.position.set(0,.72,.5); g.add(beak);
+
+  // Eyes
+  const em=new THREE.MeshLambertMaterial({color:0x111111});
+  [-0.07,0.07].forEach(ox=>{
+    const eye=new THREE.Mesh(new THREE.SphereGeometry(.04,5,5),em);
+    eye.position.set(ox,.74,.46); g.add(eye);
+  });
+
+  // Wattle
+  const wattle=new THREE.Mesh(new THREE.SphereGeometry(.05,5,5),dm);
+  wattle.position.set(0,.63,.46); g.add(wattle);
+
+  // Tail
+  const tail=new THREE.Mesh(new THREE.ConeGeometry(.16,.38,6),new THREE.MeshLambertMaterial({color:c.color^0x222222}));
+  tail.rotation.x=Math.PI*.62; tail.position.set(0,.56,-.36); g.add(tail);
+
+  // Wings
+  [-1,1].forEach(s=>{
+    const wg=new THREE.SphereGeometry(.16,6,4);
+    wg.scale(1,.52,1.5);
+    const wing=new THREE.Mesh(wg,new THREE.MeshLambertMaterial({color:c.color^0x333333}));
+    wing.position.set(s*.34,.44,0); g.add(wing);
+  });
+
+  // Legs
+  [-0.1,0.1].forEach(lx=>{
+    const leg=new THREE.Mesh(new THREE.CylinderGeometry(.03,.03,.32,4),am);
+    leg.position.set(lx,.16,0); g.add(leg);
+    const foot=new THREE.Mesh(new THREE.ConeGeometry(.055,.13,4),am);
+    foot.rotation.x=-Math.PI/2; foot.position.set(lx,.02,.07); g.add(foot);
+  });
+
+  // Sick aura
+  if(c.isSick){
+    const sa=new THREE.Mesh(new THREE.SphereGeometry(.52,8,8),new THREE.MeshLambertMaterial({color:0x88ff00,transparent:true,opacity:.18,wireframe:true}));
+    sa.position.y=.42; sa.name='sickaura'; g.add(sa);
+  }
+
+  g.position.set(c.pos.x,0,c.pos.z);
+  // Chicks are tiny and grow over 21 days
+  if(c.isChick){
+    const growDays=Math.min(G.day-c.hatchDay,21);
+    const growScale=0.28+0.72*(growDays/21); // 28% → 100%
+    g.scale.setScalar(growScale);
+  }
+  g.userData.chickenId=c.id;
+  g.userData.interactable='chicken';
+  g.userData.label='Inspect '+c.name;
+  g.traverse(ch=>{ ch.userData.chickenId=c.id; ch.userData.interactable='chicken'; ch.userData.label='Inspect '+c.name; });
+  c.mesh=g;
+  scene.add(g);
+  return g;
+}
+
+function buildAllChickenMeshes(){
+  chickenMeshes.forEach(m=>scene.remove(m));
+  chickenMeshes=[];
+  G.chickens.filter(c=>c.alive).forEach(c=>{
+    if(!c.mesh||!scene.getObjectById(c.mesh.id)){
+      chickenMeshes.push(buildChickenMesh(c));
+    }
+  });
+}
+
+function rebuildMesh(c){
+  if(c.mesh) scene.remove(c.mesh);
+  chickenMeshes=chickenMeshes.filter(m=>m!==c.mesh);
+  c.mesh=null;
+  if(c.alive){
+    const m=buildChickenMesh(c);
+    chickenMeshes.push(m);
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  PREDATOR MESH
+// ═══════════════════════════════════════════════════════
+function spawnPredatorMesh(type){
+  if(predatorMesh){ scene.remove(predatorMesh); predatorMesh=null; }
+  const g=new THREE.Group();
+  const col=type==='fox'?0xe05a1a:type==='raccoon'?0x555555:0x3a2a18;
+  const bm=new THREE.MeshLambertMaterial({color:col});
+  const body=new THREE.Mesh(new THREE.SphereGeometry(.38,8,7),bm);
+  body.position.y=.5; g.add(body);
+  const hd=new THREE.Mesh(new THREE.SphereGeometry(.2,7,7),bm);
+  hd.position.set(0,.82,.38); g.add(hd);
+  const tail=new THREE.Mesh(new THREE.ConeGeometry(.12,.5,6),bm);
+  tail.rotation.x=Math.PI*.7; tail.position.set(0,.55,-.42); g.add(tail);
+  [-0.12,0.12].forEach(lx=>{
+    const leg=new THREE.Mesh(new THREE.CylinderGeometry(.04,.04,.3,4),bm);
+    leg.position.set(lx,.15,0); g.add(leg);
+  });
+  const em=new THREE.MeshLambertMaterial({color:0xff2200});
+  [-0.07,0.07].forEach(ox=>{
+    const eye=new THREE.Mesh(new THREE.SphereGeometry(.04,5,5),em);
+    eye.position.set(ox,.84,.54); g.add(eye);
+  });
+  g.position.set(12,0,0);
+  g.userData.interactable='predator'; g.userData.label='Chase Away!';
+  scene.add(g);
+  predatorMesh=g;
+}
+
+function removePredatorMesh(){
+  if(predatorMesh){ scene.remove(predatorMesh); predatorMesh=null; }
+}
+
+// ═══════════════════════════════════════════════════════
+//  CONTROLS
+// ═══════════════════════════════════════════════════════
+function setupControls(){
+  const cv=document.getElementById('cv');
+  window.addEventListener('keyup',e=>{ keys[e.key.toLowerCase()]=false; });
+
+
+  // Mouse drag: overview orbit + TP camera orbit
+  let drag=false,lmx=0,lmy=0;
+  cv.addEventListener('mousedown',e=>{ drag=true; lmx=e.clientX; lmy=e.clientY; });
+  cv.addEventListener('mousemove',e=>{
+    if(G.mode==='ov'&&drag){
+      ovTheta-=(e.clientX-lmx)*.011; ovPhi=Math.max(.1,Math.min(1.35,ovPhi-(e.clientY-lmy)*.011));
+      lmx=e.clientX; lmy=e.clientY; updateOvCam();
+    }
+  });
+  cv.addEventListener('mouseup',()=>drag=false);
+  cv.addEventListener('wheel',e=>{
+    if(G.mode==='ov'){ ovR=Math.max(5,Math.min(42,ovR+e.deltaY*.055)); updateOvCam(); }
+  });
+  cv.addEventListener('click',e=>{
+    if(G.mode==='ov'){ rayCast(e.clientX,e.clientY); }
+  });
+
+  // Touch overview
+  let ts=null,pinch0=0;
+  cv.addEventListener('touchstart',e=>{
+    if(G.mode!=='ov') return;
+    if(e.touches.length===1) ts={x:e.touches[0].clientX,y:e.touches[0].clientY,th:ovTheta,ph:ovPhi};
+    else if(e.touches.length===2){ const d=tDist(e.touches); pinch0=d; ts=null; }
+  },{passive:true});
+  cv.addEventListener('touchmove',e=>{
+    if(G.mode!=='ov') return;
+    if(e.touches.length===1&&ts){
+      ovTheta=ts.th-(e.touches[0].clientX-ts.x)*.013;
+      ovPhi=Math.max(.1,Math.min(1.35,ts.ph-(e.touches[0].clientY-ts.y)*.013));
+      updateOvCam();
+    } else if(e.touches.length===2){
+      const d=tDist(e.touches); ovR=Math.max(5,Math.min(42,ovR*(pinch0/d))); pinch0=d; updateOvCam();
+    }
+  },{passive:true});
+  cv.addEventListener('touchend',e=>{ if(e.changedTouches.length&&G.mode==='ov'&&ts) { const t=e.changedTouches[0]; if(Math.abs(t.clientX-ts.x)<8&&Math.abs(t.clientY-ts.y)<8) rayCast(t.clientX,t.clientY); } ts=null; });
+
+}
+
+function tDist(touches){
+  const dx=touches[0].clientX-touches[1].clientX, dy=touches[0].clientY-touches[1].clientY;
+  return Math.sqrt(dx*dx+dy*dy);
+}
+
+function updateOvCam(){
+  ovCam.position.set(ovR*Math.sin(ovPhi)*Math.sin(ovTheta), ovR*Math.cos(ovPhi), ovR*Math.sin(ovPhi)*Math.cos(ovTheta));
+  ovCam.lookAt(0,0,0);
+}
+
+// ── JOYSTICK ──
+
+// ── LOOK PAD ──
+
+// ── RAYCAST ──
+function rayCast(mx,my){
+  const raycaster=new THREE.Raycaster();
+  const mouse=new THREE.Vector2((mx/innerWidth)*2-1,-(my/innerHeight)*2+1);
+  raycaster.setFromCamera(mouse,camera);
+  const hits=raycaster.intersectObjects(scene.children,true);
+  for(const h of hits){
+    const itype=h.object.userData.interactable||(h.object.parent&&h.object.parent.userData.interactable);
+    if(itype){ handleInteract(itype,h.object.userData.chickenId||(h.object.parent&&h.object.parent.userData.chickenId)); return; }
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  INTERACTION
+// ═══════════════════════════════════════════════════════
+
+function handleInteract(type, cid){
+  sfxBtn();
+  if(type==='chicken'&&cid){ showChickenModal(G.chickens.find(c=>c.id===cid)); }
+  else if(type==='feeder'){ showFeederModal(); }
+  else if(type==='waterer'){ showWatererModal(); }
+  else if(type==='coop'){ showCoopModal(); }
+  else if(type==='nest'){ collectEggs(); }
+  else if(type==='predator'){ startChasePredator(); }
+}
+
+// ── MODALS ──
+function showModal(title,body,actions){
+  document.getElementById('mtitle').textContent=title;
+  document.getElementById('mbody').innerHTML=body;
+  document.getElementById('mactions').innerHTML=actions.map(a=>`<button class="btn ${a.cls||'bsecondary'}" onclick="sfxBtn();${a.fn}">${a.label}</button>`).join('');
+  document.getElementById('moverlay').classList.remove('off');
+}
+function closeModal(){ document.getElementById('moverlay').classList.add('off'); }
+
+function sbar(label,val,col){
+  return `<div class="statblock"><div class="statlabel">${label}</div><div class="statbar"><div class="statfill" style="width:${val}%;background:${col}"></div></div><div class="statval" style="color:${col}">${Math.round(val)}%</div></div>`;
+}
+
+function showChickenModal(c){
+  if(!c) return;
+  const hc=c.health>70?'#4caf50':c.health>40?'#ff9800':'#f44336';
+  const status=c.isSick?`🤒 Sick (${c.sickType})`:c.isMolting?'🪶 Molting':c.isBroody?'🪺 Broody':c.isRooster?'🐓 Rooster':'✅ Healthy';
+  const body=`
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+      <span style="font-size:44px">${c.bdata.emoji}</span>
+      <div>
+        <div style="font-family:'Fredoka One',cursive;font-size:18px;color:var(--gold)">${c.name}</div>
+        <div style="font-size:11px;color:var(--textmuted)">${c.breed}</div>
+        <div style="font-size:11px;color:#80cbc4">${c.pdata.emoji} ${c.persona}</div>
+      </div>
+    </div>
+    <div class="statrow">
+      ${sbar('❤️ Health',c.health,hc)}${sbar('🍗 Hunger',c.hunger,'#ff9800')}
+      ${sbar('💧 Thirst',c.thirst,'#2196f3')}${sbar('😊 Happy',c.happiness,'#e91e63')}
+    </div>
+    <div style="font-size:12.5px;color:var(--textmuted);line-height:1.75">
+      <div><b style="color:var(--textmain)">Age:</b> ${c.age} weeks</div>
+      <div><b style="color:var(--textmain)">Egg color:</b> ${c.bdata.eggCol}</div>
+      <div><b style="color:var(--textmain)">Total eggs:</b> ${c.totalEggs}</div>
+      <div><b style="color:var(--textmain)">Status:</b> ${status}</div>
+      <div><b style="color:var(--textmain)">Personality:</b> ${c.pdata.desc}</div>
+    </div>
+    ${c.isSick?`<div class="warnbox" style="margin-top:10px">⚠️ Needs treatment! Buy medicine from the Market.</div>`:''}
+    ${c.isBroody?`<div class="warnbox" style="margin-top:10px">She's broody — no eggs until broken. Break it from this menu.</div>`:''}
+  `;
+  const acts=[{label:'Close',cls:'boutline',fn:'closeModal()'}];
+  if(c.isSick) acts.unshift({label:'💊 Treat',cls:'bsecondary',fn:`treatHen('${c.id}')`});
+  if(c.isBroody) acts.unshift({label:'🪺 Break Broody',cls:'bprimary',fn:`breakBroody('${c.id}')`});
+  acts.unshift({label:'✏️ Rename',cls:'boutline',fn:`renameHen('${c.id}')`});
+  showModal(c.name,body,acts);
+}
+
+function renameHen(id){
+  closeModal();
+  const c=G.chickens.find(x=>x.id===id);
+  if(!c) return;
+  showModal('✏️ Rename '+c.name,`
+    <p style="font-size:13px;color:var(--textmuted);margin-bottom:12px">Enter a new short name (max 10 chars):</p>
+    <input id="renameInput" class="nameinput" maxlength="10" value="${c.name}" style="width:100%;padding:10px 14px;font-size:16px">
+  `,[
+    {label:'Save Name',cls:'bprimary',fn:`doRename('${id}')`},
+    {label:'Cancel',cls:'boutline',fn:'closeModal()'},
+  ]);
+  setTimeout(()=>document.getElementById('renameInput')&&document.getElementById('renameInput').focus(),100);
+}
+
+function doRename(id){
+  const inp=document.getElementById('renameInput');
+  const c=G.chickens.find(x=>x.id===id);
+  if(c&&inp&&inp.value.trim()){ c.name=inp.value.trim().slice(0,10); rebuildMesh(c); notify(`✏️ Renamed to ${c.name}!`,'good'); }
+  closeModal(); updateFlockPanel(); save();
+}
+
+function showFeederModal(){
+  const pct=Math.min(100,(G.inv.feed/50)*100);
+  showModal('🌾 Feeder',`
+    <div style="text-align:center;font-size:46px;margin-bottom:12px">🌾</div>
+    <div style="margin-bottom:11px"><div style="font-size:11.5px;color:var(--textmuted);margin-bottom:5px">Feed: ${G.inv.feed.toFixed(1)}lb</div>
+    <div style="background:rgba(255,255,255,.08);border-radius:6px;overflow:hidden;height:11px"><div style="width:${pct}%;height:100%;background:#ff9800;border-radius:6px"></div></div></div>
+    <p style="font-size:12.5px;color:var(--textmuted)">${G.chickens.filter(c=>c.alive).length} hens eat ~${(G.chickens.filter(c=>c.alive).length*0.25).toFixed(1)}lb/day total.</p>
+    <p style="font-size:11.5px;color:var(--textmuted);margin-top:7px">💡 Real tip: Always keep layer pellets available free-choice. Running out of feed for even one day hurts egg production and health.</p>
+    ${G.inv.feed<5?'<div class="warnbox">⚠️ Feed critically low! Buy more now.</div>':''}
+  `,[
+    {label:'Buy Feed ($20/50lb)',cls:'bprimary',fn:"buyItem('feed_bag')"},
+    {label:'Buy Premium ($32/50lb)',cls:'bsecondary',fn:"buyItem('feed_prem')"},
+    {label:'Close',cls:'boutline',fn:'closeModal()'},
+  ]);
+}
+
+function showWatererModal(){
+  showModal('💧 Waterer',`
+    <div style="text-align:center;font-size:46px;margin-bottom:12px">💧</div>
+    <div style="font-size:13.5px;margin-bottom:10px;color:${G.waterFilled?'#4caf50':'#f44336'}">${G.waterFilled?'✅ Water is fresh':'❌ Needs refilling!'}</div>
+    <p style="font-size:12.5px;color:var(--textmuted)">Each hen drinks ~2 cups/day. Fresh, clean water is the single biggest factor in egg production quality.</p>
+    <p style="font-size:11.5px;color:var(--textmuted);margin-top:7px">☀️ Summer: Add ice cubes. ❄️ Winter: Check twice daily for freezing.</p>
+    ${G.season===3&&!G.inv.heatLamp?'<div class="warnbox">❄️ Winter! Without a heat lamp, water may freeze overnight.</div>':''}
+  `,[
+    {label:'🚿 Refill Water',cls:'bprimary',fn:'refillWater()'},
+    {label:'Close',cls:'boutline',fn:'closeModal()'},
+  ]);
+}
+
+function showCoopModal(){
+  const dusk=G.hour>=18;
+  showModal('🏠 Coop',`
+    <div style="text-align:center;font-size:46px;margin-bottom:12px">${G.coopLocked?'🔒':'🚪'}</div>
+    <div style="font-size:13.5px;margin-bottom:10px;color:${G.coopLocked?'#4caf50':'#f44336'}">Coop: ${G.coopLocked?'🔒 LOCKED (safe!)':'🔓 OPEN'}</div>
+    <p style="font-size:12.5px;color:var(--textmuted)">Lock every night at dusk. Chickens naturally return to roost at dusk — your job is just locking the door.</p>
+    ${dusk&&!G.coopLocked?'<div class="warnbox">🌙 Getting dark! Lock now to prevent predator attacks!</div>':''}
+    <p style="font-size:11.5px;color:var(--textmuted);margin-top:7px">💡 Real tip: Use a predator-proof bolt latch. Raccoons can open simple hooks.</p>
+  `,[
+    {label:G.coopLocked?'🔓 Open Coop':'🔒 Lock Coop',cls:'bprimary',fn:'toggleCoop()'},
+    {label:'Close',cls:'boutline',fn:'closeModal()'},
+  ]);
+}
+
+function toggleCoop(){
+  G.coopLocked=!G.coopLocked;
+  updateCoopDoorVisual();
+  notify(G.coopLocked?'🔒 Coop locked! Flock is safe.':'🔓 Coop opened for the day.',G.coopLocked?'good':'');
+  closeModal(); save();
+}
+
+function refillWater(){
+  G.waterFilled=true;
+  sfxWater();
+  G.chickens.filter(c=>c.alive).forEach(c=>{ c.thirst=Math.min(100,c.thirst+25); });
+  vfx('💧',window.innerWidth/2,window.innerHeight/2);
+  notify('💧 Water refilled! Hens are happy.','good');
+  closeModal(); updateHUD(); save();
+}
+
+function treatHen(id){
+  const c=G.chickens.find(x=>x.id===id);
+  if(!c||!c.isSick){ notify('Hen seems fine!','good'); return closeModal(); }
+  const mk=c.sickType==='respiratory'?'medResp':c.sickType==='mites'?'medMites':'medBumble';
+  if(G.inv[mk]>0){
+    G.inv[mk]--;
+    c.isSick=false; c.sickType=null; c.daysSick=0; c.health=Math.min(100,c.health+22);
+    rebuildMesh(c);
+    vfxAtChicken(c,'💊');
+    notify(`💊 ${c.name} treated and recovering!`,'good');
+  } else {
+    const names={medResp:'VetRx Respiratory',medMites:'Mite & Lice Spray',medBumble:'Bumblefoot Kit'};
+    notify(`Need ${names[mk]} from the Market!`,'urg');
+  }
+  closeModal(); updateFlockPanel(); save();
+}
+
+function breakBroody(id){
+  const c=G.chickens.find(x=>x.id===id);
+  if(!c) return;
+  c.isBroody=false; c.stress+=18;
+  notify(`🪺 ${c.name} removed from nest box. She'll lay again soon!`,'good');
+  closeModal(); updateFlockPanel(); save();
+}
+
+// ── COLLECT EGGS ──
+function collectEggs(){
+  const layers=G.chickens.filter(c=>c.alive&&!c.isMolting&&!c.isBroody&&!c.isSick);
+  if(!layers.length){ notify('No eggs right now. Check back later!'); return; }
+  const n=Math.floor(layers.length*.75+Math.random()*layers.length*.25);
+  if(n<=0){ notify('Nesting boxes are empty.'); return; }
+  G.inv.eggs+=n;
+  if(G.hasRooster) G.inv.fertEggs+=Math.floor(n*.28);
+  sfxEgg();
+  vfx('🥚',window.innerWidth*.4,window.innerHeight*.6);
+  notify(`🥚 Collected ${n} egg${n!==1?'s':''}!`,'good');
+  layers.forEach(c=>c.totalEggs++);
+  updateInvGrid(); updateHUD(); save();
+}
+
+// ── BUYING ──
+const ITEMS=[
+  {id:'feed_bag',n:'Layer Feed 50lb',ico:'🌾',p:20,desc:'Standard 16% protein layer feed'},
+  {id:'feed_prem',n:'Premium Feed 50lb',ico:'🌿',p:32,desc:'Organic soy-free — customers notice the egg quality!'},
+  {id:'grit',n:'Chicken Grit 5lb',ico:'🪨',p:8,desc:'Essential for digestion'},
+  {id:'oyster',n:'Oyster Shell 5lb',ico:'🐚',p:7,desc:'Calcium for strong shells'},
+  {id:'bedding',n:'Pine Shavings',ico:'🌲',p:12,desc:'Coop bedding — change weekly'},
+  {id:'waterer',n:'Gallon Waterer',ico:'💧',p:15,desc:'Larger water capacity'},
+  {id:'heatLamp',n:'Heat Lamp',ico:'💡',p:25,desc:'Prevent frozen water and frostbite in winter'},
+  {id:'nestBox',n:'Nesting Box',ico:'🪺',p:30,desc:'Needed for 4+ hens'},
+  {id:'medResp',n:'VetRx Respiratory',ico:'💊',p:16,desc:'Treat wheezing and nasal discharge'},
+  {id:'medMites',n:'Mite & Lice Spray',ico:'🧴',p:13,desc:'External parasite treatment'},
+  {id:'medBumble',n:'Bumblefoot Kit',ico:'🩹',p:19,desc:'Treat foot pad infections'},
+  {id:'new_hen',n:'Buy a Hen',ico:'🐔',p:28,desc:'Add a new laying hen (must name her!)'},
+  {id:'rooster',n:'Buy a Rooster',ico:'🐓',p:38,desc:'Fertilized eggs + chick hatching (neighbor drama included)'},
+];
+
+function buyItem(id){
+  sfxBtn();
+  const item=ITEMS.find(i=>i.id===id);
+  if(!item) return closeModal();
+  if(G.money<item.p){ sfxBad(); notify(`Not enough money! Need $${item.p}`,'urg'); return; }
+  G.money-=item.p;
+  sfxCoin();
+  vfx('💰',window.innerWidth/2,window.innerHeight/2);
+
+  if(id==='feed_bag'){ G.inv.feed+=50; notify('🌾 50lb layer feed added!','good'); }
+  else if(id==='feed_prem'){ G.inv.feed+=50; notify('🌿 Premium feed added! Egg quality will improve.','good'); G.chickens.filter(c=>c.alive).forEach(c=>c.qualityFed=Math.min(1,c.qualityFed+.15)); }
+  else if(id==='grit'){ G.inv.grit+=5; notify('🪨 Grit added!','good'); }
+  else if(id==='oyster'){ G.inv.oyster+=5; notify('🐚 Oyster shell added!','good'); }
+  else if(id==='bedding'){ G.inv.bedding+=1; notify('🌲 Bedding added!','good'); }
+  else if(id==='waterer'){ G.inv.waterer++; notify('💧 New waterer installed!','good'); }
+  else if(id==='heatLamp'){ G.inv.heatLamp++; notify('💡 Heat lamp ready for winter!','good'); }
+  else if(id==='nestBox'){ G.inv.nestBox++; notify('🪺 Nesting box added!','good'); }
+  else if(id==='medResp'){ G.inv.medResp++; notify('💊 Respiratory medicine stocked!','good'); }
+  else if(id==='medMites'){ G.inv.medMites++; notify('🧴 Mite spray stocked!','good'); }
+  else if(id==='medBumble'){ G.inv.medBumble++; notify('🩹 Bumblefoot kit stocked!','good'); }
+  else if(id==='new_hen'){ closeModal(); askHenName(); return; }
+  else if(id==='rooster'){ closeModal(); addRooster(); return; }
+
+  closeModal(); updateHUD(); updateInvGrid(); updateStoreGrid(); save();
+}
+
+function askHenName(){
+  showModal('🐔 Name Your New Hen',`
+    <p style="font-size:13px;color:var(--textmuted);margin-bottom:12px">Give her a short name (max 10 chars):</p>
+    <input id="newHenName" class="nameinput" maxlength="10" placeholder="e.g. Mabel, Dot..." style="width:100%;padding:10px 14px;font-size:16px">
+  `,[
+    {label:'Add Her!',cls:'bprimary',fn:`addNewHen(document.getElementById('newHenName').value||'Hen'+(G.chickens.length+1))`},
+    {label:'Cancel',cls:'boutline',fn:'closeModal()'},
+  ]);
+  setTimeout(()=>document.getElementById('newHenName')&&document.getElementById('newHenName').focus(),100);
+}
+
+function addNewHen(name){
+  const c=makeChicken(G.chickens.length, name.trim().slice(0,10)||'Hen'+(G.chickens.length+1));
+  c.age=18+Math.floor(Math.random()*8); c.lastLay=G.day;
+  G.chickens.push(c);
+  const m=buildChickenMesh(c); chickenMeshes.push(m);
+  sfxCluck();
+  notify(`🐔 ${c.name} (${c.breed}) joined your flock! Quarantine new hens for 2 weeks in real life.`,'good');
+  if(G.chickens.filter(x=>x.alive&&x.pdata.trait==='bully').length>0){
+    setTimeout(()=>notify(`😤 ${G.chickens.find(x=>x.alive&&x.pdata.trait==='bully').name} is pecking at the newcomer. Normal pecking order behavior!`),2500);
+  }
+  closeModal(); updateFlockPanel(); updateHUD(); updateYardGrid(); save();
+}
+
+function addRooster(){
+  const c=makeChicken(G.chickens.length,'Colonel');
+  c.name=['Colonel','Rex','Duke','Bruno','Harold'][Math.floor(Math.random()*5)];
+  c.isRooster=true; G.hasRooster=true;
+  G.chickens.push(c);
+  const m=buildChickenMesh(c); chickenMeshes.push(m);
+  sfxCrow();
+  notify(`🐓 ${c.name} the rooster joined! Hens will lay fertilized eggs.`,'good');
+  setTimeout(()=>notify('📢 Neighbors can hear your rooster crowing at dawn. Complaints may come!','urg'),3000);
+  updateFlockPanel(); updateHUD(); save();
+}
+
+// ── SELL EGGS ──
+function sellAllEggs(){
+  sfxBtn();
+  if(!G.inv.eggs){ notify('No eggs to sell!'); return; }
+  // Quality based on feed and care
+  const avgQ=G.chickens.filter(c=>c.alive).reduce((a,c)=>a+c.qualityFed,0)/Math.max(1,G.chickens.filter(c=>c.alive).length);
+  const pricePerDoz=(5.5+avgQ*2.5+Math.random())*(G.customers.length>5?1.1:1);
+  const earned=(G.inv.eggs/12)*pricePerDoz;
+  G.money+=earned;
+  sfxCoin();
+  vfx('💰',window.innerWidth/2,window.innerHeight/2);
+  notify(`🥚 Sold ${G.inv.eggs} eggs for $${earned.toFixed(2)} ($${pricePerDoz.toFixed(1)}/doz)${avgQ>1.3?' — Premium quality bonus!':''}`,'good');
+  G.inv.eggs=0;
+  updateCustomerAfterSale(earned, avgQ);
+  updateHUD(); updateInvGrid(); save();
+}
+
+function sellFertilized(){
+  sfxBtn();
+  if(!G.inv.fertEggs){ notify('No fertilized eggs!'); return; }
+  const earned=G.inv.fertEggs*2.8;
+  G.money+=earned; sfxCoin();
+  notify(`⭐ Sold ${G.inv.fertEggs} fertilized eggs for $${earned.toFixed(2)} (hatching egg premium!)`,'good');
+  G.inv.fertEggs=0;
+  updateHUD(); updateInvGrid(); save();
+}
+
+function updateCustomerAfterSale(amount, quality){
+  G.customers.filter(c=>c.pending).forEach(c=>{
+    c.pending=false; c.lastOrder=G.day; c.totalBought++;
+    c.happiness=Math.min(100,c.happiness+(quality>1.3?15:quality>1?8:2));
+    c.stars=Math.round(Math.min(5,Math.max(1,quality*2+Math.random())));
+    const reviews={5:['These eggs are AMAZING!','Best eggs in the neighborhood!','My family loves them, keep it up!'],
+      4:['Really good eggs, fresh!','Very happy with quality.','Will keep ordering!'],
+      3:['Decent eggs, could be better.','Ok quality.','Inconsistent freshness.'],
+      2:['Not very fresh…','Quality has slipped.','Need improvement.'],
+      1:['Very disappointed.','Eggs are poor quality.','Not ordering again soon.']};
+    const rev=reviews[c.stars]; c.review=rev[Math.floor(Math.random()*rev.length)];
+    if(c.happiness<40){ notify(`😞 ${c.name} is unhappy — risk of losing them as a customer!`,'urg'); }
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+//  PREDATOR SYSTEM
+// ═══════════════════════════════════════════════════════
+function triggerPredator(type){
+  if(G.predatorActive) return;
+  G.predatorActive=true; G.predatorType=type; G.predatorChased=false;
+  const icons={fox:'🦊',raccoon:'🦝',hawk:'🦅',snake:'🐍'};
+  const msgs={fox:'A fox slipped into your yard!',raccoon:'A raccoon is after your hens!',hawk:'A hawk is diving for your flock!',snake:'A snake is near the coop!'};
+  document.getElementById('predicon').textContent=icons[type]||'🦊';
+  document.getElementById('predtitle').textContent='PREDATOR ATTACK!';
+  document.getElementById('predmsg').textContent=msgs[type]||msgs.fox;
+  document.getElementById('predalert').classList.remove('off');
+  sfxPredator(); sfxAlert();
+  spawnPredatorMesh(type);
+  // Close alert after 3s so user can tap the predator in the yard
+  setTimeout(()=>document.getElementById('predalert').classList.add('off'), 3000);
+  // Auto-resolve after 30s if ignored
+  setTimeout(()=>{ if(G.predatorActive&&!G.predatorChased) dismissPredator(false); },30000);
+}
+
+function enterChaseMode(){
+  sfxBtn();
+  document.getElementById('predalert').classList.add('off');
+}
+
+function startChasePredator(){
+  if(!G.predatorActive) return;
+  dismissPredator(true);
+}
+
+function dismissPredator(chased){
+  G.predatorActive=false;
+  document.getElementById('predalert').classList.add('off');
+  if(chased){
+    G.predatorChased=true;
+    removePredatorMesh();
+    sfxCoin();
+    vfx('🏃',window.innerWidth/2,window.innerHeight/2);
+    notify('✅ Predator chased away! Lock the coop to prevent future attacks.','good');
+    // Give reward for chasing
+    G.chickens.filter(c=>c.alive).forEach(c=>c.stress=Math.max(c.stress-5,0));
+  } else {
+    // Predator wins — random hen hurt or killed
+    const alive=G.chickens.filter(c=>c.alive);
+    if(alive.length){
+      const v=alive[Math.floor(Math.random()*alive.length)];
+      if(Math.random()<.6){
+        v.alive=false;
+        sfxBad();
+        notify(`💀 ${v.name} was killed by the ${G.predatorType}. Always lock the coop!`,'urg');
+        if(v.mesh){ scene.remove(v.mesh); chickenMeshes=chickenMeshes.filter(m=>m!==v.mesh); }
+        checkGameOver();
+      } else {
+        v.health=Math.max(10,v.health-40); v.stress=Math.min(100,v.stress+40);
+        notify(`⚠️ ${v.name} was injured by the ${G.predatorType}! Treat her quickly.`,'urg');
+      }
+    }
+    removePredatorMesh();
+    updateFlockPanel();
+  }
+  save();
+}
+
+// ═══════════════════════════════════════════════════════
+//  MODE SWITCHING
+// ═══════════════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════
+//  GAME TICK
+// ═══════════════════════════════════════════════════════
+function gameTick(){
+  if(!gameRunning) return;
+  requestAnimationFrame(gameTick);
+  const now=Date.now();
+  const dt=(now-lastT)/1000; lastT=now;
+
+  // Advance game time
+  const prevHourInt = Math.floor(G.hour);
+  G.hour+=dt*GAME_SPEED*24;
+  if(G.hour>=24){ G.hour-=24; onNewDay(); }
+  G.season=Math.floor(G.day/28)%4;
+  // Switch music track when crossing dawn/dusk boundary
+  if(Math.floor(G.hour)!==prevHourInt) updateMusicTrack();
+
+  // Predator mesh movement
+  if(predatorMesh&&G.predatorActive){
+    const target=G.chickens.find(c=>c.alive);
+    if(target){
+      const dx=target.pos.x-predatorMesh.position.x, dz=target.pos.z-predatorMesh.position.z;
+      const dist=Math.sqrt(dx*dx+dz*dz);
+      if(dist>0.5){ predatorMesh.position.x+=dx/dist*2*dt; predatorMesh.position.z+=dz/dist*2*dt; }
+      predatorMesh.rotation.y=Math.atan2(dx,dz);
+    }
+  }
+
+  slowAcc+=dt;
+  if(slowAcc>8){ slowAcc=0; slowTick(); }
+
+  updateSkyLighting();
+  animChickens(dt);
+  animCoopDoor(dt);
+  updateNameLabels();
+
+  // Rooster crow at dawn
+  if(Math.floor(G.hour)===5&&G.hasRooster&&!G._crowed){
+    sfxCrow(); G._crowed=true;
+    if(G.hasRooster&&Math.random()<.2) notify('📢 Your rooster crowed at dawn. Neighbor woke up!','urg');
+  }
+  if(Math.floor(G.hour)===6) G._crowed=false;
+
+  // Morning greeting
+  if(Math.floor(G.hour)===7&&!G.morningRun){
+    G.morningRun=true;
+  }
+  if(Math.floor(G.hour)===8) G.morningRun=false;
+
+  updateHUD();
+  renderer.render(scene,camera);
+}
+
+function triggerMorningRun(){
+  // All living chickens run toward player
+  G.chickens.filter(c=>c.alive).forEach(c=>{
+    c.state='approach';
+    c.stateCd=8; // 8 seconds of approach
+    c.runAtPlayer=true;
+    c.runTimer=8;
+  });
+  notify('🐔 Your hens spotted you and come running! They remember you feed them.','good');
+  sfxCluck();
+}
+
+// ─── SLOW TICK ───
+function slowTick(){
+  const alive=G.chickens.filter(c=>c.alive);
+
+  alive.forEach(c=>{
+    // Feed / thirst
+    if(G.inv.feed>0){ c.hunger=Math.min(100,c.hunger+6); G.inv.feed=Math.max(0,G.inv.feed-.03); }
+    else { c.hunger=Math.max(0,c.hunger-9); c.health=Math.max(0,c.health-2); }
+    if(G.waterFilled){ c.thirst=Math.min(100,c.thirst+9); }
+    else { c.thirst=Math.max(0,c.thirst-11); if(c.thirst<30) c.health=Math.max(0,c.health-3); }
+
+    // Happiness
+    const happy=(c.hunger+c.thirst+c.health)/3-c.stress*.3;
+    c.happiness=Math.max(0,Math.min(100,happy));
+
+    // Stress
+    if(c.hunger<40||c.thirst<40) c.stress=Math.min(100,c.stress+4);
+    else c.stress=Math.max(3,c.stress-2);
+
+    // Sick progression
+    if(c.isSick){ c.health=Math.max(0,c.health-3); c.daysSick++; }
+
+    // Respiratory spread
+    if(c.isSick&&c.sickType==='respiratory'){
+      alive.filter(o=>o.id!==c.id&&!o.isSick&&Math.random()<.02).forEach(o=>{
+        o.isSick=true; o.sickType='respiratory'; rebuildMesh(o);
+        notify(`😷 ${o.name} caught the respiratory illness from ${c.name}!`,'urg');
+      });
+    }
+
+    // Death
+    if(c.health<=0||(c.isSick&&c.daysSick>8&&Math.random()<.3)){
+      c.alive=false;
+      if(c.mesh){ scene.remove(c.mesh); chickenMeshes=chickenMeshes.filter(m=>m!==c.mesh); c.mesh=null; }
+      sfxBad();
+      notify(`💀 ${c.name} has passed. Investigate cause — disease? Neglect? Predator?`,'urg');
+      checkGameOver();
+    }
+  });
+
+  // Water auto-empties — faster in summer, freezes in winter
+  if(G.waterFilled&&Math.random()<(G.season===1?.016:.008)) G.waterFilled=false;
+  // Winter: water freezes without heat lamp at night
+  if(G.season===3&&G.waterFilled&&!G.inv.heatLamp&&!G.yardUpgrades.heater&&(G.hour<7||G.hour>=21)&&Math.random()<.04){
+    G.waterFilled=false;
+    notify('❄️ Water froze overnight! Refill it now — hens can\'t drink ice.','urg');
+  }
+  // Auto-waterer refills if owned (but not in freezing winter without heater)
+  if(!G.waterFilled&&G.yardUpgrades.autoWater&&!(G.season===3&&!G.inv.heatLamp&&!G.yardUpgrades.heater)){ G.waterFilled=true; }
+
+  // Winter frostbite warning for cold-sensitive breeds (no heat lamp at night)
+  if(G.season===3&&!G.inv.heatLamp&&!G.yardUpgrades.heater&&(G.hour<6||G.hour>=22)&&Math.random()<.015){
+    const coldSensitive=G.chickens.filter(c=>c.alive&&!c.bdata.cold);
+    if(coldSensitive.length){ notify(`🥶 ${coldSensitive[0].name} is shivering! Cold-sensitive breeds need a heat lamp in winter.`,'urg'); }
+  }
+  // Heat stress warning in summer (no water, midday)
+  if(G.season===1&&!G.waterFilled&&G.hour>=11&&G.hour<=16&&Math.random()<.02){
+    notify('🥵 Your hens are panting from heat stress! Refill water immediately — add ice if possible.','urg');
+    G.chickens.filter(c=>c.alive).forEach(c=>{ c.thirst=Math.max(0,c.thirst-10); c.stress=Math.min(100,c.stress+8); });
+  }
+
+  // Customer orders
+  G.customers.forEach(c=>{
+    if(G.day-c.lastOrder>=7&&!c.pending){
+      c.pending=true;
+      notify(`📦 ${c.name} wants their weekly egg order! Sell eggs to fill it.`);
+    }
+    if(c.pending&&G.day-c.lastOrder>14){ c.happiness=Math.max(0,c.happiness-20); notify(`😠 ${c.name} is upset — no eggs for 2 weeks!`,'urg'); }
+    if(c.happiness<20&&!c.lostAt){ c.lostAt=G.day; notify(`😢 ${c.name} stopped ordering due to poor service.`,'urg'); }
+  });
+
+  updateFlockPanel(); updateTaskList(); updateInvGrid();
+}
+
+// ─── NEW DAY ───
+function onNewDay(){
+  G.day++;
+  sfxCluck();
+
+  // Lay eggs
+  G.chickens.filter(c=>c.alive&&!c.isMolting&&!c.isBroody&&!c.isSick).forEach(c=>{
+    const seasonMod=[1,.88,.58,.48][G.season];
+    if(Math.random()<(c.bdata.epw/7)*seasonMod){
+      G.inv.eggs++; if(G.hasRooster) G.inv.fertEggs+=Math.random()<.28?1:0;
+      c.totalEggs++; c.lastLay=G.day; c.eggReady=false;
+      vfxAtChicken(c,'🥚');
+    }
+  });
+
+  // Molt (fall)
+  if(G.season===2){
+    G.chickens.filter(c=>c.alive&&!c.isMolting&&Math.random()<.04).forEach(c=>{
+      c.isMolting=true; notify(`🪶 ${c.name} is molting — no eggs for several weeks. Give extra protein!`);
+    });
+  }
+  G.chickens.filter(c=>c.isMolting&&Math.random()<.08).forEach(c=>{
+    c.isMolting=false; notify(`✨ ${c.name} finished molting! She'll lay again soon.`,'good');
+  });
+
+  // Broody (spring/summer)
+  if(G.season<2){
+    G.chickens.filter(c=>c.alive&&!c.isBroody&&c.pdata.trait==='broody'&&Math.random()<.03).forEach(c=>{
+      c.isBroody=true;
+      c.broodStart=G.day;
+      notify(`🪺 ${c.name} went broody! If you have fertilized eggs, she'll hatch a chick in 21 days. Or break it from the Flock panel.`,'urg');
+    });
+  }
+
+  // Hatching — broody hen + rooster = chick after 21 days
+  if(G.hasRooster){
+    G.chickens.filter(c=>c.alive&&c.isBroody&&c.broodStart&&(G.day-c.broodStart)>=21).forEach(c=>{
+      c.isBroody=false; c.broodStart=0;
+      const chick=makeChick(c);
+      G.chickens.push(chick);
+      const m=buildChickenMesh(chick); chickenMeshes.push(m);
+      sfxCluck();
+      vfxAtChicken(c,'🐣');
+      notify(`🐣 ${c.name} hatched a chick! A tiny yellow baby just joined the flock. She'll grow up in 21 days.`,'good');
+      updateFlockPanel(); updateHUD();
+    });
+  }
+
+  // Chick growth — update mesh scale each day, graduate to adult at 21 days
+  G.chickens.filter(c=>c.alive&&c.isChick).forEach(c=>{
+    if(c.mesh){
+      const growDays=Math.min(G.day-c.hatchDay,21);
+      const growScale=0.28+0.72*(growDays/21);
+      c.mesh.scale.setScalar(growScale);
+    }
+    if(G.day-c.hatchDay>=21){
+      // Graduated to adult!
+      c.isChick=false;
+      c.color=c.bdata.color;
+      c.age=21;
+      rebuildMesh(c);
+      notify(`🐔 ${c.name} is all grown up! She's now a laying hen.`,'good');
+    }
+  });
+
+  // Predator at night (coop unlocked)
+  if(!G.coopLocked&&(G.hour<5||G.hour>=20)&&Math.random()<.22){
+    const types=['fox','raccoon','hawk','snake'];
+    triggerPredator(types[Math.floor(Math.random()*types.length)]);
+  }
+
+  // Random events
+  if(Math.random()<.1) randomEvent();
+
+  // New customer occasionally
+  if(G.day%7===0&&G.customers.length<10&&Math.random()<.4){
+    generateCustomers(1);
+    notify(`👋 New customer: ${G.customers[G.customers.length-1].name} wants to buy your eggs!`,'good');
+  }
+
+  updateFlockPanel(); updateTaskList(); save();
+}
+
+function randomEvent(){
+  const evs=[
+    // Summer heat wave
+    ()=>{ if(G.season===1){ notify('☀️ Heat Wave! All hens panting — add ice to water immediately!','urg'); G.chickens.filter(c=>c.alive).forEach(c=>{ c.thirst=Math.max(0,c.thirst-28); c.stress=Math.min(100,c.stress+15); }); sfxAlert(); }},
+    // Summer: non-heat-tolerant breeds take damage
+    ()=>{ if(G.season===1){ const v=G.chickens.filter(c=>c.alive&&!c.bdata.heat)[0]; if(v){ v.health=Math.max(0,v.health-12); notify(`🥵 ${v.name} (${v.breed}) is struggling in the heat — this breed isn't heat-tolerant. Consider shade netting.`,'urg'); }}},
+    // Winter freeze alert
+    ()=>{ if(G.season===3&&!G.inv.heatLamp&&!G.yardUpgrades.heater){ notify('❄️ Hard Freeze overnight! Water is solid. Your hens are huddled in the coop. A heat lamp would prevent this.','urg'); G.waterFilled=false; G.chickens.filter(c=>c.alive).forEach(c=>{ c.thirst=Math.max(0,c.thirst-20); if(!c.bdata.cold) c.health=Math.max(0,c.health-8); }); sfxAlert(); }},
+    // Winter: cold-hardy breeds are fine, sensitive ones suffer
+    ()=>{ if(G.season===3){ const v=G.chickens.filter(c=>c.alive&&!c.bdata.cold)[0]; if(v){ notify(`🥶 ${v.name} has a frostbitten comb! Apply petroleum jelly to combs in freezing weather.`,'urg'); v.health=Math.max(0,v.health-10); rebuildMesh(v); }}},
+    // Fall wind + rain
+    ()=>{ if(G.season===2){ notify('🌧️ Fall rain — coop bedding got damp. Change bedding soon or respiratory illness can develop.','urg'); if(Math.random()<.3){ const v=G.chickens.filter(c=>c.alive)[0]; if(v){ v.isSick=true; v.sickType='respiratory'; rebuildMesh(v); notify(`😷 ${v.name} developed a respiratory infection from damp bedding!`,'urg'); }}}},
+    // Spring: extra foraging, productivity bonus
+    ()=>{ if(G.season===0){ G.chickens.filter(c=>c.alive).forEach(c=>{ c.happiness=Math.min(100,c.happiness+15); c.stress=Math.max(0,c.stress-10); }); notify('🌸 Beautiful spring day! Your hens are foraging happily. Spring = peak egg production.','good'); sfxCluck(); }},
+    // Spring: new growth, hens eating bugs
+    ()=>{ if(G.season===0){ const bonus=G.chickens.filter(c=>c.alive).length; G.inv.eggs+=bonus; notify(`🐛 Your hens found bugs in the spring soil! Bonus ${bonus} eggs from happy foragers.`,'good'); sfxEgg(); }},
+    // Generic illness
+    ()=>{ const v=G.chickens.filter(c=>c.alive&&!c.isSick)[0]; if(v){ const t=['respiratory','mites','bumblefoot'][Math.floor(Math.random()*3)]; v.isSick=true; v.sickType=t; rebuildMesh(v); sfxAlert(); const tips={respiratory:'Check for sneezing, discharge, labored breathing.',mites:'Check under wings at night — mites hide in coop cracks by day.',bumblefoot:'Black scab on foot pad from rough ground.'}; notify(`🤒 ${v.name} is showing signs of ${t}! ${tips[t]}`,'urg'); }},
+    // Predator attempt even in daytime (hawk)
+    ()=>{ if(G.season!==3) notify('🦅 Hawk circling! Your hens ran for cover. A covered run prevents aerial attacks.','urg'); },
+    // Customer tip
+    ()=>{ if(G.customers.filter(c=>!c.lostAt).length>0){ const extra=5+Math.floor(Math.random()*18); G.money+=extra; sfxCoin(); notify(`🎁 ${G.customers[0].name} sent a $${extra} tip — they love your eggs!`,'good'); }},
+    // Escape artist
+    ()=>{ const e=G.chickens.find(c=>c.alive&&c.pdata.trait==='escape'); if(e) notify(`🚪 ${e.name} pushed through a gap in the fence again! Check fencing regularly in real life.`,'urg'); },
+  ];
+  evs[Math.floor(Math.random()*evs.length)]();
+}
+
+function checkGameOver(){
+  if(G.chickens.filter(c=>c.alive).length===0){
+    gameRunning=false;
+    document.getElementById('gomsg').textContent=`Your flock is gone on Day ${G.day}. In real life, these losses are heartbreaking — and mostly preventable. Daily water, food, and a locked coop each night saves lives.`;
+    document.getElementById('hud').classList.add('off');
+    document.getElementById('pausebtn').classList.remove('on');
+    document.getElementById('musicbtn').classList.remove('on');
+    localStorage.removeItem('bc_save');
+    showScreen('sgo');
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  SKY & LIGHTING + FULL SEASONAL VISUALS
+// ═══════════════════════════════════════════════════════
+function lerpHex(a,b,t){ return ((Math.round(((a>>16)&0xff)+((((b>>16)&0xff)-((a>>16)&0xff))*t))<<16)|(Math.round(((a>>8)&0xff)+((((b>>8)&0xff)-((a>>8)&0xff))*t))<<8)|Math.round((a&0xff)+(((b&0xff)-(a&0xff))*t))); }
+
+// Season sky palettes: [dawn, day, dusk, night]
+const SEASON_SKY={
+  0:{ dawn:0xff9a6c, day:0x87ceeb, dusk:0xff6b35, night:0x080820, fog:0x87ceeb }, // Spring
+  1:{ dawn:0xffb347, day:0x5bb8f5, dusk:0xff8c42, night:0x0a0a28, fog:0x8cd4f5 }, // Summer - brighter blue
+  2:{ dawn:0xd4804a, day:0xb8c4a8, dusk:0xc0622a, night:0x0a0a18, fog:0xb0b898 }, // Fall - muted grey-green sky
+  3:{ dawn:0x7a8fa0, day:0xacc8d8, dusk:0x607080, night:0x050a12, fog:0xc8d8e0 }, // Winter - cold pale blue
+};
+// Ground colors per season
+const SEASON_GROUND={ 0:0x4a8a28, 1:0x3a8020, 2:0x7a6a30, 3:0xd8dce0 };
+// Foliage colors per season
+const SEASON_FOLIAGE={ 0:0x28a828, 1:0x1a9a1a, 2:0xd4621a, 3:0xc8ccc8 };
+
+let lastAppliedSeason=-1;
+let snowParticles=null, leafParticles=null;
+
+function updateSkyLighting(){
+  const h=G.hour, s=G.season;
+  const pal=SEASON_SKY[s];
+  let sky,ai,si,sc,fogCol;
+
+  if(h>=5&&h<8){ const t=(h-5)/3; sky=lerpHex(0x1a1a3e,pal.dawn,t); ai=.18+t*.38; si=.28+t*.72; sc=pal.dawn; }
+  else if(h>=8&&h<17){ sky=pal.day; ai=s===3?.45:.62; si=s===3?.85:1.22; sc=s===3?0xd0e8f8:0xffe8c0; }
+  else if(h>=17&&h<20){ const t=(h-17)/3; sky=lerpHex(pal.day,0x1a1a3e,t); ai=(s===3?.45:.62)-t*.44; si=(s===3?.85:1.22)-t*.88; sc=pal.dusk; }
+  else { sky=pal.night; ai=s===3?.08:.1; si=.05; sc=0x2244aa; }
+
+  scene.background=new THREE.Color(sky);
+  scene.fog.color=new THREE.Color(pal.fog);
+  // Tighten fog in winter/fall for atmosphere
+  scene.fog.far=s===3?45:s===2?55:85;
+  if(ambLight){ ambLight.intensity=ai; ambLight.color=new THREE.Color(s===3?0xc8d8f0:s===1?0xfff8e8:0xfff5e0); }
+  if(sunLight){ sunLight.intensity=si; sunLight.color=new THREE.Color(sc); const ang=(h/24)*Math.PI*2; sunLight.position.set(Math.cos(ang)*22,Math.abs(Math.sin(ang))*22+2,10); }
+
+  // Apply seasonal world changes when season changes
+  if(lastAppliedSeason!==s){ applySeasonToWorld(s); lastAppliedSeason=s; }
+
+  // Animate particles
+  animSeasonParticles();
+
+  const fi=scene.getObjectByName('findicator');
+  if(fi) fi.material.color.set(G.inv.feed>12?0x00cc00:G.inv.feed>0?0xff9800:0xff2222);
+  const wi=scene.getObjectByName('windicator');
+  if(wi) wi.material.color.set(G.waterFilled?0x00aaff:0xff3333);
+
+  // Frozen water visual in winter
+  if(wi&&s===3&&!G.waterFilled&&!G.inv.heatLamp){
+    wi.material.color.set(0x99ccff); // icy blue
+  }
+}
+
+function applySeasonToWorld(s){
+  // Ground color
+  const gc=SEASON_GROUND[s];
+  scene.traverse(obj=>{
+    if(obj.name==='ground'&&obj.material){ obj.material.color.set(gc); }
+    // Foliage spheres (trees)
+    if(obj.isMesh&&obj.geometry&&obj.geometry.type==='SphereGeometry'&&obj.position.y>1.5){
+      obj.material.color.set(SEASON_FOLIAGE[s]);
+      // Winter: trees look bare — scale down foliage
+      if(s===3) obj.scale.set(0.7,0.7,0.7);
+      else if(s===0) obj.scale.set(1.1,1.1,1.1); // Spring lush
+      else obj.scale.set(1,1,1);
+    }
+    // Coop roof - frost tint in winter
+    if(obj.isMesh&&obj.material&&obj.material.color){
+      const col=obj.material.color.getHex();
+      if(col===0x8b1010&&s===3) obj.material.color.set(0x7a8a9a);
+      if(col===0x7a8a9a&&s!==3) obj.material.color.set(0x8b1010);
+    }
+  });
+
+  // Remove old particles
+  if(snowParticles){ scene.remove(snowParticles); snowParticles=null; }
+  if(leafParticles){ scene.remove(leafParticles); leafParticles=null; }
+
+  if(s===3) spawnSnow();
+  if(s===2) spawnLeaves();
+
+  // Season transition notification (not on first load)
+  if(lastAppliedSeason>=0){
+    const msgs={
+      0:'🌸 Spring has arrived! Hens are energetic and laying more. Watch for broody hens!',
+      1:'☀️ Summer is here! Keep waterers full — heat stress is real. Watch for panting hens.',
+      2:'🍂 Fall is here. Hens may start molting and lay fewer eggs. Add extra protein to feed.',
+      3:'❄️ Winter has arrived! Hens need a heat lamp in the coop, extra feed, and unfrozen water daily.',
+    };
+    notify(msgs[s],'urg');
+    // Real-life tip
+    const tips={
+      0:'💡 Real tip: Spring is the best time to add new hens to your flock!',
+      1:'💡 Real tip: Freeze water in advance and add ice cubes to waterers on hot days.',
+      2:'💡 Real tip: High-protein treats like mealworms help hens regrow feathers faster during molt.',
+      3:'💡 Real tip: Don\'t heat the whole coop — just prevent drafts and freezing water.',
+    };
+    setTimeout(()=>notify(tips[s]),4000);
+    // Show big season banner
+    showSeasonBanner(s);
+  }
+}
+
+function spawnSnow(){
+  const count=220;
+  const geo=new THREE.BufferGeometry();
+  const pos=new Float32Array(count*3);
+  for(let i=0;i<count;i++){
+    pos[i*3]=(Math.random()-.5)*40;
+    pos[i*3+1]=Math.random()*18;
+    pos[i*3+2]=(Math.random()-.5)*30;
+  }
+  geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  const mat=new THREE.PointsMaterial({color:0xffffff,size:0.18,transparent:true,opacity:0.82});
+  snowParticles=new THREE.Points(geo,mat);
+  snowParticles.name='snow';
+  scene.add(snowParticles);
+}
+
+function spawnLeaves(){
+  const count=120;
+  const geo=new THREE.BufferGeometry();
+  const pos=new Float32Array(count*3);
+  const cols=new Float32Array(count*3);
+  const leafColors=[[0.85,0.35,0.05],[0.9,0.55,0.1],[0.75,0.2,0.05],[0.6,0.45,0.1]];
+  for(let i=0;i<count;i++){
+    pos[i*3]=(Math.random()-.5)*35; pos[i*3+1]=Math.random()*12+1; pos[i*3+2]=(Math.random()-.5)*25;
+    const lc=leafColors[Math.floor(Math.random()*leafColors.length)];
+    cols[i*3]=lc[0]; cols[i*3+1]=lc[1]; cols[i*3+2]=lc[2];
+  }
+  geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  geo.setAttribute('color',new THREE.BufferAttribute(cols,3));
+  const mat=new THREE.PointsMaterial({size:0.22,vertexColors:true,transparent:true,opacity:0.75});
+  leafParticles=new THREE.Points(geo,mat);
+  leafParticles.name='leaves';
+  scene.add(leafParticles);
+}
+
+function animSeasonParticles(){
+  const t=Date.now()*0.001;
+  if(snowParticles){
+    const pos=snowParticles.geometry.attributes.position.array;
+    for(let i=0;i<pos.length;i+=3){
+      pos[i+1]-=0.018; // fall down
+      pos[i]+=Math.sin(t+i)*.008; // drift
+      if(pos[i+1]<-0.5){ pos[i+1]=18; pos[i]=(Math.random()-.5)*40; pos[i+2]=(Math.random()-.5)*30; }
+    }
+    snowParticles.geometry.attributes.position.needsUpdate=true;
+  }
+  if(leafParticles){
+    const pos=leafParticles.geometry.attributes.position.array;
+    for(let i=0;i<pos.length;i+=3){
+      pos[i+1]-=0.012;
+      pos[i]+=Math.sin(t*0.7+i)*.015;
+      pos[i+2]+=Math.cos(t*0.5+i)*.01;
+      if(pos[i+1]<0){ pos[i+1]=12+Math.random()*4; pos[i]=(Math.random()-.5)*35; }
+    }
+    leafParticles.geometry.attributes.position.needsUpdate=true;
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  CHICKEN AI & ANIMATION — FULL SEASONAL BEHAVIOR
+// ═══════════════════════════════════════════════════════
+function animChickens(dt){
+  const s=G.season;
+  const isWinter=s===3;
+  const isSummer=s===1;
+  const isFall=s===2;
+  const nightTime=G.hour>=20||G.hour<5;
+  const coldNight=isWinter&&nightTime;
+
+  G.chickens.filter(c=>c.alive&&c.mesh).forEach(c=>{
+    c.stateCd-=dt;
+
+    // Morning run toward player (FP mode only)
+    if(c.runAtPlayer){
+      c.runTimer-=dt;
+      if(c.runTimer<=0){ c.runAtPlayer=false; c.state='wander'; c.stateCd=2+Math.random()*4; }
+      else {
+      const dx=fppos.x-c.pos.x, dz=fppos.z-c.pos.z;
+        const dist=Math.sqrt(dx*dx+dz*dz);
+        if(dist>1.5){ const spd=2.5; c.pos.x+=dx/dist*spd*dt; c.pos.z+=dz/dist*spd*dt; c.mesh.rotation.y=Math.atan2(dx,dz); }
+        else { c.mesh.rotation.y+=dt*3; }
+        c.mesh.position.set(c.pos.x,Math.sin(Date.now()*.007+c.bobOffset)*.06,c.pos.z);
+        return;
+      }
+    }
+
+    // ── SEASONAL STATE MACHINE ──
+    if(c.stateCd<=0){
+      const r=Math.random();
+
+      // WINTER: hens huddle near coop, move less, stay inside more
+      if(isWinter){
+        const hasHeater=G.inv.heatLamp>0||G.yardUpgrades.heater;
+        if(coldNight||(!hasHeater&&r<0.65)){
+          // Without heat lamp at night, hens cluster near coop
+          c.state='huddle';
+          c.stateCd=6+Math.random()*8;
+          // Huddle near coop entrance
+          c.target={x:-4.5+Math.random()*2-1, z:-5.5+Math.random()*2-1};
+        } else if(c.hunger<40&&G.inv.feed>0){ c.state='eat'; c.stateCd=5+Math.random()*4; c.target={x:3,z:0}; }
+        else if(c.thirst<40&&G.waterFilled){ c.state='drink'; c.stateCd=3+Math.random()*3; c.target={x:3,z:2.5}; }
+        else if(r<0.5){ c.state='huddle'; c.stateCd=5+Math.random()*6; c.target={x:-3+Math.random()*2, z:-3+Math.random()*2}; }
+        else { c.state='wander'; c.stateCd=3+Math.random()*4; c.target={x:(Math.random()-.5)*8, z:(Math.random()-.5)*6}; }
+
+      // SUMMER: hens seek shade, drink more often, pant in heat
+      } else if(isSummer){
+        if(c.thirst<50&&G.waterFilled){ c.state='drink'; c.stateCd=2+Math.random()*3; c.target={x:3,z:2.5}; }
+        else if(c.hunger<40&&G.inv.feed>0){ c.state='eat'; c.stateCd=4+Math.random()*3; c.target={x:3,z:0}; }
+        else if(G.hour>=11&&G.hour<=15&&r<0.55){
+          // Midday heat — seek shade near fence/trees
+          c.state='shade'; c.stateCd=6+Math.random()*8;
+          c.target={x:-12+(Math.random()*4), z:(Math.random()-.5)*6};
+        } else if(nightTime&&!G.coopLocked){ c.state='sleep'; c.stateCd=6; c.target={x:-5,z:-7}; } else if(nightTime&&G.coopLocked){ c.state='huddle'; c.stateCd=4; c.target={x:-3+Math.random()*2,z:-3+Math.random()*2}; }
+        else { c.state='wander'; c.stateCd=2+Math.random()*4; c.target={x:(Math.random()-.5)*14,z:(Math.random()-.5)*10}; }
+
+      // FALL: hens wander less, molt hens are lethargic
+      } else if(isFall){
+        if(c.isMolting&&r<0.5){ c.state='huddle'; c.stateCd=5+Math.random()*7; c.target={x:(Math.random()-.5)*6, z:(Math.random()-.5)*4}; }
+        else if(c.hunger<40&&G.inv.feed>0){ c.state='eat'; c.stateCd=5+Math.random()*4; c.target={x:3,z:0}; }
+        else if(c.thirst<40&&G.waterFilled){ c.state='drink'; c.stateCd=3+Math.random()*3; c.target={x:3,z:2.5}; }
+        else if(nightTime){ c.state='sleep'; c.stateCd=6; c.target={x:-5,z:-7}; }
+        else { c.state='wander'; c.stateCd=2.5+Math.random()*5; c.target={x:(Math.random()-.5)*12,z:(Math.random()-.5)*8}; }
+
+      // SPRING: most active, foraging constantly
+      } else {
+        if(c.hunger<40&&G.inv.feed>0){ c.state='eat'; c.stateCd=4+Math.random()*4; c.target={x:3,z:0}; }
+        else if(c.thirst<40&&G.waterFilled){ c.state='drink'; c.stateCd=3+Math.random()*3; c.target={x:3,z:2.5}; }
+        else if(nightTime){ c.state='sleep'; c.stateCd=6; c.target={x:-5,z:-7}; }
+        else if(c.isBroody){ c.state='brood'; c.stateCd=10; c.target={x:-4.2,z:-7.5}; }
+        else { c.state='wander'; c.stateCd=2+Math.random()*4; c.target={x:(Math.random()-.5)*14,z:(Math.random()-.5)*10}; }
+      }
+
+      // Sick chickens stay still regardless of season
+      if(c.isSick){ c.state='sick'; c.stateCd=5+Math.random()*5; c.target={x:c.pos.x,z:c.pos.z}; }
+    }
+
+    // ── MOVEMENT ──
+    const dx=(c.target?.x||0)-c.pos.x, dz=(c.target?.z||0)-c.pos.z;
+    const dist=Math.sqrt(dx*dx+dz*dz);
+    // Speed affected by season: slower in winter/molting/sick
+    let spd=c.state==='eat'||c.state==='drink'?1.6:0.95;
+    if(isWinter) spd*=0.6;
+    if(isFall&&c.isMolting) spd*=0.5;
+    if(c.isSick) spd=0.25;
+    if(c.state==='huddle') spd=0.7;
+    if(c.state==='shade') spd=1.0;
+
+    if(dist>0.25){ c.pos.x+=dx/dist*spd*dt; c.pos.z+=dz/dist*spd*dt; c.mesh.rotation.y=Math.atan2(dx,dz); }
+
+    // ── VISUALS: position, bob, scale ──
+    const isMoving=dist>0.5;
+    const bobSpd=c.isSick?.6:isMoving?5:1.8;
+    const bobAmt=c.isBroody?0:c.state==='sleep'?.003:c.state==='huddle'?.02:.06;
+    const bob=Math.sin(Date.now()*.001*bobSpd+c.bobOffset)*bobAmt;
+    let ty=bob;
+    if(c.state==='sleep') ty=-0.06;
+    if(c.isSick) ty-=.1;
+    if(c.state==='huddle'&&isWinter) ty-=0.04; // crouched in cold
+    c.mesh.position.set(c.pos.x,ty,c.pos.z);
+
+    // Winter puffed-up look — scale body up slightly
+    const bodyMesh=c.mesh.children[0];
+    if(bodyMesh){
+      if(isWinter&&!G.inv.heatLamp&&!G.yardUpgrades.heater){
+        bodyMesh.scale.set(1.15,1.15,1.15); // puffed feathers to stay warm
+      } else if(isSummer&&G.hour>=11&&G.hour<=16){
+        bodyMesh.scale.set(0.95,0.88,0.95); // heat stress — slight hunch
+      } else {
+        bodyMesh.scale.set(1,1,1);
+      }
+    }
+
+    // Head bob for eating/drinking
+    const head=c.mesh.children[1];
+    if(head){
+      if(c.state==='eat'&&dist<0.4){ head.position.y=.72+Math.sin(Date.now()*.006)*.15; }
+      else if(c.state==='drink'&&dist<0.4){ head.position.y=.72+Math.sin(Date.now()*.007)*.18; }
+      else if(c.state==='huddle'){ head.position.y=.62; } // head tucked
+      else head.position.y=.72;
+    }
+
+    // ── SEASONAL HEALTH DAMAGE ──
+    // Winter cold without heat lamp
+    if(isWinter&&nightTime&&!G.inv.heatLamp&&!G.yardUpgrades.heater){
+      // Cold-sensitive breeds take frostbite damage
+      if(!c.bdata.cold&&Math.random()<0.0002){
+        c.health=Math.max(0,c.health-1);
+        if(Math.random()<0.05) vfxAtChicken(c,'🥶');
+      }
+    }
+    // Summer heat stress
+    if(isSummer&&G.hour>=11&&G.hour<=16&&c.thirst<30){
+      c.health=Math.max(0,c.health-0.02);
+      if(Math.random()<0.001) vfxAtChicken(c,'🥵');
+    }
+
+    // ── OCCASIONAL SFXVFX ──
+    if(Math.random()<0.0005&&!c.isSick){ sfxCluck(); vfxAtChicken(c,'💬'); }
+    if(c.isRooster&&Math.random()<0.0002) sfxCrow();
+    if(c.state==='eat'&&dist<0.5&&Math.random()<0.001) vfxAtChicken(c,'🌾');
+    if(c.state==='drink'&&dist<0.5&&Math.random()<0.001) vfxAtChicken(c,'💧');
+    if(isWinter&&c.state==='huddle'&&Math.random()<0.0002) vfxAtChicken(c,'🥶');
+    if(isSummer&&c.state==='shade'&&Math.random()<0.0002) vfxAtChicken(c,'🥵');
+    if(isFall&&c.isMolting&&Math.random()<0.0003) vfxAtChicken(c,'🪶');
+    // Footstep sound while walking
+    if(isMoving&&dist>0.4&&Math.random()<0.006) sfxChickenStep();
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+//  NAME LABELS
+// ═══════════════════════════════════════════════════════
+function updateNameLabels(){
+  const el=document.getElementById('namelabels');
+  el.innerHTML='';
+  G.chickens.filter(c=>c.alive&&c.mesh).forEach(c=>{
+    const wp=c.mesh.position.clone(); wp.y+=1.8;
+    const s=worldToScreen(wp);
+    if(!s) return;
+    if(s.x<-50||s.x>innerWidth+50||s.y<-50||s.y>innerHeight+50) return;
+    const lbl=document.createElement('div');
+    lbl.className='nlabel';
+    lbl.style.left=s.x+'px'; lbl.style.top=s.y+'px';
+    lbl.textContent=c.name+(c.isSick?'🤒':c.isMolting?'🪶':c.isBroody?'🪺':c.state==='eat'?'🌾':c.state==='drink'?'💧':c.state==='sleep'?'😴':'');
+    el.appendChild(lbl);
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+//  3RD PERSON MOVEMENT
+// ═══════════════════════════════════════════════════════
+
+
+// ═══════════════════════════════════════════════════════
+//  UI UPDATES
+// ═══════════════════════════════════════════════════════
+function updateHUD(){
+  const alive=G.chickens.filter(c=>c.alive).length;
+  document.getElementById('hmoney').textContent='$'+G.money.toFixed(2);
+  document.getElementById('heggs').textContent=G.inv.eggs+(G.inv.fertEggs?` (+${G.inv.fertEggs}⭐)`:'');
+  document.getElementById('hfeed').textContent=G.inv.feed.toFixed(0)+'lb';
+  document.getElementById('hcusts').textContent=G.customers.filter(c=>!c.lostAt).length;
+  document.getElementById('hday').textContent=G.day;
+  const h=Math.floor(G.hour);
+  const tod=['Night','Pre-Dawn','Pre-Dawn','Pre-Dawn','Pre-Dawn','Dawn','Morning','Morning','Morning','Late Morning','Late Morning','Noon','Noon','Afternoon','Afternoon','Afternoon','Late Aft.','Evening','Evening','Dusk','Dusk','Night','Night','Night'];
+  document.getElementById('htime').textContent=`${h.toString().padStart(2,'0')}:${Math.floor((G.hour%1)*60).toString().padStart(2,'0')} ${tod[h]||'Night'}`;
+  document.getElementById('hseason').textContent=`${SEASONS[G.season][0]} ${SEASONS[G.season][1]}`;
+
+  const sick=G.chickens.filter(c=>c.alive&&c.isSick).length;
+  const fb=document.getElementById('bflock'); fb.style.display=sick>0?'':'none'; fb.textContent=sick;
+  const urg=urgentCount();
+  const tb=document.getElementById('btasks'); tb.style.display=urg>0?'':'none'; tb.textContent=urg;
+  const cp=G.customers.filter(c=>c.pending&&!c.lostAt).length;
+  const cb=document.getElementById('bcusts'); cb.style.display=cp>0?'':'none'; cb.textContent=cp;
+}
+
+function urgentCount(){
+  let n=0;
+  if(!G.waterFilled) n++;
+  if(G.inv.feed<5) n++;
+  if(!G.coopLocked&&G.hour>=18) n++;
+  if(G.inv.eggs>12) n++;
+  if(G.chickens.some(c=>c.alive&&c.isSick)) n++;
+  return n;
+}
+
+function updateAllUI(){ updateHUD(); updateFlockPanel(); updateTaskList(); updateStoreGrid(); updateInvGrid(); updateCustContent(); updateYardGrid(); updateLearnContent(); }
+
+function updateFlockPanel(){
+  const el=document.getElementById('flockList');
+  const alive=G.chickens.filter(c=>c.alive);
+  el.innerHTML=alive.map(c=>{
+    const hc=c.health>70?'#4caf50':c.health>40?'#ff9800':'#f44336';
+    const st=c.isSick?'🤒':c.isMolting?'🪶':c.isBroody?'🪺':c.isRooster?'🐓':c.state==='sleep'?'😴':c.state==='eat'?'🌾':c.state==='drink'?'💧':'';
+    return `<div class="crow" onclick="showChickenModal(G.chickens.find(x=>x.id==='${c.id}'))">
+      <div class="cemoji">${c.bdata.emoji}</div>
+      <div class="cinfo">
+        <div class="cname">${c.name} ${st}</div>
+        <div class="cdetail">${c.breed} · ${c.persona}</div>
+        <div class="cdetail">${c.isMolting?'Molting — no eggs':c.isBroody?'Broody — no eggs':c.isSick?`Sick: ${c.sickType}`:c.state==='eat'?'Eating...':c.state==='drink'?'Drinking...':c.state==='sleep'?'Roosting':'Free range'}</div>
+      </div>
+      <div class="hbwrap"><div style="font-size:9px;color:var(--textmuted)">Health</div><div class="hb"><div class="hbf" style="width:${c.health}%;background:${hc}"></div></div><div style="font-size:10px;color:${hc}">${Math.round(c.health)}%</div></div>
+      <div class="sdot" style="background:${c.isSick?'#f44336':c.isMolting||c.isBroody?'#ff9800':'#4caf50'}"></div>
+    </div>`;
+  }).join('')||'<div style="color:var(--textmuted);text-align:center;padding:20px">Add hens from the Market!</div>';
+}
+
+function updateTaskList(){
+  const el=document.getElementById('taskList');
+  const h=G.hour;
+  const tasks=[
+    {i:'💧',t:'Refill waterer',u:!G.waterFilled,d:G.waterFilled},
+    {i:'🌾',t:`Check feed (${G.inv.feed.toFixed(0)}lb)`,u:G.inv.feed<5,d:G.inv.feed>=20},
+    {i:'🔒',t:'Lock coop at dusk',u:h>=18&&!G.coopLocked,d:G.coopLocked},
+    {i:'🥚',t:`Collect eggs (${G.inv.eggs} ready)`,u:G.inv.eggs>10,d:G.inv.eggs===0},
+    {i:'❤️',t:'Check hen health',u:G.chickens.some(c=>c.alive&&c.isSick),d:!G.chickens.some(c=>c.alive&&(c.isSick||c.health<60))},
+    {i:'💰',t:`Fill customer orders (${G.customers.filter(c=>c.pending).length} pending)`,u:G.customers.some(c=>c.pending&&G.day-c.lastOrder>10),d:!G.customers.some(c=>c.pending)},
+    G.season===1?{i:'☀️',t:'Summer: Keep water ice-cold, watch for panting',u:!G.waterFilled,d:G.waterFilled}:null,
+    G.season===2?{i:'🪶',t:'Fall: Molting hens need extra protein (mealworms)',u:G.chickens.some(c=>c.alive&&c.isMolting),d:!G.chickens.some(c=>c.alive&&c.isMolting)}:null,
+    G.season===3?{i:'❄️',t:'Winter: Check for frozen water morning & night',u:!G.waterFilled,d:G.waterFilled}:null,
+    G.season===3?{i:'💡',t:'Winter: Heat lamp in coop prevents frostbite',u:!G.inv.heatLamp&&!G.yardUpgrades.heater,d:!!(G.inv.heatLamp||G.yardUpgrades.heater)}:null,
+    G.season===0?{i:'🌸',t:'Spring: Peak laying — collect eggs daily!',u:G.inv.eggs>8,d:G.inv.eggs===0}:null,
+  ].filter(Boolean);
+  el.innerHTML=tasks.map(t=>`<div class="titem ${t.u?'urg':''} ${t.d?'done':''}"><span class="tico">${t.i}</span><span class="ttxt">${t.t}</span><span class="tchk">${t.d?'✅':t.u?'🚨':'⬜'}</span></div>`).join('');
+}
+
+function updateStoreGrid(){
+  const el=document.getElementById('storeGrid');
+  el.innerHTML=ITEMS.map(item=>`
+    <div class="sitem ${G.money>=item.p?'':'noafford'}" onclick="${G.money>=item.p?`buyItem('${item.id}')`:''}" title="${G.money>=item.p?'':'Need $'+(item.p-G.money).toFixed(0)+' more'}">
+      <div class="sicon">${item.ico}</div>
+      <div class="sname">${item.n}</div>
+      <div class="sprice">$${item.p}</div>
+      <div class="sdesc">${item.desc}</div>
+    </div>
+  `).join('');
+}
+
+function updateInvGrid(){
+  const el=document.getElementById('invGrid');
+  const items=[
+    {ico:'🥚',n:'Eggs',q:G.inv.eggs,fn:"sellAllEggs()"},
+    {ico:'⭐🥚',n:'Fert. Eggs',q:G.inv.fertEggs,fn:"sellFertilized()"},
+    {ico:'🌾',n:'Feed',q:G.inv.feed.toFixed(0)+'lb'},
+    {ico:'🪨',n:'Grit',q:G.inv.grit+'lb'},
+    {ico:'🐚',n:'Oyster',q:G.inv.oyster+'lb'},
+    {ico:'🌲',n:'Bedding',q:G.inv.bedding+'bg'},
+    {ico:'💊',n:'Resp.Med',q:G.inv.medResp},
+    {ico:'🧴',n:'Mite Spr.',q:G.inv.medMites},
+    {ico:'🩹',n:'Bumble.',q:G.inv.medBumble},
+    {ico:'💡',n:'Heat Lamp',q:G.inv.heatLamp},
+    {ico:'💧',n:'Waterer',q:G.inv.waterer},
+    {ico:'🪺',n:'Nest Box',q:G.inv.nestBox},
+  ].filter(i=>i.q>0||i.n==='Feed'||i.n==='Eggs');
+  el.innerHTML=items.map(i=>`<div class="iitem" ${i.fn?`onclick="${i.fn}"`:''}><div class="iiicon">${i.ico}</div><div class="iiqty">${i.q}</div><div class="iiname">${i.n}</div></div>`).join('');
+}
+
+function updateCustContent(){
+  const el=document.getElementById('custContent');
+  const active=G.customers.filter(c=>!c.lostAt);
+  const lost=G.customers.filter(c=>c.lostAt);
+  el.innerHTML=`
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <div class="rchip">😊 ${active.length} active</div>
+      <div class="rchip">📦 ${active.filter(c=>c.pending).length} pending orders</div>
+    </div>
+    <p style="font-size:12px;color:var(--textmuted);margin-bottom:12px">Keep customers happy by selling eggs regularly. Feed your hens premium food for better egg quality = better reviews!</p>
+    ${active.map(c=>`
+      <div class="cfcard">
+        <div class="cfname">${c.name} ${c.pending?'📦 Wants eggs!':''}</div>
+        <div class="cfstars">${'⭐'.repeat(c.stars)}${'☆'.repeat(5-c.stars)}</div>
+        <div class="cfmsg">"${c.review||'New customer — no reviews yet.'}"</div>
+        <div style="font-size:10.5px;color:var(--textmuted);margin-top:5px">Happiness: ${c.happiness.toFixed(0)}% · Ordered ${c.totalBought}x</div>
+      </div>
+    `).join('')}
+    ${lost.length?`<div style="font-size:12px;color:#f44336;margin-top:10px">😢 Lost customers: ${lost.map(c=>c.name).join(', ')}</div>`:''}
+  `;
+}
+
+const YARD_UPGRADES=[
+  {id:'fence2',n:'Larger Fence',ico:'🏗️',p:120,desc:'Expand yard for up to 8 hens'},
+  {id:'fence3',n:'Big Yard',ico:'🏕️',p:250,desc:'Full backyard size — 15+ hens'},
+  {id:'coopUpg',n:'Coop Upgrade',ico:'🏠',p:180,desc:'Larger coop with 6 nest boxes'},
+  {id:'coveredRun',n:'Covered Run',ico:'🦺',p:200,desc:'Protects from hawks and weather'},
+  {id:'heater',n:'Coop Heater',ico:'🔥',p:95,desc:'Heated coop for winter (saves heat lamp cost)'},
+  {id:'autoWater',n:'Auto Waterer',ico:'🚿',p:160,desc:'Auto-fills water — one less daily task!'},
+];
+
+function updateYardGrid(){
+  const el=document.getElementById('yardGrid');
+  el.innerHTML=YARD_UPGRADES.map(u=>{
+    const owned=G.yardUpgrades[u.id]||false;
+    const canAfford=G.money>=u.p;
+    return `<div class="upitem ${owned?'':''+(!canAfford?'noafford':'')}" onclick="${owned?'':canAfford?`buyUpgrade('${u.id}')`:''}">
+      <div class="upicon">${u.ico}</div>
+      <div class="upname">${u.n}${owned?' ✅':''}</div>
+      <div class="upprice">${owned?'Owned':'$'+u.p}</div>
+      <div class="updesc">${u.desc}</div>
+    </div>`;
+  }).join('');
+}
+
+function buyUpgrade(id){
+  sfxBtn();
+  const u=YARD_UPGRADES.find(x=>x.id===id);
+  if(!u||G.money<u.p){ sfxBad(); notify('Not enough money!','urg'); return; }
+  G.money-=u.p;
+  G.yardUpgrades[id]=true;
+  sfxCoin();
+  if(id==='fence2'){ G.yardSize=2; buildFence(2); notify('🏗️ Yard expanded! Room for up to 8 hens.','good'); }
+  if(id==='fence3'){ G.yardSize=3; buildFence(3); notify('🏕️ Full backyard! Plenty of space now.','good'); }
+  if(id==='coopUpg') notify('🏠 Coop upgraded with more nest boxes!','good');
+  if(id==='coveredRun') notify('🦺 Covered run built! Hawks can\'t get your hens.','good');
+  if(id==='heater') notify('🔥 Coop heater installed! Winter will be easier.','good');
+  if(id==='autoWater'){ notify('🚿 Auto-waterer installed! Water fills itself daily.','good'); G.waterFilled=true; }
+  updateYardGrid(); updateHUD(); save();
+}
+
+function updateLearnContent(){
+  const el=document.getElementById('learnContent');
+  el.innerHTML=LEARN_TIPS.map((t,i)=>`
+    <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,200,100,.14);border-radius:12px;padding:13px;margin-bottom:9px;cursor:pointer" onclick="this.querySelector('.tbody').style.display=this.querySelector('.tbody').style.display==='none'?'block':'none'">
+      <div style="font-family:'Fredoka One',cursive;font-size:13.5px;color:var(--gold)">${t.title} ▾</div>
+      <div class="tbody" style="display:none;font-size:12px;color:var(--textmuted);line-height:1.72;margin-top:7px">${t.body}</div>
+    </div>
+  `).join('');
+}
+
+// ── PANEL ──
+function openPanel(tab){ const d=document.getElementById('pdrawer'); d.classList.add('open'); panelOpen=true; document.getElementById('closepanel-btn').style.display='inline-flex'; switchTab(tab); }
+function togglePanel(){ const d=document.getElementById('pdrawer'); d.classList.toggle('open'); panelOpen=d.classList.contains('open'); document.getElementById('closepanel-btn').style.display=panelOpen?'inline-flex':'none'; }
+function closePanel(){ const d=document.getElementById('pdrawer'); d.classList.remove('open'); panelOpen=false; document.getElementById('closepanel-btn').style.display='none'; }
+function switchTab(tab){
+  activeTab=tab;
+  document.querySelectorAll('.ptab').forEach((el,i)=>{ const tabs=['flock','tasks','market','inv','customers','yard','learn']; el.classList.toggle('active',tabs[i]===tab); });
+  document.querySelectorAll('.pcontent').forEach(el=>el.classList.remove('active'));
+  const t=document.getElementById('tab-'+tab); if(t) t.classList.add('active');
+  if(tab==='flock') updateFlockPanel();
+  if(tab==='tasks') updateTaskList();
+  if(tab==='market') updateStoreGrid();
+  if(tab==='inv') updateInvGrid();
+  if(tab==='customers') updateCustContent();
+  if(tab==='yard') updateYardGrid();
+  if(tab==='learn') updateLearnContent();
+}
+
+// ── PAUSE ──
+function showPause(){
+  sfxBtn();
+  showModal('⏸ Paused',`
+    <div style="text-align:center;margin-bottom:14px;font-size:13.5px;color:var(--textmuted)">Your flock will be waiting when you return.</div>
+    <div style="background:rgba(255,200,100,.07);border:1px solid rgba(255,200,100,.18);border-radius:11px;padding:13px;font-size:12.5px;color:var(--textmuted)">
+      <strong style="color:var(--gold)">📊 Quick Stats</strong><br>
+      Day ${G.day} · ${SEASONS[G.season][1]} · $${G.money.toFixed(2)}<br>
+      ${G.chickens.filter(c=>c.alive).length} hens · ${G.inv.eggs} eggs · ${G.customers.filter(c=>!c.lostAt).length} customers
+    </div>
+  `,[
+    {label:'▶️ Resume',cls:'bprimary',fn:'closeModal()'},
+    {label:'🏠 Main Menu',cls:'boutline',fn:'returnMenu()'},
+    {label:'🗑️ New Game',cls:'bdanger',fn:'confirmNew()'},
+  ]);
+}
+
+function returnMenu(){
+  closeModal(); save(); gameRunning=false;
+  document.getElementById('hud').classList.add('off');
+  document.getElementById('pausebtn').classList.remove('on');
+  document.getElementById('musicbtn').classList.remove('on');
+  if(scene) while(scene.children.length>0) scene.remove(scene.children[0]);
+  showScreen('smenu');
+  if(hasSave()) document.getElementById('cbtn').style.display='block';
+}
+
+function confirmNew(){
+  closeModal();
+  showModal('⚠️ New Game?','<p style="font-size:13.5px;color:var(--textmuted)">This deletes your current save. Are you sure?</p>',[
+    {label:'Yes, Start Over',cls:'bdanger',fn:'returnMenu();setTimeout(startNewGame,300)'},
+    {label:'Cancel',cls:'boutline',fn:'closeModal()'},
+  ]);
+}
+
+// ── SEASON BANNER ──
+function showSeasonBanner(s){
+  const data={
+    0:{emoji:'🌸',title:'Spring',sub:'Peak laying season — hens are lively!'},
+    1:{emoji:'☀️',title:'Summer',sub:'Keep water ice-cold — watch for heat stress!'},
+    2:{emoji:'🍂',title:'Fall',sub:'Molting season — fewer eggs, more protein needed!'},
+    3:{emoji:'❄️',title:'Winter',sub:'Heat lamp required — water will freeze!'},
+  };
+  const d=data[s];
+  const banner=document.getElementById('seasonbanner');
+  document.getElementById('seasonbanneremoji').textContent=d.emoji;
+  document.getElementById('seasonbannertitle').textContent=d.title;
+  document.getElementById('seasonbannersub').textContent=d.sub;
+  banner.style.opacity='1';
+  setTimeout(()=>{ banner.style.opacity='0'; },3800);
+}
+
+// ── NOTIFICATIONS ──
+function notify(msg,type=''){
+  const area=document.getElementById('notifs');
+  const el=document.createElement('div');
+  el.className=`notif ${type==='urg'?'urg':type==='good'?'good':''}`;
+  const ico=type==='urg'?'⚠️':type==='good'?'✅':'ℹ️';
+  el.innerHTML=`<span class="nficon">${ico}</span><span class="nftxt">${msg}</span>`;
+  area.appendChild(el);
+  if(area.children.length>4) area.removeChild(area.children[0]);
+  setTimeout(()=>{ el.style.opacity='0'; el.style.transition='opacity .4s'; setTimeout(()=>el.remove(),400); },6000);
+}
+
+// ── INIT ──
+window.addEventListener('load',init);
+</script>
+</body>
+</html>
