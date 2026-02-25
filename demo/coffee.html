@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coffee Demo</title>
+<style>
+body, html { margin:0; padding:0; font-family:Arial; background:#f4ebe0; color:#333; overflow-x:hidden; }
+header { text-align:center; padding:60px 20px; }
+header h1 { font-size:2.5em; color:#5b3a29; margin-bottom:10px; }
+header p { color:#6b4f3c; font-size:1.2em; }
+.main-content { width:90%; max-width:900px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:space-around; gap:30px; }
+.coffee-card { width:250px; background:#fff8f0; padding:20px; border-radius:15px; box-shadow:0 10px 25px rgba(0,0,0,0.15); transition: transform 0.3s, box-shadow 0.3s; cursor:pointer; }
+.coffee-card img { width:100%; border-radius:10px; transition: transform 0.3s; }
+.coffee-card:hover { transform:translateY(-10px); box-shadow:0 15px 35px rgba(0,0,0,0.3); }
+.coffee-card:hover img { transform:scale(1.05); }
+.coffee-card h3 { margin:10px 0; color:#8b5e3c; }
+.coffee-card p { font-size:0.9em; color:#6b4f3c; }
+.back { display:block; margin:40px auto 0; text-align:center; text-decoration:none; color:#5b3a29; font-weight:bold; }
+.back:hover { color:#8b5e3c; }
+</style>
+</head>
+<body>
+<header>
+<h1>Ethnic Coffee Shop</h1>
+<p>Interactive coffee landing page with warm traditional vibes.</p>
+</header>
+
+<div class="main-content">
+  <div class="coffee-card">
+    <img src="https://images.pexels.com/photos/374885/pexels-photo-374885.jpeg" alt="Coffee 1">
+    <h3>Espresso</h3>
+    <p>Strong and rich coffee for true connoisseurs.</p>
+  </div>
+  <div class="coffee-card">
+    <img src="https://images.pexels.com/photos/302899/pexels-photo-302899.jpeg" alt="Coffee 2">
+    <h3>Latte Art</h3>
+    <p>Creamy coffee with handcrafted designs.</p>
+  </div>
+  <div class="coffee-card">
+    <img src="https://images.pexels.com/photos/374885/pexels-photo-374885.jpeg" alt="Coffee 3">
+    <h3>Cappuccino</h3>
+    <p>Traditional aroma with perfect froth.</p>
+  </div>
+</div>
+
+<a class="back" href="../index.html">← Back to Portfolio</a>
+
+<script>
+const cards = document.querySelectorAll('.coffee-card');
+cards.forEach(card=>{
+  card.addEventListener('click', ()=>{ alert("Clicked: " + card.querySelector('h3').innerText); });
+});
+</script>
+</body>
+</html>
