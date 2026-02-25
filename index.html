@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive 3D Portfolio</title>
+<style>
+/* Reset */
+* { margin:0; padding:0; box-sizing:border-box; }
+body, html { width:100%; height:100%; font-family: Arial, sans-serif; overflow-x:hidden; background:#000; color:#fff; }
+
+/* Star background */
+canvas#stars { position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1; }
+
+/* Header */
+header { text-align:center; padding:60px 20px 40px; }
+#floating-title { font-size:3em; line-height:1.2em; display:inline-block; }
+header p { font-size:1.2em; color:#ccc; transition: all 0.3s ease; }
+header p:hover { color:#ff6600; transform: scale(1.03); }
+
+/* Demo section */
+.demo-section { width:90%; max-width:1000px; margin:0 auto 100px; }
+.demo-card { display:flex; align-items:center; justify-content:space-between; margin:60px 0; opacity:0; transform:translateY(50px); transition: all 0.8s ease; cursor:pointer; }
+.demo-card.left { flex-direction: row; }
+.demo-card.right { flex-direction: row-reverse; }
+.card-text { width:45%; }
+.card-text h2 { font-size:2em; margin-bottom:10px; transition: all 0.3s ease; }
+.card-text h2:hover { color:#ff4c00; transform:scale(1.05); }
+.card-text p { font-size:1em; color:#ccc; transition: all 0.3s ease; }
+.card-text p:hover { color:#ff6600; transform:scale(1.03); }
+.card-text a { display:inline-block; padding:8px 16px; background:#ff4c00; color:#fff; text-decoration:none; border-radius:5px; transition: all 0.3s ease; position:relative; overflow:hidden; }
+.card-text a:hover { background:#ff6600; }
+
+/* Sparkle animation */
+.card-text a:after {
+  content: "";
+  position: absolute;
+  top:50%; left:50%;
+  width:10px; height:10px;
+  background: radial-gradient(circle,#fff,#ff4c00);
+  opacity:0; transform:translate(-50%,-50%) scale(0);
+  border-radius:50%; pointer-events:none;
+  transition: transform 0.5s, opacity 0.5s;
+}
+
+/* Card images */
+.card-img { width:45%; }
+.card-img img { width:100%; border-radius:10px; box-shadow:0 10px 30px rgba(0,0,0,0.5); }
+
+/* Footer */
+footer { text-align:center; padding:40px 20px; color:#888; }
+
+/* Scroll reveal */
+.demo-card.show { opacity:1; transform:translateY(0); }
+
+/* Mobile responsiveness */
+@media(max-width:768px) {
+  .demo-card { flex-direction: column; }
+  .card-text, .card-img { width:100%; margin-bottom:20px; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+
+<header>
+<h1 id="floating-title"></h1>
+<p>Immersive experiences that engage visitors and make brands stand out.</p>
+</header>
+
+<main>
+<section class="demo-section">
+  <div class="demo-card left" data-link="demos/food.html">
+    <div class="card-text">
+      <h2>Interactive Food Experience</h2>
+      <p>Engaging food website using depth and motion to highlight dishes.</p>
+      <a href="demos/food.html">View Demo</a>
+    </div>
+    <div class="card-img">
+      <img src="https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg" alt="Food Demo">
+    </div>
+  </div>
+
+  <div class="demo-card right" data-link="demos/coffee.html">
+    <div class="card-img">
+      <img src="https://images.pexels.com/photos/302899/pexels-photo-302899.jpeg" alt="Coffee Demo">
+    </div>
+    <div class="card-text">
+      <h2>Premium Coffee Landing Page</h2>
+      <p>A landing page with depth, motion, and smooth animations for a coffee brand.</p>
+      <a href="demos/coffee.html">View Demo</a>
+    </div>
+  </div>
+
+  <div class="demo-card left" data-link="demos/product.html">
+    <div class="card-text">
+      <h2>Luxury Product Showcase</h2>
+      <p>Highlight premium products with interactive 3D-style presentation.</p>
+      <a href="demos/product.html">View Demo</a>
+    </div>
+    <div class="card-img">
+      <img src="https://images.pexels.com/photos/715688/pexels-photo-715688.jpeg" alt="Product Demo">
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+<p>&copy; 2026 Your Name. Interactive 3D Portfolio.</p>
+</footer>
+
+<script>
+// ===== Starfield background =====
+const canvas = document.getElementById('stars');
+const ctx = canvas.getContext('2d');
+let w = canvas.width = window.innerWidth;
+let h = canvas.height = window.innerHeight;
+window.addEventListener('resize', ()=>{ w=canvas.width=window.innerWidth; h=canvas.height=window.innerHeight; });
+const stars=[];
+for(let i=0;i<200;i++){stars.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.5+0.5,dx:(Math.random()-0.5)*0.2,dy:(Math.random()-0.5)*0.2});}
+function drawStars(){ctx.fillStyle='black';ctx.fillRect(0,0,w,h);ctx.fillStyle='white';stars.forEach(s=>{ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();s.x+=s.dx;s.y+=s.dy;if(s.x<0)s.x=w;if(s.x>w)s.x=0;if(s.y<0)s.y=h;if(s.y>h)s.y=0;});requestAnimationFrame(drawStars);}
+drawStars();
+
+// ===== Scroll reveal for cards =====
+const cards = document.querySelectorAll('.demo-card');
+function revealCards(){const trigger=window.innerHeight*0.85;cards.forEach(card=>{if(card.getBoundingClientRect().top<trigger)card.classList.add('show');});}
+window.addEventListener('scroll', revealCards);
+revealCards();
+
+// ===== Floating animated title =====
+const titleText = "Interactive 3D Websites for Modern Brands";
+const titleContainer = document.getElementById("floating-title");
+titleText.split("").forEach(char => {
+  const span = document.createElement("span");
+  span.innerText = char;
+  span.style.display = "inline-block";
+  span.style.transition = "transform 0.5s, color 0.5s";
+  span.style.position = "relative";
+  titleContainer.appendChild(span);
+});
+const spans = titleContainer.querySelectorAll("span");
+function floatLetters() {
+  spans.forEach(span => {
+    const x = (Math.random() - 0.5) * 4;
+    const y = (Math.random() - 0.5) * 4;
+    const rotate = (Math.random() - 0.5) * 10;
+    span.style.transform = `translate(${x}px, ${y}px) rotate(${rotate}deg)`;
+  });
+}
+setInterval(floatLetters, 800);
+spans.forEach(span => {
+  span.addEventListener("mouseenter", () => {
+    span.style.color = "#ff4c00";
+    span.style.transform += " scale(1.3)";
+  });
+  span.addEventListener("mouseleave", () => { span.style.color = ""; });
+});
+
+// ===== Card text clickable + button sparkle =====
+cards.forEach(card=>{
+  card.addEventListener('click', e=>{
+    const link = card.dataset.link;
+    if(link) window.open(link,"_blank");
+  });
+});
+
+// Button sparkle on click
+const buttons = document.querySelectorAll('.card-text a');
+buttons.forEach(btn=>{
+  btn.addEventListener('click', e=>{
+    e.stopPropagation(); // don't trigger card click
+    const sparkle = document.createElement('span');
+    sparkle.style.position='absolute';
+    sparkle.style.top=`${Math.random()*100}%`;
+    sparkle.style.left=`${Math.random()*100}%`;
+    sparkle.style.width='6px';
+    sparkle.style.height='6px';
+    sparkle.style.background='radial-gradient(circle,#fff,#ff4c00)';
+    sparkle.style.borderRadius='50%';
+    sparkle.style.pointerEvents='none';
+    sparkle.style.opacity='1';
+    sparkle.style.transform='scale(1)';
+    btn.appendChild(sparkle);
+    setTimeout(()=>{sparkle.remove();},600);
+  });
+});
+</script>
+
+</body>
+</html>
