@@ -3,54 +3,543 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Interactive Food Demo</title>
+<title>Interactive Food Experience — Studio 3D</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
 <style>
-body, html { margin:0; padding:0; font-family:Arial; background:#fdf6e3; color:#333; overflow-x:hidden; }
-header { text-align:center; padding:60px 20px; }
-header h1 { font-size:2.5em; margin-bottom:10px; color:#6b4226; }
-header p { color:#555; font-size:1.2em; }
-.main-content { width:90%; max-width:900px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:space-around; gap:30px; }
-.food-card { width:250px; background:#fff3e0; padding:20px; border-radius:15px; box-shadow:0 10px 25px rgba(0,0,0,0.2); transition: transform 0.3s, box-shadow 0.3s; cursor:pointer; }
-.food-card img { width:100%; border-radius:10px; transition: transform 0.3s; }
-.food-card:hover { transform:translateY(-10px); box-shadow:0 15px 35px rgba(0,0,0,0.3); }
-.food-card:hover img { transform:scale(1.05); }
-.food-card h3 { margin:10px 0; color:#a64b2a; }
-.food-card p { font-size:0.9em; color:#555; }
-.back { display:block; margin:40px auto 0; text-align:center; text-decoration:none; color:#6b4226; font-weight:bold; }
-.back:hover { color:#a64b2a; }
+  :root {
+    --bg: #0e0a06;
+    --amber: #f59e0b;
+    --amber-glow: rgba(245,158,11,0.3);
+    --red: #dc2626;
+    --cream: #fef3c7;
+    --gray: #a08060;
+    --white: #fff8ef;
+    --card: rgba(20,13,5,0.9);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--white); font-family: 'DM Sans', sans-serif; font-weight: 300; overflow-x: hidden; }
+
+  /* NOISE */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+    opacity: 0.5;
+  }
+
+  .wrap { position: relative; z-index: 1; }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 48px;
+    backdrop-filter: blur(20px);
+    background: rgba(14,10,6,0.7);
+    border-bottom: 1px solid rgba(245,158,11,0.1);
+  }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-style: italic;
+    color: var(--amber);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: opacity 0.3s;
+  }
+  .nav-logo:hover { opacity: 0.7; }
+
+  .nav-back {
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .nav-back:hover { color: var(--amber); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 120px 32px 80px;
+    position: relative;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .hero-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.2) saturate(0.8);
+    transform: scale(1.05);
+    animation: slow-zoom 12s ease-in-out infinite alternate;
+  }
+
+  @keyframes slow-zoom {
+    from { transform: scale(1.05); }
+    to   { transform: scale(1.12); }
+  }
+
+  .hero-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center bottom, rgba(245,158,11,0.12) 0%, transparent 65%);
+  }
+
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 780px;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.3s;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    font-weight: 900;
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.5s;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--amber);
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+  }
+
+  .hero-title em:hover {
+    color: #fbbf24;
+    text-shadow: 0 0 40px var(--amber-glow);
+    cursor: default;
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--gray);
+    line-height: 1.8;
+    max-width: 480px;
+    margin: 0 auto 48px;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.7s;
+    transition: color 0.3s ease;
+  }
+
+  .hero-sub:hover { color: #c0a880; }
+
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 40px;
+    background: var(--amber);
+    color: var(--bg);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 4px;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.9s;
+    transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+  }
+
+  .hero-cta:hover {
+    background: #fbbf24;
+    box-shadow: 0 0 40px var(--amber-glow);
+    transform: translateY(-2px);
+  }
+
+  /* SCROLL LINE */
+  .scroll-line {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 1.2s;
+  }
+
+  .scroll-line span { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gray); }
+  .scroll-line::before {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(to bottom, transparent, var(--amber));
+  }
+
+  /* DISHES GRID */
+  .dishes {
+    padding: 120px 0;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding-left: 48px;
+    padding-right: 48px;
+  }
+
+  .dishes-header {
+    text-align: center;
+    margin-bottom: 80px;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .dishes-header.revealed { opacity: 1; transform: translateY(0); }
+
+  .dishes-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 700;
+    margin-bottom: 16px;
+    transition: color 0.3s;
+  }
+
+  .dishes-header h2:hover { color: var(--amber); cursor: default; }
+
+  .dishes-header p { color: var(--gray); font-size: 1rem; line-height: 1.7; max-width: 440px; margin: 0 auto; }
+
+  .dishes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .dish-card {
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .dish-card.revealed { opacity: 1; transform: translateY(0); }
+
+  .dish-card:nth-child(1) { grid-row: span 2; }
+
+  .dish-card img {
+    width: 100%;
+    height: 100%;
+    min-height: 280px;
+    object-fit: cover;
+    transition: transform 0.7s ease, filter 0.4s ease;
+    filter: brightness(0.7) saturate(1.1);
+    display: block;
+  }
+
+  .dish-card:hover img {
+    transform: scale(1.07);
+    filter: brightness(0.85) saturate(1.2);
+  }
+
+  .dish-overlay {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 40px 28px 28px;
+    background: linear-gradient(to top, rgba(10,6,2,0.95) 0%, transparent 100%);
+    transform: translateY(8px);
+    transition: transform 0.4s ease;
+  }
+
+  .dish-card:hover .dish-overlay { transform: translateY(0); }
+
+  .dish-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    transition: color 0.3s;
+  }
+
+  .dish-card:hover .dish-name { color: var(--amber); }
+
+  .dish-tag {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+
+  /* STORY SECTION */
+  .story {
+    padding: 80px 48px 140px;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .story-img {
+    border-radius: 12px;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .story-img.revealed { opacity: 1; transform: translateX(0); }
+
+  .story-img img {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+    filter: brightness(0.75) saturate(1.1);
+    transition: transform 0.7s ease;
+  }
+
+  .story-img:hover img { transform: scale(1.04); }
+
+  .story-text {
+    opacity: 0;
+    transform: translateX(30px);
+    transition: opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s;
+  }
+
+  .story-text.revealed { opacity: 1; transform: translateX(0); }
+
+  .story-text .eyebrow { animation: none; opacity: 1; display: block; margin-bottom: 20px; }
+
+  .story-text h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 24px;
+    transition: color 0.3s;
+  }
+
+  .story-text h2:hover { color: var(--amber); cursor: default; }
+
+  .story-text p {
+    color: var(--gray);
+    line-height: 1.8;
+    margin-bottom: 16px;
+    transition: color 0.3s;
+  }
+
+  .story-text p:hover { color: #c0a880; }
+
+  .btn-amber {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 32px;
+    padding: 14px 32px;
+    background: transparent;
+    border: 1.5px solid var(--amber);
+    border-radius: 4px;
+    color: var(--amber);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.3s, color 0.3s, box-shadow 0.3s, transform 0.2s;
+    cursor: pointer;
+  }
+
+  .btn-amber:hover {
+    background: var(--amber);
+    color: var(--bg);
+    box-shadow: 0 0 30px var(--amber-glow);
+    transform: translateY(-2px);
+  }
+
+  /* FOOTER */
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 48px 32px;
+    border-top: 1px solid rgba(245,158,11,0.1);
+    color: var(--gray);
+    font-size: 13px;
+    letter-spacing: 0.05em;
+  }
+
+  footer a { color: var(--amber); text-decoration: none; font-family: 'Playfair Display', serif; font-style: italic; }
+  footer a:hover { text-decoration: underline; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SPARKLE */
+  .sparkle {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    border-radius: 50%;
+    animation: spark 0.6s ease forwards;
+  }
+
+  @keyframes spark {
+    0% { opacity: 1; transform: translate(0,0) scale(1); }
+    100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0); }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; }
+    .dishes { padding: 80px 24px; }
+    .dishes-grid { grid-template-columns: 1fr; }
+    .dish-card:nth-child(1) { grid-row: span 1; }
+    .story { grid-template-columns: 1fr; gap: 40px; padding: 60px 24px 100px; }
+    .story-img { transform: none; }
+    .story-text { transform: none; }
+  }
 </style>
 </head>
 <body>
-<header>
-<h1>Ethnic Food Experience</h1>
-<p>Interactive menu showcasing traditional and modern dishes.</p>
-</header>
+<div class="wrap">
 
-<div class="main-content">
-  <div class="food-card">
-    <img src="https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg" alt="Dish 1">
-    <h3>Spicy Curry</h3>
-    <p>Aromatic spices from traditional recipes.</p>
-  </div>
-  <div class="food-card">
-    <img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg" alt="Dish 2">
-    <h3>Grilled Vegetables</h3>
-    <p>Freshly grilled with authentic flavors.</p>
-  </div>
-  <div class="food-card">
-    <img src="https://images.pexels.com/photos/5938/food-salad-healthy-lunch.jpg" alt="Dish 3">
-    <h3>Salad Bowl</h3>
-    <p>Colorful mix of fresh local produce.</p>
-  </div>
+  <nav>
+    <a href="../index.html" class="nav-logo">Studio 3D</a>
+    <a href="../index.html" class="nav-back">← Back to Portfolio</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg">
+      <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1400&q=80" alt="Fine dining">
+    </div>
+    <div class="hero-inner">
+      <span class="eyebrow">Food Experience Demo</span>
+      <h1 class="hero-title">A Taste of<br><em>Extraordinary</em></h1>
+      <p class="hero-sub">Engaging food website using depth and motion to highlight dishes and transform the dining experience.</p>
+      <a href="#dishes" class="hero-cta">Explore the Menu ↓</a>
+    </div>
+    <div class="scroll-line"><span>Scroll</span></div>
+  </section>
+
+  <!-- DISHES -->
+  <section class="dishes" id="dishes">
+    <div class="dishes-header">
+      <h2>Signature Dishes</h2>
+      <p>Each creation is a story of flavour, texture, and artistry — designed to be as beautiful as it is unforgettable.</p>
+    </div>
+    <div class="dishes-grid">
+      <div class="dish-card" data-delay="0">
+        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=700&q=80" alt="Artisan Pizza">
+        <div class="dish-overlay">
+          <div class="dish-name">Wood-Fired Artisan</div>
+          <div class="dish-tag">Chef's Signature</div>
+        </div>
+      </div>
+      <div class="dish-card" data-delay="100">
+        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=700&q=80" alt="Fresh Salad" style="min-height:200px">
+        <div class="dish-overlay">
+          <div class="dish-name">Garden Harvest</div>
+          <div class="dish-tag">Seasonal Selection</div>
+        </div>
+      </div>
+      <div class="dish-card" data-delay="200">
+        <img src="https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=700&q=80" alt="Dessert" style="min-height:200px">
+        <div class="dish-overlay">
+          <div class="dish-name">Sweet Finale</div>
+          <div class="dish-tag">Pastry Creation</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STORY -->
+  <section class="story">
+    <div class="story-img">
+      <img src="https://images.unsplash.com/photo-1551218808-94e220e084d2?w=700&q=80" alt="Restaurant interior">
+    </div>
+    <div class="story-text">
+      <span class="eyebrow">Our Philosophy</span>
+      <h2>Crafted with<br>intention & soul</h2>
+      <p>Every dish emerges from a deep respect for seasonal ingredients, local producers, and the centuries-old traditions that turn simple food into ceremony.</p>
+      <p>Motion and depth aren't just visual effects — they're an invitation to slow down and savour every moment before the first bite.</p>
+      <a href="#" class="btn-amber">Reserve a Table →</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>Food Experience Demo — <a href="../index.html">Studio 3D Portfolio</a> &nbsp;·&nbsp; © 2025 Studio 3D</p>
+  </footer>
+
 </div>
 
-<a class="back" href="../index.html">← Back to Portfolio</a>
-
 <script>
-// Simple interactive hover effect
-const cards = document.querySelectorAll('.food-card');
-cards.forEach(card=>{
-  card.addEventListener('click', ()=>{ alert("Clicked: " + card.querySelector('h3').innerText); });
+// Scroll reveal
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const d = parseInt(e.target.dataset.delay || 0);
+      setTimeout(() => e.target.classList.add('revealed'), d);
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.dishes-header, .dish-card, .story-img, .story-text').forEach(el => observer.observe(el));
+
+// Sparkle
+document.querySelectorAll('.btn-amber, .hero-cta').forEach(btn => {
+  btn.addEventListener('click', function(e) {
+    const rect = btn.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const colors = ['#f59e0b','#fbbf24','#fde68a','#fff'];
+    for (let i = 0; i < 10; i++) {
+      const s = document.createElement('div');
+      s.className = 'sparkle';
+      const angle = (i/10)*Math.PI*2;
+      const dist = 35 + Math.random()*35;
+      const size = 4 + Math.random()*5;
+      s.style.cssText = `left:${cx-size/2}px;top:${cy-size/2}px;width:${size}px;height:${size}px;background:${colors[Math.floor(Math.random()*colors.length)]};--tx:${Math.cos(angle)*dist}px;--ty:${Math.sin(angle)*dist}px;`;
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 650);
+    }
+  });
 });
 </script>
 </body>
