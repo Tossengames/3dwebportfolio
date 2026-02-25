@@ -3,498 +3,401 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Premium Coffee Landing Page — Studio 3D</title>
+<title>Kōhi — Precision Roastery</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600&family=DM+Sans:wght@200;300;400&family=Courier+Prime&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0d0905;
-    --brown-dark: #1a0f07;
-    --brown-mid: #3d1f0d;
-    --cream: #f5e6d0;
-    --tan: #c4956a;
-    --tan-glow: rgba(196,149,106,0.3);
-    --gray: #8a7060;
-    --white: #fdf6ef;
-  }
+:root{--bg:#f8f6f2;--black:#0d0c0b;--espresso:#1a0f08;--mid:#555048;--light:#e8e3da;--accent:#2c1a0e;--white:#ffffff;--line:rgba(13,12,11,.1)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--black);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden}
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body { background: var(--bg); color: var(--white); font-family: 'DM Sans', sans-serif; font-weight: 300; overflow-x: hidden; }
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:28px 56px;background:rgba(248,246,242,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--line)}
+.nav-logo{font-family:'Shippori Mincho',serif;font-size:20px;font-weight:500;color:var(--black);text-decoration:none;letter-spacing:.04em;display:flex;flex-direction:column;line-height:1}
+.nav-logo small{font-family:'DM Sans',sans-serif;font-size:8px;font-weight:200;letter-spacing:.4em;text-transform:uppercase;color:var(--mid);margin-top:3px}
+.nav-links{display:flex;gap:44px;align-items:center}
+.nav-link{font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--mid);text-decoration:none;transition:color .3s;position:relative}
+.nav-link::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:var(--black);transition:width .3s}
+.nav-link:hover{color:var(--black)}
+.nav-link:hover::after{width:100%}
+.nav-back{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:rgba(85,80,72,.45);text-decoration:none;transition:color .3s;border-left:1px solid var(--line);padding-left:24px}
+.nav-back:hover{color:var(--mid)}
 
-  /* NAV */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 24px 56px;
-    backdrop-filter: blur(20px);
-    background: rgba(13,9,5,0.8);
-    border-bottom: 1px solid rgba(196,149,106,0.1);
-  }
+/* HERO — split with Three.js bean on right */
+.hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding-top:100px;position:relative}
+.hero-left{padding:80px 48px 80px 80px;display:flex;flex-direction:column;justify-content:center}
+.hero-kana{font-family:'Shippori Mincho',serif;font-size:clamp(5rem,10vw,9rem);font-weight:400;color:rgba(13,12,11,.06);line-height:1;margin-bottom:-20px;user-select:none}
+.hero-tag{font-size:10px;letter-spacing:.45em;text-transform:uppercase;color:var(--mid);margin-bottom:32px;opacity:0;animation:up .7s ease forwards .3s}
+.hero-h1{font-family:'Shippori Mincho',serif;font-size:clamp(2.5rem,5vw,4.5rem);font-weight:500;line-height:1.18;color:var(--black);margin-bottom:36px;opacity:0;animation:up .9s ease forwards .5s;letter-spacing:-.01em}
+.hero-h1 span{font-weight:400;color:var(--mid)}
+.hero-sub{font-size:.95rem;color:var(--mid);line-height:2;max-width:380px;margin-bottom:52px;opacity:0;animation:up .9s ease forwards .7s;font-weight:200}
+.hero-ctas{display:flex;gap:16px;opacity:0;animation:up .8s ease forwards .9s}
+.btn-black{padding:14px 36px;background:var(--black);color:var(--white);font-size:11px;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;transition:background .3s,transform .2s;display:inline-flex;align-items:center;gap:10px}
+.btn-black:hover{background:var(--espresso);transform:translateY(-2px)}
+.btn-ghost-b{padding:13px 32px;background:transparent;border:1px solid var(--black);color:var(--black);font-size:11px;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;transition:background .3s,color .3s,transform .2s}
+.btn-ghost-b:hover{background:var(--black);color:var(--white);transform:translateY(-2px)}
 
-  .nav-brand {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 22px;
-    font-style: italic;
-    color: var(--tan);
-    letter-spacing: 0.04em;
-    text-decoration: none;
-    transition: opacity 0.3s;
-  }
-  .nav-brand:hover { opacity: 0.7; }
+/* THREE.JS bean container */
+.hero-right{position:relative;height:100vh;display:flex;align-items:center;justify-content:center}
+#beanCanvas{display:block;width:100%;height:100%}
+.bean-label{position:absolute;bottom:15%;left:50%;transform:translateX(-50%);text-align:center;opacity:0;animation:up .8s ease forwards 1.2s}
+.bean-label span{font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--mid)}
 
-  .nav-back {
-    font-size: 11px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--gray);
-    text-decoration: none;
-    transition: color 0.3s;
-  }
-  .nav-back:hover { color: var(--tan); }
+/* SPEC BAR */
+.spec-bar{border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.spec-row{display:grid;grid-template-columns:repeat(4,1fr);max-width:1200px;margin:0 auto}
+.spec{padding:28px 40px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
+.spec:last-child{border-right:none}
+.spec-k{font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:rgba(85,80,72,.45);font-family:'Courier Prime',monospace}
+.spec-v{font-family:'Shippori Mincho',serif;font-size:1.4rem;color:var(--black);font-weight:500}
 
-  /* HERO */
-  .hero {
-    height: 100vh;
-    min-height: 700px;
-    position: relative;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: stretch;
-  }
+/* ORIGINS */
+.origins{padding:120px 80px;max-width:1400px;margin:0 auto}
+.or-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:80px;opacity:0;transform:translateY(24px);transition:opacity .8s,transform .8s}
+.or-header.on{opacity:1;transform:translateY(0)}
+.or-title{font-family:'Shippori Mincho',serif;font-size:clamp(2rem,4vw,3.8rem);font-weight:500;line-height:1.2;color:var(--black)}
+.or-desc{max-width:300px;font-size:.9rem;color:var(--mid);line-height:1.85;font-weight:200;padding-top:8px}
+.beans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line)}
+.bean-card{background:var(--bg);opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
+.bean-card.on{opacity:1;transform:translateY(0)}
+.bean-card-img{aspect-ratio:1;overflow:hidden;position:relative}
+.bean-card-img img{width:100%;height:100%;object-fit:cover;filter:saturate(.6) brightness(.9);transition:filter .6s ease,transform .7s ease}
+.bean-card:hover .bean-card-img img{filter:saturate(.85) brightness(1);transform:scale(1.04)}
+.bean-body{padding:32px 36px 40px;border-top:1px solid var(--line)}
+.bean-origin{font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--mid);font-family:'Courier Prime',monospace;margin-bottom:14px}
+.bean-name{font-family:'Shippori Mincho',serif;font-size:1.4rem;font-weight:500;margin-bottom:10px;color:var(--black);transition:color .3s}
+.bean-card:hover .bean-name{color:var(--espresso)}
+.bean-notes{font-size:.85rem;color:var(--mid);line-height:1.7;margin-bottom:20px;font-weight:200}
+.bean-meta{display:flex;justify-content:space-between;align-items:center;padding-top:16px;border-top:1px solid var(--line)}
+.bean-price{font-family:'Courier Prime',monospace;font-size:1rem;color:var(--black)}
+.bean-process{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:rgba(85,80,72,.45)}
 
-  .hero-left {
-    position: relative;
-    overflow: hidden;
-  }
+/* PHILOSOPHY */
+.phil{padding:140px 80px;text-align:center;max-width:1000px;margin:0 auto}
+.phil-line{height:1px;background:var(--black);margin:0 auto 40px;opacity:0;width:0;transition:opacity .8s,width 1.2s}
+.phil-line.on{opacity:1;width:40px}
+.phil-q{font-family:'Shippori Mincho',serif;font-size:clamp(1.4rem,3.5vw,2.8rem);font-weight:400;line-height:1.6;color:var(--black);opacity:0;transform:translateY(20px);transition:opacity .9s,transform .9s}
+.phil-q.on{opacity:1;transform:translateY(0)}
+.phil-q em{font-style:italic;font-weight:500}
 
-  .hero-left img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: brightness(0.55) saturate(0.85);
-    transform: scale(1.06);
-    animation: slow-zoom 14s ease-in-out infinite alternate;
-  }
+/* BREW */
+.brew{padding:80px;background:var(--espresso);color:var(--white)}
+.brew-inner{max-width:1200px;margin:0 auto}
+.brew-h{font-family:'Shippori Mincho',serif;font-size:clamp(2rem,4vw,3.5rem);font-weight:500;margin-bottom:64px;opacity:0;transform:translateY(20px);transition:opacity .8s,transform .8s}
+.brew-h.on{opacity:1;transform:translateY(0)}
+.brew-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.06)}
+.step{background:var(--espresso);padding:40px 32px;opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease,background .3s}
+.step.on{opacity:1;transform:translateY(0)}
+.step:hover{background:#2c1a0e}
+.step-n{font-family:'Courier Prime',monospace;font-size:3rem;color:rgba(255,255,255,.07);line-height:1;margin-bottom:20px}
+.step-title{font-family:'Shippori Mincho',serif;font-size:1.1rem;font-weight:500;color:rgba(248,246,242,.9);margin-bottom:10px}
+.step-desc{font-size:.85rem;color:rgba(255,255,255,.38);line-height:1.75;font-weight:200}
 
-  @keyframes slow-zoom {
-    from { transform: scale(1.06); }
-    to { transform: scale(1.13); }
-  }
+footer{display:flex;justify-content:space-between;align-items:center;padding:40px 80px;border-top:1px solid var(--line);flex-wrap:wrap;gap:16px}
+.ft-logo{font-family:'Shippori Mincho',serif;font-size:18px;color:var(--black)}
+.ft-copy{font-size:11px;letter-spacing:.15em;color:rgba(85,80,72,.45);text-align:center}
+.ft-back{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);text-decoration:none;transition:color .3s}
+.ft-back:hover{color:var(--black)}
 
-  .hero-left::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to right, transparent 50%, var(--bg));
-  }
+@keyframes up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.sp{position:fixed;pointer-events:none;z-index:9999;border-radius:50%;animation:spa .6s ease forwards}
+@keyframes spa{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(0)}}
 
-  .hero-right {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 120px 64px 80px 72px;
-    position: relative;
-  }
-
-  .hero-right::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; bottom: 0;
-    width: 1px;
-    background: linear-gradient(to bottom, transparent, var(--tan), transparent);
-    opacity: 0.2;
-  }
-
-  .eyebrow {
-    font-size: 10px;
-    letter-spacing: 0.4em;
-    text-transform: uppercase;
-    color: var(--tan);
-    margin-bottom: 28px;
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards 0.4s;
-  }
-
-  .hero-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(3rem, 5vw, 5.5rem);
-    font-weight: 600;
-    line-height: 1.05;
-    letter-spacing: -0.01em;
-    margin-bottom: 28px;
-    opacity: 0;
-    animation: fadeUp 1s ease forwards 0.6s;
-  }
-
-  .hero-title em {
-    font-style: italic;
-    color: var(--tan);
-    transition: color 0.3s, text-shadow 0.3s;
-  }
-
-  .hero-title em:hover {
-    color: #e0b990;
-    text-shadow: 0 0 40px var(--tan-glow);
-    cursor: default;
-  }
-
-  .hero-sub {
-    font-size: 1rem;
-    color: var(--gray);
-    line-height: 1.85;
-    margin-bottom: 52px;
-    max-width: 360px;
-    opacity: 0;
-    animation: fadeUp 1s ease forwards 0.8s;
-    transition: color 0.3s;
-  }
-
-  .hero-sub:hover { color: #b09878; }
-
-  .hero-btns {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    opacity: 0;
-    animation: fadeUp 1s ease forwards 1s;
-  }
-
-  .btn-primary {
-    padding: 15px 36px;
-    background: var(--tan);
-    color: var(--bg);
-    font-size: 12px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    border: none;
-    border-radius: 2px;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
-    position: relative;
-  }
-
-  .btn-primary:hover {
-    background: #d4a87a;
-    box-shadow: 0 0 40px var(--tan-glow);
-    transform: translateY(-2px);
-  }
-
-  .btn-ghost {
-    padding: 14px 32px;
-    background: transparent;
-    border: 1px solid rgba(196,149,106,0.4);
-    color: var(--tan);
-    font-size: 12px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    border-radius: 2px;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    transition: border-color 0.3s, background 0.3s, color 0.3s, transform 0.2s;
-  }
-
-  .btn-ghost:hover {
-    border-color: var(--tan);
-    background: rgba(196,149,106,0.1);
-    transform: translateY(-2px);
-  }
-
-  /* BEANS / FEATURES */
-  .features {
-    padding: 140px 56px;
-    max-width: 1160px;
-    margin: 0 auto;
-  }
-
-  .features-header {
-    text-align: center;
-    margin-bottom: 80px;
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
-  }
-
-  .features-header.revealed { opacity: 1; transform: translateY(0); }
-
-  .features-header .eyebrow { animation: none; opacity: 1; display: block; margin-bottom: 16px; }
-
-  .features-header h2 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2rem, 4vw, 3.8rem);
-    font-weight: 600;
-    margin-bottom: 16px;
-    transition: color 0.3s;
-  }
-
-  .features-header h2:hover { color: var(--tan); cursor: default; }
-
-  .features-header p { color: var(--gray); max-width: 420px; margin: 0 auto; line-height: 1.8; }
-
-  .features-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-    background: rgba(196,149,106,0.08);
-    border: 1px solid rgba(196,149,106,0.1);
-    border-radius: 4px;
-    overflow: hidden;
-  }
-
-  .feature-item {
-    padding: 52px 40px;
-    background: var(--brown-dark);
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.6s ease, transform 0.6s ease, background 0.4s ease;
-  }
-
-  .feature-item.revealed { opacity: 1; transform: translateY(0); }
-
-  .feature-item:hover { background: rgba(30,15,7,0.95); }
-
-  .feature-icon {
-    font-size: 32px;
-    margin-bottom: 24px;
-    display: block;
-    transition: transform 0.3s ease;
-  }
-
-  .feature-item:hover .feature-icon { transform: scale(1.15) rotate(-5deg); }
-
-  .feature-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 12px;
-    transition: color 0.3s;
-  }
-
-  .feature-item:hover .feature-name { color: var(--tan); }
-
-  .feature-desc {
-    font-size: 0.9rem;
-    color: var(--gray);
-    line-height: 1.75;
-    transition: color 0.3s;
-  }
-
-  .feature-item:hover .feature-desc { color: #a08870; }
-
-  /* PRODUCT SHOWCASE */
-  .product {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    min-height: 600px;
-    opacity: 0;
-    transform: translateY(40px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
-    margin: 0 0 2px;
-  }
-
-  .product.revealed { opacity: 1; transform: translateY(0); }
-
-  .product-img {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .product-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: brightness(0.65) saturate(1.1);
-    transition: transform 0.7s ease;
-  }
-
-  .product:hover .product-img img { transform: scale(1.04); }
-
-  .product-content {
-    background: var(--brown-dark);
-    padding: 80px 72px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
-  .product-content .eyebrow { animation: none; opacity: 1; display: block; margin-bottom: 20px; }
-
-  .product-content h2 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(1.8rem, 3vw, 3rem);
-    font-weight: 600;
-    line-height: 1.2;
-    margin-bottom: 24px;
-    transition: color 0.3s;
-  }
-
-  .product-content h2:hover { color: var(--tan); cursor: default; }
-
-  .product-content p {
-    color: var(--gray);
-    line-height: 1.85;
-    margin-bottom: 14px;
-    transition: color 0.3s;
-  }
-
-  .product-content p:hover { color: #b09878; }
-
-  .price-tag {
-    display: inline-block;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2.5rem;
-    font-weight: 600;
-    color: var(--tan);
-    margin: 20px 0 32px;
-  }
-
-  /* FOOTER */
-  footer {
-    text-align: center;
-    padding: 56px 32px;
-    border-top: 1px solid rgba(196,149,106,0.1);
-    color: var(--gray);
-    font-size: 13px;
-    letter-spacing: 0.05em;
-  }
-
-  footer a { color: var(--tan); text-decoration: none; font-family: 'Cormorant Garamond', serif; font-style: italic; }
-  footer a:hover { text-decoration: underline; }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .sparkle {
-    position: fixed; pointer-events: none; z-index: 9999;
-    border-radius: 50%;
-    animation: spark 0.6s ease forwards;
-  }
-
-  @keyframes spark {
-    0% { opacity: 1; transform: translate(0,0) scale(1); }
-    100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0); }
-  }
-
-  @media (max-width: 900px) {
-    .hero { grid-template-columns: 1fr; height: auto; }
-    .hero-left { height: 50vh; }
-    .hero-left::after { background: linear-gradient(to top, var(--bg), transparent); }
-    .hero-right { padding: 60px 32px 80px; }
-    .hero-right::before { display: none; }
-    .features { padding: 80px 24px; }
-    .features-grid { grid-template-columns: 1fr; }
-    .product { grid-template-columns: 1fr; }
-    .product-img { height: 300px; }
-    .product-content { padding: 52px 32px; }
-    nav { padding: 20px 24px; }
-  }
+@media(max-width:960px){
+  nav{padding:20px 24px}
+  .nav-links{display:none}
+  .nav-back{border:none;padding:0}
+  .hero{grid-template-columns:1fr;padding-top:80px}
+  .hero-right{height:50vw;min-height:280px}
+  .hero-left{padding:60px 28px 40px}
+  .spec-row{grid-template-columns:repeat(2,1fr)}
+  .origins{padding:80px 28px}
+  .beans-grid{grid-template-columns:1fr}
+  .phil{padding:80px 28px}
+  .brew{padding:60px 28px}
+  .brew-steps{grid-template-columns:1fr 1fr}
+  footer{padding:32px 24px;flex-direction:column;text-align:center}
+}
 </style>
 </head>
 <body>
 
 <nav>
-  <a href="../index.html" class="nav-brand">Studio 3D</a>
-  <a href="../index.html" class="nav-back">← Back to Portfolio</a>
+  <a href="../index.html" class="nav-logo">Kōhi<small>Precision Roastery</small></a>
+  <div class="nav-links">
+    <a href="#origins" class="nav-link">Origins</a>
+    <a href="#brew" class="nav-link">Brew Guide</a>
+    <a href="#" class="nav-link">Subscribe</a>
+  </div>
+  <a href="../index.html" class="nav-back">← Portfolio</a>
 </nav>
 
-<!-- HERO -->
 <section class="hero">
   <div class="hero-left">
-    <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=1000&q=80" alt="Coffee pour">
+    <div class="hero-kana">珈琲</div>
+    <div class="hero-tag">Specialty Single-Origin Coffee</div>
+    <h1 class="hero-h1">Precision in<br>every<br><span>extraction.</span></h1>
+    <p class="hero-sub">We source, roast, and deliver exceptional single-origin coffees. No blends, no shortcuts. Only beans that earn their place in your cup.</p>
+    <div class="hero-ctas">
+      <a href="#origins" class="btn-black">Shop Beans →</a>
+      <a href="#brew" class="btn-ghost-b">Brew Guide</a>
+    </div>
   </div>
   <div class="hero-right">
-    <span class="eyebrow">Premium Coffee Demo</span>
-    <h1 class="hero-title">The Art of<br><em>Perfect</em><br>Coffee</h1>
-    <p class="hero-sub">A landing page with depth, motion, and smooth animations built for a premium coffee brand that values the ritual as much as the result.</p>
-    <div class="hero-btns">
-      <a href="#features" class="btn-primary">Explore Blends →</a>
-      <a href="#product" class="btn-ghost">Our Story</a>
+    <canvas id="beanCanvas"></canvas>
+    <div class="bean-label"><span>Ethiopian · Yirgacheffe · 2,100m</span></div>
+  </div>
+</section>
+
+<div class="spec-bar">
+  <div class="spec-row">
+    <div class="spec"><span class="spec-k">Founded</span><span class="spec-v">2018</span></div>
+    <div class="spec"><span class="spec-k">Origins</span><span class="spec-v">12+</span></div>
+    <div class="spec"><span class="spec-k">Roast Cycle</span><span class="spec-v">Weekly</span></div>
+    <div class="spec"><span class="spec-k">Approach</span><span class="spec-v">Traceable</span></div>
+  </div>
+</div>
+
+<section class="origins" id="origins">
+  <div class="or-header">
+    <h2 class="or-title">Current<br>Offerings</h2>
+    <p class="or-desc">Each lot purchased direct from farmers at above-market rates. Roasted fresh to order, never pre-bagged.</p>
+  </div>
+  <div class="beans-grid">
+    <div class="bean-card" data-d="0">
+      <div class="bean-card-img"><img src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=600&q=80" alt="Ethiopian"></div>
+      <div class="bean-body">
+        <div class="bean-origin">Ethiopia · Yirgacheffe · 2,100m</div>
+        <div class="bean-name">Gedeo Forest Natural</div>
+        <p class="bean-notes">Ripe blueberry, dark chocolate, bergamot finish. One of the cleanest naturals we have ever sourced.</p>
+        <div class="bean-meta"><span class="bean-price">¥4,200 / 100g</span><span class="bean-process">Natural Process</span></div>
+      </div>
+    </div>
+    <div class="bean-card" data-d="120">
+      <div class="bean-card-img"><img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&q=80" alt="Colombian"></div>
+      <div class="bean-body">
+        <div class="bean-origin">Colombia · Huila · 1,850m</div>
+        <div class="bean-name">El Paraíso Washed</div>
+        <p class="bean-notes">Red apple, caramel, malic acidity. Exceptional balance for pour-over and Aeropress methods.</p>
+        <div class="bean-meta"><span class="bean-price">¥3,800 / 100g</span><span class="bean-process">Washed Process</span></div>
+      </div>
+    </div>
+    <div class="bean-card" data-d="240">
+      <div class="bean-card-img"><img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=600&q=80" alt="Guatemalan"></div>
+      <div class="bean-body">
+        <div class="bean-origin">Guatemala · Huehuetenango · 1,700m</div>
+        <div class="bean-name">Finca La Hermosa</div>
+        <p class="bean-notes">Peach, honey, light floral. A delicate honey process that rewards slow, attentive brewing.</p>
+        <div class="bean-meta"><span class="bean-price">¥3,400 / 100g</span><span class="bean-process">Honey Process</span></div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- FEATURES -->
-<section class="features" id="features">
-  <div class="features-header">
-    <span class="eyebrow">Why We're Different</span>
-    <h2>The ritual matters</h2>
-    <p>From sourcing to steaming — every step is deliberate, every cup a ceremony worth repeating.</p>
-  </div>
-  <div class="features-grid">
-    <div class="feature-item" data-delay="0">
-      <span class="feature-icon">☕</span>
-      <div class="feature-name">Single Origin</div>
-      <p class="feature-desc">Sourced from elevated farms in Ethiopia, Colombia, and Guatemala. Traceable from bean to cup.</p>
-    </div>
-    <div class="feature-item" data-delay="100">
-      <span class="feature-icon">🌿</span>
-      <div class="feature-name">Slow Roasted</div>
-      <p class="feature-desc">Our small-batch roasting technique preserves the unique terroir of each region's harvest.</p>
-    </div>
-    <div class="feature-item" data-delay="200">
-      <span class="feature-icon">✦</span>
-      <div class="feature-name">Precision Crafted</div>
-      <p class="feature-desc">Every bag is profiled, timed, and checked by our roastmaster to ensure consistent excellence.</p>
-    </div>
-  </div>
-</section>
+<div class="phil">
+  <div class="phil-line"></div>
+  <p class="phil-q">Coffee is not a commodity. It is a <em>conversation</em> between a farmer's labour, a roaster's attention, and the deliberate stillness of whoever holds the cup.</p>
+</div>
 
-<!-- PRODUCT -->
-<section class="product" id="product">
-  <div class="product-img">
-    <img src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=900&q=80" alt="Coffee beans close up">
-  </div>
-  <div class="product-content">
-    <span class="eyebrow">Featured Blend</span>
-    <h2>Midnight<br>Ethiopian Reserve</h2>
-    <p>Dark chocolate, ripe blueberry, and a long honeyed finish. This washed Ethiopian Yirgacheffe is complex, smooth, and deeply satisfying.</p>
-    <p>Grown at 2,100m altitude in the Gedeo Zone. Only available in limited seasonal runs.</p>
-    <div class="price-tag">$32 / 250g</div>
-    <a href="#" class="btn-primary">Add to Cart →</a>
+<section class="brew" id="brew">
+  <div class="brew-inner">
+    <h2 class="brew-h">Brew Guide</h2>
+    <div class="brew-steps">
+      <div class="step" data-d="0"><div class="step-n">01</div><div class="step-title">Grind Fresh</div><p class="step-desc">Grind only what you'll use. Medium-fine for pour-over, coarse for French press.</p></div>
+      <div class="step" data-d="80"><div class="step-n">02</div><div class="step-title">Water Temperature</div><p class="step-desc">93–96°C for lighter roasts. 88–91°C for medium profiles. Never boiling.</p></div>
+      <div class="step" data-d="160"><div class="step-n">03</div><div class="step-title">Bloom</div><p class="step-desc">Pour 2× the coffee's weight in water. Wait 30–45 seconds. Watch the gas release.</p></div>
+      <div class="step" data-d="240"><div class="step-n">04</div><div class="step-title">Pour & Rest</div><p class="step-desc">Slow even circles. Total brew time 3–4 minutes. Rest 60 seconds before tasting.</p></div>
+    </div>
   </div>
 </section>
 
 <footer>
-  <p>Coffee Landing Page Demo — <a href="../index.html">Studio 3D Portfolio</a> &nbsp;·&nbsp; © 2025 Studio 3D</p>
+  <div class="ft-logo">Kōhi</div>
+  <div class="ft-copy">Demo by Studio 3D · © 2025</div>
+  <a href="../index.html" class="ft-back">← Back to Portfolio</a>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      const d = parseInt(e.target.dataset.delay || 0);
-      setTimeout(() => e.target.classList.add('revealed'), d);
-      obs.unobserve(e.target);
-    }
+// ── THREE.JS COFFEE BEAN SCULPTURE ──
+(function(){
+  const container = document.querySelector('.hero-right');
+  const canvas = document.getElementById('beanCanvas');
+  const W = container.offsetWidth, H = container.offsetHeight;
+
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.setSize(W, H);
+  renderer.shadowMap.enabled = true;
+  renderer.setClearColor(0x000000, 0);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, W/H, 0.1, 100);
+  camera.position.set(0, 0, 4.5);
+
+  // Bean group
+  const beanGroup = new THREE.Group();
+  scene.add(beanGroup);
+
+  // Main bean body — flattened sphere
+  const beanGeo = new THREE.SphereGeometry(1, 64, 64);
+  const beanPos = beanGeo.attributes.position;
+  // Deform into bean shape
+  for(let i=0; i<beanPos.count; i++){
+    const x=beanPos.getX(i), y=beanPos.getY(i), z=beanPos.getZ(i);
+    // Flatten sides to make it oval
+    beanPos.setX(i, x*0.72);
+    beanPos.setZ(i, z*0.52);
+    // Add the characteristic crease
+    const crease = Math.exp(-y*y*2) * 0.15;
+    beanPos.setX(i, beanPos.getX(i) - crease * Math.sign(z));
+  }
+  beanGeo.computeVertexNormals();
+
+  const beanMat = new THREE.MeshStandardMaterial({
+    color: 0x2c1a0e,
+    roughness: 0.3,
+    metalness: 0.15,
+    envMapIntensity: 1,
   });
-}, { threshold: 0.1 });
+  const bean = new THREE.Mesh(beanGeo, beanMat);
+  beanGroup.add(bean);
 
-document.querySelectorAll('.features-header, .feature-item, .product').forEach(el => obs.observe(el));
+  // Crease line — torus that runs along the bean
+  const creaseGeo = new THREE.TorusGeometry(0.02, 0.015, 8, 80);
+  const creaseMat = new THREE.MeshStandardMaterial({color:0x1a0a04, roughness:0.6, metalness:0});
+  const crease = new THREE.Mesh(creaseGeo, creaseMat);
+  crease.rotation.y = Math.PI/2;
+  crease.scale.set(1, 36, 1);
+  crease.position.set(0, 0, 0.01);
+  beanGroup.add(crease);
 
-document.querySelectorAll('.btn-primary, .btn-ghost').forEach(btn => {
-  btn.addEventListener('click', function() {
-    const rect = btn.getBoundingClientRect();
-    const cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
-    const colors = ['#c4956a','#d4a87a','#fde68a','#fff'];
-    for (let i = 0; i < 10; i++) {
-      const s = document.createElement('div');
-      s.className = 'sparkle';
-      const angle = (i/10)*Math.PI*2;
-      const dist = 35 + Math.random()*35;
-      const size = 4 + Math.random()*5;
-      s.style.cssText = `left:${cx-size/2}px;top:${cy-size/2}px;width:${size}px;height:${size}px;background:${colors[Math.floor(Math.random()*colors.length)]};--tx:${Math.cos(angle)*dist}px;--ty:${Math.sin(angle)*dist}px;`;
-      document.body.appendChild(s);
-      setTimeout(() => s.remove(), 650);
+  // Steam particles
+  const steamGeo = new THREE.BufferGeometry();
+  const steamCount = 120;
+  const steamPos = new Float32Array(steamCount*3);
+  const steamVel = new Float32Array(steamCount*3);
+  for(let i=0;i<steamCount;i++){
+    steamPos[i*3]   = (Math.random()-.5)*.4;
+    steamPos[i*3+1] = 1.2 + Math.random()*2;
+    steamPos[i*3+2] = (Math.random()-.5)*.4;
+    steamVel[i*3]   = (Math.random()-.5)*.002;
+    steamVel[i*3+1] = 0.004 + Math.random()*.006;
+    steamVel[i*3+2] = (Math.random()-.5)*.002;
+  }
+  steamGeo.setAttribute('position', new THREE.BufferAttribute(steamPos,3));
+  const steamMat = new THREE.PointsMaterial({color:0xc4a888,size:0.025,transparent:true,opacity:0.3,blending:THREE.AdditiveBlending,depthWrite:false,sizeAttenuation:true});
+  const steam = new THREE.Points(steamGeo, steamMat);
+  scene.add(steam);
+
+  // Floating coffee aroma particles
+  const aromaGeo = new THREE.BufferGeometry();
+  const aromaCount = 200;
+  const aromaPos = new Float32Array(aromaCount*3);
+  for(let i=0;i<aromaCount;i++){
+    aromaPos[i*3]   = (Math.random()-.5)*5;
+    aromaPos[i*3+1] = (Math.random()-.5)*4;
+    aromaPos[i*3+2] = (Math.random()-.5)*3 - 1;
+  }
+  aromaGeo.setAttribute('position', new THREE.BufferAttribute(aromaPos,3));
+  const aromaMat = new THREE.PointsMaterial({color:0x8b6a44,size:0.012,transparent:true,opacity:0.25,blending:THREE.AdditiveBlending,depthWrite:false,sizeAttenuation:true});
+  const aroma = new THREE.Points(aromaGeo, aromaMat);
+  scene.add(aroma);
+
+  // LIGHTS — studio setup
+  const ambLight = new THREE.AmbientLight(0xffeedd, 0.4);
+  scene.add(ambLight);
+
+  // Key light — warm
+  const keyLight = new THREE.DirectionalLight(0xffd4a0, 2.5);
+  keyLight.position.set(3, 3, 3);
+  scene.add(keyLight);
+
+  // Fill light — cool rim
+  const fillLight = new THREE.DirectionalLight(0x4488ff, 0.6);
+  fillLight.position.set(-3, 1, -2);
+  scene.add(fillLight);
+
+  // Rim light
+  const rimLight = new THREE.PointLight(0xff9944, 1.5, 8);
+  rimLight.position.set(2, -1, -2);
+  scene.add(rimLight);
+
+  // Bottom glow
+  const bottomLight = new THREE.PointLight(0x3d1f0d, 2, 4);
+  bottomLight.position.set(0, -2, 1);
+  scene.add(bottomLight);
+
+  // Mouse interaction
+  let targetRotX=0, targetRotY=0;
+  let currentRotX=0, currentRotY=0;
+  document.addEventListener('mousemove', e=>{
+    targetRotY = (e.clientX/innerWidth - .5) * .8;
+    targetRotX = (e.clientY/innerHeight - .5) * .4;
+  });
+
+  window.addEventListener('resize',()=>{
+    const nW=container.offsetWidth, nH=container.offsetHeight;
+    camera.aspect=nW/nH;
+    camera.updateProjectionMatrix();
+    renderer.setSize(nW,nH);
+  });
+
+  let t=0;
+  function animate(){
+    requestAnimationFrame(animate);
+    t += 0.008;
+
+    // Auto-rotate bean
+    beanGroup.rotation.y += 0.005;
+    beanGroup.rotation.x = 0.15 + Math.sin(t*0.5)*0.1;
+
+    // Mouse parallax on camera
+    currentRotX += (targetRotX - currentRotX)*0.04;
+    currentRotY += (targetRotY - currentRotY)*0.04;
+    camera.position.x = currentRotY*0.8;
+    camera.position.y = -currentRotX*0.5;
+    camera.lookAt(0,0,0);
+
+    // Animate steam
+    const sp = steam.geometry.attributes.position;
+    for(let i=0;i<steamCount;i++){
+      let y = sp.getY(i) + steamVel[i*3+1];
+      let x = sp.getX(i) + steamVel[i*3] + Math.sin(t+i)*0.001;
+      if(y > 3.5){ y=1.2; x=(Math.random()-.5)*.4; }
+      sp.setY(i, y);
+      sp.setX(i, x);
     }
+    sp.needsUpdate = true;
+    steam.material.opacity = 0.15 + Math.sin(t)*0.08;
+
+    // Gentle pulse on rim light
+    rimLight.intensity = 1.5 + Math.sin(t*1.3)*0.4;
+
+    // Rotate aroma particles
+    aroma.rotation.y = t*0.05;
+    aroma.rotation.x = Math.sin(t*0.3)*0.1;
+
+    renderer.render(scene, camera);
+  }
+  animate();
+})();
+
+const io=new IntersectionObserver(ee=>{ee.forEach(e=>{if(e.isIntersecting){const d=parseInt(e.target.dataset.d||0);setTimeout(()=>e.target.classList.add('on'),d);io.unobserve(e.target)}})},{threshold:.1});
+document.querySelectorAll('.or-header,.bean-card,.phil-line,.phil-q,.brew-h,.step').forEach(el=>io.observe(el));
+
+document.querySelectorAll('.btn-black,.btn-ghost-b').forEach(b=>{
+  b.addEventListener('click',()=>{
+    const r=b.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+    ['#2c1a0e','#8b6a44','#c4b898','#fff'].forEach(col=>{
+      for(let j=0;j<3;j++){
+        const s=document.createElement('div');s.className='sp';
+        const a=Math.random()*Math.PI*2,d=28+Math.random()*45,sz=3+Math.random()*4;
+        s.style.cssText=`left:${cx-sz/2}px;top:${cy-sz/2}px;width:${sz}px;height:${sz}px;background:${col};--tx:${Math.cos(a)*d}px;--ty:${Math.sin(a)*d}px`;
+        document.body.appendChild(s);setTimeout(()=>s.remove(),650);
+      }
+    });
   });
 });
 </script>
