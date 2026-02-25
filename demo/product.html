@@ -3,53 +3,582 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Luxury Product Demo</title>
+<title>Luxury Product Showcase — Studio 3D</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Didact+Gothic&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
 <style>
-body, html { margin:0; padding:0; font-family:Arial; background:#f0f0f5; color:#333; overflow-x:hidden; }
-header { text-align:center; padding:60px 20px; }
-header h1 { font-size:2.5em; color:#3b2f2f; margin-bottom:10px; }
-header p { color:#555; font-size:1.2em; }
-.main-content { width:90%; max-width:900px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:space-around; gap:30px; }
-.product-card { width:250px; background:#fff; padding:20px; border-radius:15px; box-shadow:0 10px 25px rgba(0,0,0,0.2); transition: transform 0.3s, box-shadow 0.3s; cursor:pointer; }
-.product-card img { width:100%; border-radius:10px; transition: transform 0.3s; }
-.product-card:hover { transform:translateY(-10px); box-shadow:0 15px 35px rgba(0,0,0,0.3); }
-.product-card:hover img { transform:scale(1.05); }
-.product-card h3 { margin:10px 0; color:#6c4b3a; }
-.product-card p { font-size:0.9em; color:#555; }
-.back { display:block; margin:40px auto 0; text-align:center; text-decoration:none; color:#3b2f2f; font-weight:bold; }
-.back:hover { color:#6c4b3a; }
+  :root {
+    --bg: #f9f7f4;
+    --black: #0a0a0a;
+    --dark: #111111;
+    --mid: #444444;
+    --gray: #888888;
+    --light: #e8e4de;
+    --gold: #b8965a;
+    --gold-glow: rgba(184,150,90,0.25);
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--black); font-family: 'DM Sans', sans-serif; font-weight: 300; overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 28px 64px;
+    background: rgba(249,247,244,0.92);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+
+  .nav-brand {
+    font-family: 'EB Garamond', serif;
+    font-size: 20px;
+    font-style: italic;
+    color: var(--black);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    transition: color 0.3s;
+  }
+  .nav-brand:hover { color: var(--gold); }
+
+  .nav-links { display: flex; gap: 40px; align-items: center; }
+
+  .nav-link {
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gray);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .nav-link:hover { color: var(--black); }
+
+  .nav-back {
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gray);
+    text-decoration: none;
+    transition: color 0.3s;
+    border-left: 1px solid var(--light);
+    padding-left: 28px;
+  }
+  .nav-back:hover { color: var(--gold); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
+  }
+
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 140px 80px 80px;
+    background: var(--black);
+    color: var(--white);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-content::before {
+    content: '';
+    position: absolute;
+    bottom: -100px; right: -100px;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(184,150,90,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.3s;
+  }
+
+  .hero-title {
+    font-family: 'EB Garamond', serif;
+    font-size: clamp(3rem, 5vw, 5.5rem);
+    font-weight: 400;
+    line-height: 1.06;
+    margin-bottom: 32px;
+    letter-spacing: -0.01em;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.5s;
+    color: var(--white);
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold);
+    transition: color 0.3s, text-shadow 0.3s;
+  }
+
+  .hero-title em:hover {
+    color: #d4b478;
+    text-shadow: 0 0 50px var(--gold-glow);
+    cursor: default;
+  }
+
+  .hero-sub {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.9;
+    max-width: 380px;
+    margin-bottom: 56px;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.7s;
+    transition: color 0.3s;
+  }
+
+  .hero-sub:hover { color: rgba(255,255,255,0.7); }
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.9s;
+  }
+
+  .btn-gold {
+    padding: 16px 40px;
+    background: var(--gold);
+    color: var(--black);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border: none;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
+    position: relative;
+  }
+
+  .btn-gold:hover {
+    background: #d4b478;
+    box-shadow: 0 0 40px var(--gold-glow);
+    transform: translateY(-2px);
+  }
+
+  .btn-outline-white {
+    padding: 15px 36px;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.8);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: border-color 0.3s, background 0.3s, color 0.3s, transform 0.2s;
+  }
+
+  .btn-outline-white:hover {
+    border-color: rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.06);
+    color: #fff;
+    transform: translateY(-2px);
+  }
+
+  /* HERO IMAGE */
+  .hero-image {
+    position: relative;
+    overflow: hidden;
+    background: var(--light);
+  }
+
+  .hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.9) contrast(1.05) saturate(0.9);
+    transform: scale(1.04);
+    animation: slow-zoom 14s ease-in-out infinite alternate;
+    transition: filter 0.5s ease;
+  }
+
+  .hero-image:hover img { filter: brightness(1) contrast(1.05) saturate(1); }
+
+  @keyframes slow-zoom {
+    from { transform: scale(1.04); }
+    to { transform: scale(1.1); }
+  }
+
+  /* COLLECTION */
+  .collection {
+    padding: 140px 64px;
+    max-width: 1260px;
+    margin: 0 auto;
+  }
+
+  .collection-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 80px;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .collection-header.revealed { opacity: 1; transform: translateY(0); }
+
+  .collection-header .eyebrow { animation: none; opacity: 1; display: block; margin-bottom: 14px; color: var(--gold); }
+
+  .collection-header h2 {
+    font-family: 'EB Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3.8rem);
+    font-weight: 400;
+    line-height: 1.1;
+    transition: color 0.3s;
+  }
+
+  .collection-header h2:hover { color: var(--gold); cursor: default; }
+
+  .collection-header p { color: var(--gray); max-width: 280px; line-height: 1.7; text-align: right; font-size: 0.9rem; }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: var(--light);
+  }
+
+  .product-card {
+    background: var(--white);
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    cursor: pointer;
+  }
+
+  .product-card.revealed { opacity: 1; transform: translateY(0); }
+
+  .product-card-img {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 3/4;
+    background: var(--light);
+  }
+
+  .product-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.85) brightness(0.95);
+    transition: transform 0.7s ease, filter 0.4s ease;
+  }
+
+  .product-card:hover .product-card-img img {
+    transform: scale(1.06);
+    filter: saturate(1) brightness(1);
+  }
+
+  .product-card-body {
+    padding: 28px 28px 36px;
+    border-top: 1px solid var(--light);
+  }
+
+  .product-cat {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+
+  .product-name {
+    font-family: 'EB Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    margin-bottom: 8px;
+    transition: color 0.3s;
+  }
+
+  .product-card:hover .product-name { color: var(--gold); }
+
+  .product-tagline {
+    font-size: 0.85rem;
+    color: var(--gray);
+    line-height: 1.6;
+    margin-bottom: 20px;
+    transition: color 0.3s;
+  }
+
+  .product-card:hover .product-tagline { color: var(--mid); }
+
+  .product-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .product-price {
+    font-family: 'EB Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: var(--black);
+  }
+
+  .btn-add {
+    padding: 9px 20px;
+    background: var(--black);
+    color: var(--white);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+    text-decoration: none;
+  }
+
+  .btn-add:hover {
+    background: var(--gold);
+    color: var(--black);
+    transform: translateY(-2px);
+  }
+
+  /* BANNER */
+  .banner {
+    background: var(--black);
+    color: var(--white);
+    padding: 120px 64px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .banner.revealed { opacity: 1; transform: translateY(0); }
+
+  .banner-text .eyebrow { animation: none; opacity: 1; display: block; margin-bottom: 20px; }
+
+  .banner-text h2 {
+    font-family: 'EB Garamond', serif;
+    font-size: clamp(2rem, 3.5vw, 3.5rem);
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 24px;
+    transition: color 0.3s;
+  }
+
+  .banner-text h2:hover { color: var(--gold); cursor: default; }
+
+  .banner-text p { color: rgba(255,255,255,0.5); line-height: 1.85; margin-bottom: 40px; max-width: 400px; transition: color 0.3s; }
+  .banner-text p:hover { color: rgba(255,255,255,0.7); }
+
+  .banner-img {
+    position: relative;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .banner-img img {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+    filter: brightness(0.8) saturate(0.85);
+    transition: transform 0.7s ease;
+  }
+
+  .banner:hover .banner-img img { transform: scale(1.04); }
+
+  /* FOOTER */
+  footer {
+    background: var(--black);
+    color: rgba(255,255,255,0.4);
+    text-align: center;
+    padding: 56px 32px;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  footer a { color: var(--gold); text-decoration: none; font-family: 'EB Garamond', serif; font-style: italic; }
+  footer a:hover { text-decoration: underline; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .sparkle {
+    position: fixed; pointer-events: none; z-index: 9999;
+    border-radius: 50%;
+    animation: spark 0.6s ease forwards;
+  }
+
+  @keyframes spark {
+    0% { opacity: 1; transform: translate(0,0) scale(1); }
+    100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0); }
+  }
+
+  @media (max-width: 900px) {
+    nav { padding: 20px 24px; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-content { padding: 120px 32px 60px; }
+    .hero-image { height: 400px; }
+    .collection { padding: 80px 24px; }
+    .collection-header { flex-direction: column; align-items: flex-start; gap: 20px; }
+    .collection-header p { text-align: left; }
+    .products-grid { grid-template-columns: 1fr; }
+    .banner { grid-template-columns: 1fr; padding: 80px 32px; }
+    .banner-img { order: -1; }
+    .banner-img img { height: 300px; }
+  }
 </style>
 </head>
 <body>
-<header>
-<h1>Luxury Product Showcase</h1>
-<p>Interactive 3D-style product presentation with premium feel.</p>
-</header>
 
-<div class="main-content">
-  <div class="product-card">
-    <img src="https://images.pexels.com/photos/715688/pexels-photo-715688.jpeg" alt="Product 1">
-    <h3>Handmade Watch</h3>
-    <p>Classic design with ethnic craftsmanship.</p>
+<nav>
+  <a href="../index.html" class="nav-brand">Studio 3D</a>
+  <div class="nav-links">
+    <a href="#collection" class="nav-link">Collection</a>
+    <a href="#about" class="nav-link">About</a>
   </div>
-  <div class="product-card">
-    <img src="https://images.pexels.com/photos/1661477/pexels-photo-1661477.jpeg" alt="Product 2">
-    <h3>Leather Bag</h3>
-    <p>Premium leather with detailed embroidery.</p>
-  </div>
-  <div class="product-card">
-    <img src="https://images.pexels.com/photos/715688/pexels-photo-715688.jpeg" alt="Product 3">
-    <h3>Perfume Bottle</h3>
-    <p>Elegant fragrance packaging with artisanal style.</p>
-  </div>
-</div>
+  <a href="../index.html" class="nav-back">← Portfolio</a>
+</nav>
 
-<a class="back" href="../index.html">← Back to Portfolio</a>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <span class="eyebrow">Luxury Product Demo</span>
+    <h1 class="hero-title">Objects of<br><em>Rare</em><br>Distinction</h1>
+    <p class="hero-sub">Highlight premium products with an interactive, 3D-style presentation built for high-conversion storytelling and brand prestige.</p>
+    <div class="hero-actions">
+      <a href="#collection" class="btn-gold">View Collection →</a>
+      <a href="#about" class="btn-outline-white">Our Craft</a>
+    </div>
+  </div>
+  <div class="hero-image">
+    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900&q=80" alt="Luxury watch">
+  </div>
+</section>
+
+<!-- COLLECTION -->
+<section class="collection" id="collection">
+  <div class="collection-header">
+    <div>
+      <span class="eyebrow">2025 Collection</span>
+      <h2>Precision<br>Reimagined</h2>
+    </div>
+    <p>Each piece is a convergence of heritage craft and modern design — made to outlast trends.</p>
+  </div>
+  <div class="products-grid">
+    <div class="product-card" data-delay="0">
+      <div class="product-card-img">
+        <img src="https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?w=600&q=80" alt="Watch 1">
+      </div>
+      <div class="product-card-body">
+        <div class="product-cat">Horology</div>
+        <div class="product-name">The Meridian I</div>
+        <p class="product-tagline">Swiss movement, sapphire crystal, 5-day power reserve.</p>
+        <div class="product-footer">
+          <span class="product-price">$4,800</span>
+          <a href="#" class="btn-add">View</a>
+        </div>
+      </div>
+    </div>
+    <div class="product-card" data-delay="100">
+      <div class="product-card-img">
+        <img src="https://images.unsplash.com/photo-1548169874-53e85f753f1e?w=600&q=80" alt="Product 2">
+      </div>
+      <div class="product-card-body">
+        <div class="product-cat">Accessories</div>
+        <div class="product-name">The Umbra</div>
+        <p class="product-tagline">Hand-stitched full-grain leather. Patina improves with time.</p>
+        <div class="product-footer">
+          <span class="product-price">$650</span>
+          <a href="#" class="btn-add">View</a>
+        </div>
+      </div>
+    </div>
+    <div class="product-card" data-delay="200">
+      <div class="product-card-img">
+        <img src="https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=600&q=80" alt="Product 3">
+      </div>
+      <div class="product-card-body">
+        <div class="product-cat">Fragrance</div>
+        <div class="product-name">Noir Absolu</div>
+        <p class="product-tagline">Oud, vetiver, and cedarwood. Bottled in hand-blown Venetian glass.</p>
+        <div class="product-footer">
+          <span class="product-price">$320</span>
+          <a href="#" class="btn-add">View</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BANNER -->
+<section class="banner" id="about">
+  <div class="banner-text">
+    <span class="eyebrow">Our Philosophy</span>
+    <h2>Craftsmanship<br>that endures</h2>
+    <p>We collaborate with the world's most skilled artisans to create objects that are as meaningful as they are beautiful — each one a story told through material and form.</p>
+    <a href="#" class="btn-gold">Explore the Atelier →</a>
+  </div>
+  <div class="banner-img">
+    <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=900&q=80" alt="Craftsmanship">
+  </div>
+</section>
+
+<footer>
+  <p>Luxury Product Demo — <a href="../index.html">Studio 3D Portfolio</a> &nbsp;·&nbsp; © 2025 Studio 3D</p>
+</footer>
 
 <script>
-const cards = document.querySelectorAll('.product-card');
-cards.forEach(card=>{
-  card.addEventListener('click', ()=>{ alert("Clicked: " + card.querySelector('h3').innerText); });
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const d = parseInt(e.target.dataset.delay || 0);
+      setTimeout(() => e.target.classList.add('revealed'), d);
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.collection-header, .product-card, .banner').forEach(el => obs.observe(el));
+
+document.querySelectorAll('.btn-gold, .btn-outline-white, .btn-add, .btn-outline').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const rect = btn.getBoundingClientRect();
+    const cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
+    const colors = ['#b8965a','#d4b478','#ffe8a0','#fff','#8a6a30'];
+    for (let i = 0; i < 10; i++) {
+      const s = document.createElement('div');
+      s.className = 'sparkle';
+      const angle = (i/10)*Math.PI*2;
+      const dist = 35 + Math.random()*35;
+      const size = 4 + Math.random()*5;
+      s.style.cssText = `left:${cx-size/2}px;top:${cy-size/2}px;width:${size}px;height:${size}px;background:${colors[Math.floor(Math.random()*colors.length)]};--tx:${Math.cos(angle)*dist}px;--ty:${Math.sin(angle)*dist}px;`;
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 650);
+    }
+  });
 });
 </script>
 </body>
