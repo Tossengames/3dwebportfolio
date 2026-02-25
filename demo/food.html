@@ -3,542 +3,300 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Interactive Food Experience — Studio 3D</title>
+<title>Maison — Fine Dining Experience</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0e0a06;
-    --amber: #f59e0b;
-    --amber-glow: rgba(245,158,11,0.3);
-    --red: #dc2626;
-    --cream: #fef3c7;
-    --gray: #a08060;
-    --white: #fff8ef;
-    --card: rgba(20,13,5,0.9);
-  }
+:root{--bg:#0c0804;--red:#c41c1c;--cream:#f5f0e8;--warm:#e8d5b0;--gray:#7a6a58;--dark:#150e08;--white:#fdf8f0}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden}
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body { background: var(--bg); color: var(--white); font-family: 'DM Sans', sans-serif; font-weight: 300; overflow-x: hidden; }
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:20px 48px}
+.nav-name{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.12em;color:var(--cream);text-decoration:none;transition:color .3s}
+.nav-name:hover{color:var(--red)}
+.nav-right{display:flex;align-items:center;gap:32px}
+.nav-link{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,232,.45);text-decoration:none;transition:color .3s}
+.nav-link:hover{color:var(--cream)}
+.nav-res{padding:10px 22px;background:var(--red);color:#fff;font-size:11px;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;transition:background .3s,transform .2s,box-shadow .3s}
+.nav-res:hover{background:#a01515;transform:translateY(-1px);box-shadow:0 4px 20px rgba(196,28,28,.4)}
 
-  /* NOISE */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
-    opacity: 0.5;
-  }
+/* HERO — canvas wave behind */
+.hero{position:relative;height:100vh;min-height:700px;overflow:hidden;display:flex;align-items:flex-end}
+#waveCanvas{position:absolute;inset:0;z-index:1}
+.hero-photo{position:absolute;inset:0;z-index:0}
+.hero-photo img{width:100%;height:100%;object-fit:cover;filter:brightness(.35)}
+.hero-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(12,8,4,.98) 0%,rgba(12,8,4,.3) 50%,transparent 100%)}
 
-  .wrap { position: relative; z-index: 1; }
+.hero-text{position:relative;z-index:10;padding:0 60px 80px;width:100%}
+.hero-micro{font-size:10px;letter-spacing:.45em;text-transform:uppercase;color:var(--red);margin-bottom:14px;opacity:0;animation:fu .7s ease forwards .5s}
+.hero-h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(5rem,14vw,14rem);line-height:.92;letter-spacing:.02em;color:var(--cream);opacity:0;animation:fu 1s ease forwards .6s}
+.hero-h1 em{font-style:normal;color:var(--red);display:block}
+.hero-bottom{display:flex;justify-content:space-between;align-items:flex-end;margin-top:20px;opacity:0;animation:fu .9s ease forwards .9s}
+.hero-desc{font-size:1rem;color:rgba(245,240,232,.55);line-height:1.8;max-width:400px;font-weight:200}
+.hero-scroll{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gray);display:flex;align-items:center;gap:14px}
+.hero-scroll::before{content:'';width:50px;height:1px;background:var(--gray)}
 
-  /* NAV */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 24px 48px;
-    backdrop-filter: blur(20px);
-    background: rgba(14,10,6,0.7);
-    border-bottom: 1px solid rgba(245,158,11,0.1);
-  }
+/* TICKER */
+.ticker-wrap{background:var(--red);overflow:hidden;padding:13px 0;white-space:nowrap;position:relative;z-index:2}
+.ticker{display:inline-flex;animation:tick 20s linear infinite}
+.ticker span{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:.2em;color:#fff;padding:0 28px}
+.ticker span.dot{color:rgba(255,255,255,.4);padding:0 4px;font-size:10px}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-  .nav-logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 18px;
-    font-style: italic;
-    color: var(--amber);
-    text-decoration: none;
-    letter-spacing: 0.02em;
-    transition: opacity 0.3s;
-  }
-  .nav-logo:hover { opacity: 0.7; }
+/* DISH FEATURES */
+.dish-feature{display:grid;grid-template-columns:3fr 2fr;min-height:580px;opacity:0;transform:translateY(40px);transition:opacity .9s ease,transform .9s ease}
+.dish-feature.on{opacity:1;transform:translateY(0)}
+.dish-feature.flip{grid-template-columns:2fr 3fr}
+.df-img{position:relative;overflow:hidden}
+.df-img img{width:100%;height:100%;object-fit:cover;filter:brightness(.75) saturate(1.1);transition:transform 1s ease,filter .5s}
+.dish-feature:hover .df-img img{transform:scale(1.05);filter:brightness(.9) saturate(1.2)}
+.df-content{background:var(--dark);display:flex;flex-direction:column;justify-content:center;padding:72px 64px;position:relative;overflow:hidden}
+.df-content::before{content:'';position:absolute;bottom:-80px;right:-80px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(196,28,28,.07),transparent 70%)}
+.df-cat{font-size:10px;letter-spacing:.45em;text-transform:uppercase;color:var(--red);margin-bottom:20px}
+.df-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,5vw,5.5rem);line-height:.95;color:var(--cream);margin-bottom:18px;transition:color .3s}
+.dish-feature:hover .df-name{color:var(--red)}
+.df-desc{font-family:'Libre Baskerville',serif;font-style:italic;font-size:.95rem;color:var(--gray);line-height:1.85;margin-bottom:36px;max-width:340px}
+.df-detail{display:flex;gap:32px;margin-bottom:40px}
+.df-d{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gray)}
+.df-d strong{display:block;font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--warm);letter-spacing:.08em;font-weight:400;margin-bottom:2px}
+.btn-red{display:inline-flex;align-items:center;gap:10px;padding:14px 32px;background:transparent;border:1px solid var(--red);color:var(--cream);font-size:11px;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;transition:background .3s,transform .2s,box-shadow .3s;width:fit-content}
+.btn-red:hover{background:var(--red);transform:translateY(-2px);box-shadow:0 0 30px rgba(196,28,28,.35)}
 
-  .nav-back {
-    font-size: 12px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--gray);
-    text-decoration: none;
-    transition: color 0.3s;
-  }
-  .nav-back:hover { color: var(--amber); }
+/* QUOTE */
+.phil{padding:120px 48px;text-align:center;max-width:860px;margin:0 auto;opacity:0;transform:translateY(24px);transition:opacity .9s,transform .9s}
+.phil.on{opacity:1;transform:translateY(0)}
+.phil-q{font-family:'Libre Baskerville',serif;font-style:italic;font-size:clamp(1.4rem,3vw,2.4rem);line-height:1.5;color:var(--warm);margin-bottom:28px}
+.phil-attr{font-size:10px;letter-spacing:.35em;text-transform:uppercase;color:var(--red)}
 
-  /* HERO */
-  .hero {
-    min-height: 100vh;
-    display: grid;
-    place-items: center;
-    text-align: center;
-    padding: 120px 32px 80px;
-    position: relative;
-  }
+/* MENU GRID */
+.menu-sec{padding:80px 60px 140px;max-width:1400px;margin:0 auto}
+.menu-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,7vw,7rem);color:var(--cream);margin-bottom:56px;line-height:1;opacity:0;transform:translateX(-30px);transition:opacity .8s,transform .8s}
+.menu-title.on{opacity:1;transform:translateX(0)}
+.menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}
+.menu-item{background:var(--dark);padding:36px 32px;opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease,background .3s}
+.menu-item.on{opacity:1;transform:translateY(0)}
+.menu-item:hover{background:#221408}
+.mi-course{font-size:10px;letter-spacing:.35em;text-transform:uppercase;color:var(--red);margin-bottom:16px}
+.mi-name{font-family:'Libre Baskerville',serif;font-size:1.2rem;font-weight:700;color:var(--cream);margin-bottom:10px;line-height:1.3;transition:color .3s}
+.menu-item:hover .mi-name{color:var(--red)}
+.mi-desc{font-size:.85rem;color:var(--gray);line-height:1.7;margin-bottom:20px}
+.mi-price{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--warm);letter-spacing:.05em}
 
-  .hero-bg {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    z-index: 0;
-  }
+/* FOOTER */
+footer{background:#070401;border-top:1px solid rgba(196,28,28,.12);padding:48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
+.ft-brand{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.1em;color:var(--cream)}
+.ft-mid{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gray)}
+.ft-back{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gray);text-decoration:none;transition:color .3s}
+.ft-back:hover{color:var(--red)}
 
-  .hero-bg img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: brightness(0.2) saturate(0.8);
-    transform: scale(1.05);
-    animation: slow-zoom 12s ease-in-out infinite alternate;
-  }
+@keyframes fu{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.sp{position:fixed;pointer-events:none;z-index:9999;border-radius:50%;animation:spa .6s ease forwards}
+@keyframes spa{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(0)}}
 
-  @keyframes slow-zoom {
-    from { transform: scale(1.05); }
-    to   { transform: scale(1.12); }
-  }
-
-  .hero-bg::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse at center bottom, rgba(245,158,11,0.12) 0%, transparent 65%);
-  }
-
-  .hero-inner {
-    position: relative;
-    z-index: 1;
-    max-width: 780px;
-  }
-
-  .eyebrow {
-    display: inline-block;
-    font-size: 11px;
-    letter-spacing: 0.35em;
-    text-transform: uppercase;
-    color: var(--amber);
-    margin-bottom: 28px;
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards 0.3s;
-  }
-
-  .hero-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(3rem, 8vw, 6.5rem);
-    font-weight: 900;
-    line-height: 1.0;
-    letter-spacing: -0.02em;
-    margin-bottom: 24px;
-    opacity: 0;
-    animation: fadeUp 1s ease forwards 0.5s;
-  }
-
-  .hero-title em {
-    font-style: italic;
-    color: var(--amber);
-    transition: color 0.3s ease, text-shadow 0.3s ease;
-  }
-
-  .hero-title em:hover {
-    color: #fbbf24;
-    text-shadow: 0 0 40px var(--amber-glow);
-    cursor: default;
-  }
-
-  .hero-sub {
-    font-size: 1.1rem;
-    color: var(--gray);
-    line-height: 1.8;
-    max-width: 480px;
-    margin: 0 auto 48px;
-    opacity: 0;
-    animation: fadeUp 1s ease forwards 0.7s;
-    transition: color 0.3s ease;
-  }
-
-  .hero-sub:hover { color: #c0a880; }
-
-  .hero-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px 40px;
-    background: var(--amber);
-    color: var(--bg);
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 400;
-    font-size: 14px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    text-decoration: none;
-    border-radius: 4px;
-    opacity: 0;
-    animation: fadeUp 1s ease forwards 0.9s;
-    transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
-  }
-
-  .hero-cta:hover {
-    background: #fbbf24;
-    box-shadow: 0 0 40px var(--amber-glow);
-    transform: translateY(-2px);
-  }
-
-  /* SCROLL LINE */
-  .scroll-line {
-    position: absolute;
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards 1.2s;
-  }
-
-  .scroll-line span { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gray); }
-  .scroll-line::before {
-    content: '';
-    display: block;
-    width: 1px;
-    height: 50px;
-    background: linear-gradient(to bottom, transparent, var(--amber));
-  }
-
-  /* DISHES GRID */
-  .dishes {
-    padding: 120px 0;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding-left: 48px;
-    padding-right: 48px;
-  }
-
-  .dishes-header {
-    text-align: center;
-    margin-bottom: 80px;
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
-  }
-
-  .dishes-header.revealed { opacity: 1; transform: translateY(0); }
-
-  .dishes-header h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2rem, 4vw, 3.5rem);
-    font-weight: 700;
-    margin-bottom: 16px;
-    transition: color 0.3s;
-  }
-
-  .dishes-header h2:hover { color: var(--amber); cursor: default; }
-
-  .dishes-header p { color: var(--gray); font-size: 1rem; line-height: 1.7; max-width: 440px; margin: 0 auto; }
-
-  .dishes-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-  }
-
-  .dish-card {
-    border-radius: 16px;
-    overflow: hidden;
-    position: relative;
-    cursor: pointer;
-    opacity: 0;
-    transform: translateY(40px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
-  }
-
-  .dish-card.revealed { opacity: 1; transform: translateY(0); }
-
-  .dish-card:nth-child(1) { grid-row: span 2; }
-
-  .dish-card img {
-    width: 100%;
-    height: 100%;
-    min-height: 280px;
-    object-fit: cover;
-    transition: transform 0.7s ease, filter 0.4s ease;
-    filter: brightness(0.7) saturate(1.1);
-    display: block;
-  }
-
-  .dish-card:hover img {
-    transform: scale(1.07);
-    filter: brightness(0.85) saturate(1.2);
-  }
-
-  .dish-overlay {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    padding: 40px 28px 28px;
-    background: linear-gradient(to top, rgba(10,6,2,0.95) 0%, transparent 100%);
-    transform: translateY(8px);
-    transition: transform 0.4s ease;
-  }
-
-  .dish-card:hover .dish-overlay { transform: translateY(0); }
-
-  .dish-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 6px;
-    transition: color 0.3s;
-  }
-
-  .dish-card:hover .dish-name { color: var(--amber); }
-
-  .dish-tag {
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--gray);
-  }
-
-  /* STORY SECTION */
-  .story {
-    padding: 80px 48px 140px;
-    max-width: 1100px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 80px;
-    align-items: center;
-  }
-
-  .story-img {
-    border-radius: 12px;
-    overflow: hidden;
-    opacity: 0;
-    transform: translateX(-30px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
-  }
-
-  .story-img.revealed { opacity: 1; transform: translateX(0); }
-
-  .story-img img {
-    width: 100%;
-    height: 500px;
-    object-fit: cover;
-    filter: brightness(0.75) saturate(1.1);
-    transition: transform 0.7s ease;
-  }
-
-  .story-img:hover img { transform: scale(1.04); }
-
-  .story-text {
-    opacity: 0;
-    transform: translateX(30px);
-    transition: opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s;
-  }
-
-  .story-text.revealed { opacity: 1; transform: translateX(0); }
-
-  .story-text .eyebrow { animation: none; opacity: 1; display: block; margin-bottom: 20px; }
-
-  .story-text h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(1.8rem, 3vw, 2.8rem);
-    font-weight: 700;
-    line-height: 1.2;
-    margin-bottom: 24px;
-    transition: color 0.3s;
-  }
-
-  .story-text h2:hover { color: var(--amber); cursor: default; }
-
-  .story-text p {
-    color: var(--gray);
-    line-height: 1.8;
-    margin-bottom: 16px;
-    transition: color 0.3s;
-  }
-
-  .story-text p:hover { color: #c0a880; }
-
-  .btn-amber {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 32px;
-    padding: 14px 32px;
-    background: transparent;
-    border: 1.5px solid var(--amber);
-    border-radius: 4px;
-    color: var(--amber);
-    font-size: 13px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    text-decoration: none;
-    transition: background 0.3s, color 0.3s, box-shadow 0.3s, transform 0.2s;
-    cursor: pointer;
-  }
-
-  .btn-amber:hover {
-    background: var(--amber);
-    color: var(--bg);
-    box-shadow: 0 0 30px var(--amber-glow);
-    transform: translateY(-2px);
-  }
-
-  /* FOOTER */
-  footer {
-    position: relative;
-    z-index: 1;
-    text-align: center;
-    padding: 48px 32px;
-    border-top: 1px solid rgba(245,158,11,0.1);
-    color: var(--gray);
-    font-size: 13px;
-    letter-spacing: 0.05em;
-  }
-
-  footer a { color: var(--amber); text-decoration: none; font-family: 'Playfair Display', serif; font-style: italic; }
-  footer a:hover { text-decoration: underline; }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  /* SPARKLE */
-  .sparkle {
-    position: fixed;
-    pointer-events: none;
-    z-index: 9999;
-    border-radius: 50%;
-    animation: spark 0.6s ease forwards;
-  }
-
-  @keyframes spark {
-    0% { opacity: 1; transform: translate(0,0) scale(1); }
-    100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0); }
-  }
-
-  @media (max-width: 768px) {
-    nav { padding: 20px 24px; }
-    .dishes { padding: 80px 24px; }
-    .dishes-grid { grid-template-columns: 1fr; }
-    .dish-card:nth-child(1) { grid-row: span 1; }
-    .story { grid-template-columns: 1fr; gap: 40px; padding: 60px 24px 100px; }
-    .story-img { transform: none; }
-    .story-text { transform: none; }
-  }
+@media(max-width:900px){
+  nav{padding:18px 24px}
+  .nav-right .nav-link{display:none}
+  .hero-text{padding:0 28px 60px}
+  .hero-bottom{flex-direction:column;align-items:flex-start;gap:16px}
+  .dish-feature,.dish-feature.flip{grid-template-columns:1fr;min-height:auto}
+  .df-img{height:280px}
+  .df-content{padding:44px 28px}
+  .menu-sec{padding:60px 24px 100px}
+  .menu-grid{grid-template-columns:1fr}
+  footer{flex-direction:column;text-align:center;padding:36px 24px}
+}
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <nav>
-    <a href="../index.html" class="nav-logo">Studio 3D</a>
-    <a href="../index.html" class="nav-back">← Back to Portfolio</a>
-  </nav>
+<nav>
+  <a href="../index.html" class="nav-name">Maison</a>
+  <div class="nav-right">
+    <a href="#menu" class="nav-link">Menu</a>
+    <a href="#" class="nav-link">Reservations</a>
+    <a href="#" class="nav-res">Reserve a Table</a>
+  </div>
+</nav>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-bg">
-      <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1400&q=80" alt="Fine dining">
+<section class="hero">
+  <div class="hero-photo">
+    <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1600&q=85" alt="Fine Dining">
+  </div>
+  <canvas id="waveCanvas"></canvas>
+  <div class="hero-text">
+    <div class="hero-micro">★★★ Michelin Guide 2025</div>
+    <h1 class="hero-h1">Fine<br><em>Dining</em><br>Reimagined</h1>
+    <div class="hero-bottom">
+      <p class="hero-desc">Where French culinary tradition meets contemporary narrative. Every plate a chapter, every evening a story.</p>
+      <div class="hero-scroll">scroll to discover</div>
     </div>
-    <div class="hero-inner">
-      <span class="eyebrow">Food Experience Demo</span>
-      <h1 class="hero-title">A Taste of<br><em>Extraordinary</em></h1>
-      <p class="hero-sub">Engaging food website using depth and motion to highlight dishes and transform the dining experience.</p>
-      <a href="#dishes" class="hero-cta">Explore the Menu ↓</a>
-    </div>
-    <div class="scroll-line"><span>Scroll</span></div>
-  </section>
+  </div>
+</section>
 
-  <!-- DISHES -->
-  <section class="dishes" id="dishes">
-    <div class="dishes-header">
-      <h2>Signature Dishes</h2>
-      <p>Each creation is a story of flavour, texture, and artistry — designed to be as beautiful as it is unforgettable.</p>
-    </div>
-    <div class="dishes-grid">
-      <div class="dish-card" data-delay="0">
-        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=700&q=80" alt="Artisan Pizza">
-        <div class="dish-overlay">
-          <div class="dish-name">Wood-Fired Artisan</div>
-          <div class="dish-tag">Chef's Signature</div>
-        </div>
-      </div>
-      <div class="dish-card" data-delay="100">
-        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=700&q=80" alt="Fresh Salad" style="min-height:200px">
-        <div class="dish-overlay">
-          <div class="dish-name">Garden Harvest</div>
-          <div class="dish-tag">Seasonal Selection</div>
-        </div>
-      </div>
-      <div class="dish-card" data-delay="200">
-        <img src="https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=700&q=80" alt="Dessert" style="min-height:200px">
-        <div class="dish-overlay">
-          <div class="dish-name">Sweet Finale</div>
-          <div class="dish-tag">Pastry Creation</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- STORY -->
-  <section class="story">
-    <div class="story-img">
-      <img src="https://images.unsplash.com/photo-1551218808-94e220e084d2?w=700&q=80" alt="Restaurant interior">
-    </div>
-    <div class="story-text">
-      <span class="eyebrow">Our Philosophy</span>
-      <h2>Crafted with<br>intention & soul</h2>
-      <p>Every dish emerges from a deep respect for seasonal ingredients, local producers, and the centuries-old traditions that turn simple food into ceremony.</p>
-      <p>Motion and depth aren't just visual effects — they're an invitation to slow down and savour every moment before the first bite.</p>
-      <a href="#" class="btn-amber">Reserve a Table →</a>
-    </div>
-  </section>
-
-  <footer>
-    <p>Food Experience Demo — <a href="../index.html">Studio 3D Portfolio</a> &nbsp;·&nbsp; © 2025 Studio 3D</p>
-  </footer>
-
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span>Seasonal Tasting Menu</span><span class="dot">◆</span><span>Wine Pairing Available</span><span class="dot">◆</span><span>Private Dining Rooms</span><span class="dot">◆</span><span>Open Tuesday – Sunday</span><span class="dot">◆</span><span>Reservations Recommended</span><span class="dot">◆</span>
+    <span>Seasonal Tasting Menu</span><span class="dot">◆</span><span>Wine Pairing Available</span><span class="dot">◆</span><span>Private Dining Rooms</span><span class="dot">◆</span><span>Open Tuesday – Sunday</span><span class="dot">◆</span><span>Reservations Recommended</span><span class="dot">◆</span>
+  </div>
 </div>
 
+<div class="dish-feature" data-d="0">
+  <div class="df-img"><img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=1200&q=85" alt="Signature Dish"></div>
+  <div class="df-content">
+    <div class="df-cat">Entrée Principale</div>
+    <h2 class="df-name">Côte de<br>Bœuf Noir</h2>
+    <p class="df-desc">Dry-aged 60 days, finished with truffle butter and a Burgundy reduction. Served with pommes Anna and seasonal micro-herbs from our garden.</p>
+    <div class="df-detail"><div class="df-d"><strong>€185</strong>Per person</div><div class="df-d"><strong>2020</strong>Suggested vintage</div></div>
+    <a href="#" class="btn-red">View Full Menu →</a>
+  </div>
+</div>
+
+<div class="dish-feature flip" data-d="100">
+  <div class="df-content">
+    <div class="df-cat">Dessert de Saison</div>
+    <h2 class="df-name">Soufflé<br>Chocolat</h2>
+    <p class="df-desc">Valrhona dark chocolate soufflé with a salted caramel centre. Accompanied by vanilla bean crème anglaise and Champagne sorbet.</p>
+    <div class="df-detail"><div class="df-d"><strong>€42</strong>À la carte</div><div class="df-d"><strong>18 min</strong>Preparation</div></div>
+    <a href="#" class="btn-red">Reserve a Table →</a>
+  </div>
+  <div class="df-img"><img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=1200&q=85" alt="Chocolate Dessert"></div>
+</div>
+
+<div class="phil">
+  <blockquote class="phil-q">"Cooking is not about convenience. Our kitchen exists to tell a story through every carefully considered ingredient."</blockquote>
+  <div class="phil-attr">— Chef de Cuisine, Maison</div>
+</div>
+
+<section class="menu-sec" id="menu">
+  <h2 class="menu-title">Tonight's<br>Menu</h2>
+  <div class="menu-grid">
+    <div class="menu-item" data-d="0"><div class="mi-course">Amuse-Bouche</div><div class="mi-name">Oyster & Cucumber Gelée</div><p class="mi-desc">Fines de claires with cucumber water, dill oil, and frozen caviar pearls.</p><div class="mi-price">Complimentary</div></div>
+    <div class="menu-item" data-d="80"><div class="mi-course">First Course</div><div class="mi-name">Foie Gras Torchon</div><p class="mi-desc">House-cured with Sauternes, brioche mouillette, and black truffle honey.</p><div class="mi-price">€68</div></div>
+    <div class="menu-item" data-d="160"><div class="mi-course">Second Course</div><div class="mi-name">Langoustine Royale</div><p class="mi-desc">Brittany langoustine, bisque foam, caviar, and seasonal sea vegetables.</p><div class="mi-price">€92</div></div>
+    <div class="menu-item" data-d="240"><div class="mi-course">Main Course</div><div class="mi-name">Pigeon en Croûte</div><p class="mi-desc">Bresse pigeon wrapped in brioche pastry, cherry jus, and glazed chicory.</p><div class="mi-price">€145</div></div>
+    <div class="menu-item" data-d="320"><div class="mi-course">Pre-Dessert</div><div class="mi-name">Lemon Verbena Granita</div><p class="mi-desc">Palate cleanser with fresh verbena from the garden and yuzu cream.</p><div class="mi-price">Included</div></div>
+    <div class="menu-item" data-d="400"><div class="mi-course">Dessert</div><div class="mi-name">Soufflé au Grand Marnier</div><p class="mi-desc">Classic hot soufflé with orange blossom, Madagascar vanilla ice cream.</p><div class="mi-price">€46</div></div>
+  </div>
+</section>
+
+<footer>
+  <div class="ft-brand">Maison</div>
+  <div class="ft-mid">Demo by Studio 3D · © 2025</div>
+  <a href="../index.html" class="ft-back">← Back to Portfolio</a>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-// Scroll reveal
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      const d = parseInt(e.target.dataset.delay || 0);
-      setTimeout(() => e.target.classList.add('revealed'), d);
-      observer.unobserve(e.target);
-    }
+// ── THREE.JS SILK WAVE HERO ──
+(function(){
+  const canvas = document.getElementById('waveCanvas');
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.setClearColor(0x000000, 0);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(50, innerWidth/innerHeight, 0.1, 100);
+  camera.position.set(0, 0, 3);
+
+  // Wave plane
+  const W=80, H=80;
+  const geo = new THREE.PlaneGeometry(6, 4, W, H);
+  const posArr = geo.attributes.position.array.slice();
+
+  const mat = new THREE.MeshStandardMaterial({
+    color: 0xc41c1c,
+    wireframe: false,
+    side: THREE.DoubleSide,
+    transparent: true,
+    opacity: 0.18,
+    metalness: 0.3,
+    roughness: 0.5,
   });
-}, { threshold: 0.1 });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.rotation.x = -0.35;
+  mesh.position.set(0, -0.8, 0);
+  scene.add(mesh);
 
-document.querySelectorAll('.dishes-header, .dish-card, .story-img, .story-text').forEach(el => observer.observe(el));
+  // Second subtle layer
+  const geo2 = new THREE.PlaneGeometry(7, 5, W, H);
+  const posArr2 = geo2.attributes.position.array.slice();
+  const mat2 = new THREE.MeshBasicMaterial({color:0xe8d5b0,wireframe:false,transparent:true,opacity:0.05,side:THREE.DoubleSide});
+  const mesh2 = new THREE.Mesh(geo2, mat2);
+  mesh2.rotation.x = -0.3;
+  mesh2.position.set(0,-1.2,0);
+  scene.add(mesh2);
 
-// Sparkle
-document.querySelectorAll('.btn-amber, .hero-cta').forEach(btn => {
-  btn.addEventListener('click', function(e) {
-    const rect = btn.getBoundingClientRect();
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top + rect.height / 2;
-    const colors = ['#f59e0b','#fbbf24','#fde68a','#fff'];
-    for (let i = 0; i < 10; i++) {
-      const s = document.createElement('div');
-      s.className = 'sparkle';
-      const angle = (i/10)*Math.PI*2;
-      const dist = 35 + Math.random()*35;
-      const size = 4 + Math.random()*5;
-      s.style.cssText = `left:${cx-size/2}px;top:${cy-size/2}px;width:${size}px;height:${size}px;background:${colors[Math.floor(Math.random()*colors.length)]};--tx:${Math.cos(angle)*dist}px;--ty:${Math.sin(angle)*dist}px;`;
-      document.body.appendChild(s);
-      setTimeout(() => s.remove(), 650);
+  // Lights
+  const ambLight = new THREE.AmbientLight(0xffeedd, 0.5);
+  scene.add(ambLight);
+  const dirLight = new THREE.DirectionalLight(0xff6633, 1.2);
+  dirLight.position.set(2,3,2);
+  scene.add(dirLight);
+  const pointLight = new THREE.PointLight(0xc41c1c, 2, 5);
+  pointLight.position.set(-1,1,2);
+  scene.add(pointLight);
+
+  window.addEventListener('resize',()=>{
+    camera.aspect=innerWidth/innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth,innerHeight);
+  });
+
+  let t=0;
+  function animate(){
+    requestAnimationFrame(animate);
+    t += 0.012;
+
+    // Animate wave positions
+    const pos = geo.attributes.position;
+    for(let i=0;i<pos.count;i++){
+      const ox = posArr[i*3], oy = posArr[i*3+1];
+      pos.setZ(i,
+        Math.sin(ox*1.2 + t*1.1)*0.12 +
+        Math.sin(oy*1.5 + t*0.8)*0.10 +
+        Math.sin((ox+oy)*0.8 + t*1.4)*0.08
+      );
     }
+    pos.needsUpdate = true;
+    geo.computeVertexNormals();
+
+    const pos2 = geo2.attributes.position;
+    for(let i=0;i<pos2.count;i++){
+      const ox = posArr2[i*3], oy = posArr2[i*3+1];
+      pos2.setZ(i,
+        Math.sin(ox*1.0 + t*0.7)*0.15 +
+        Math.sin(oy*1.3 + t*1.0)*0.12
+      );
+    }
+    pos2.needsUpdate=true;
+
+    // Pulsing light
+    pointLight.intensity = 1.5 + Math.sin(t*1.5)*0.5;
+    mesh.material.opacity = 0.15 + Math.sin(t*0.9)*0.04;
+
+    renderer.render(scene, camera);
+  }
+  animate();
+})();
+
+// SCROLL REVEAL
+const io=new IntersectionObserver(ee=>{ee.forEach(e=>{if(e.isIntersecting){const d=parseInt(e.target.dataset.d||0);setTimeout(()=>e.target.classList.add('on'),d);io.unobserve(e.target)}})},{threshold:.1});
+document.querySelectorAll('.dish-feature,.phil,.menu-item,.menu-title').forEach(el=>io.observe(el));
+
+document.querySelectorAll('.btn-red,.nav-res').forEach(b=>{
+  b.addEventListener('click',()=>{
+    const r=b.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+    ['#c41c1c','#e03030','#ff8080','#fff'].forEach(col=>{
+      for(let j=0;j<3;j++){
+        const s=document.createElement('div');s.className='sp';
+        const a=Math.random()*Math.PI*2,d=30+Math.random()*50,sz=3+Math.random()*5;
+        s.style.cssText=`left:${cx-sz/2}px;top:${cy-sz/2}px;width:${sz}px;height:${sz}px;background:${col};--tx:${Math.cos(a)*d}px;--ty:${Math.sin(a)*d}px`;
+        document.body.appendChild(s);setTimeout(()=>s.remove(),680);
+      }
+    });
   });
 });
 </script>
