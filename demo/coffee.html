@@ -3,53 +3,499 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Coffee Demo</title>
+<title>Premium Coffee Landing Page — Studio 3D</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
 <style>
-body, html { margin:0; padding:0; font-family:Arial; background:#f4ebe0; color:#333; overflow-x:hidden; }
-header { text-align:center; padding:60px 20px; }
-header h1 { font-size:2.5em; color:#5b3a29; margin-bottom:10px; }
-header p { color:#6b4f3c; font-size:1.2em; }
-.main-content { width:90%; max-width:900px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:space-around; gap:30px; }
-.coffee-card { width:250px; background:#fff8f0; padding:20px; border-radius:15px; box-shadow:0 10px 25px rgba(0,0,0,0.15); transition: transform 0.3s, box-shadow 0.3s; cursor:pointer; }
-.coffee-card img { width:100%; border-radius:10px; transition: transform 0.3s; }
-.coffee-card:hover { transform:translateY(-10px); box-shadow:0 15px 35px rgba(0,0,0,0.3); }
-.coffee-card:hover img { transform:scale(1.05); }
-.coffee-card h3 { margin:10px 0; color:#8b5e3c; }
-.coffee-card p { font-size:0.9em; color:#6b4f3c; }
-.back { display:block; margin:40px auto 0; text-align:center; text-decoration:none; color:#5b3a29; font-weight:bold; }
-.back:hover { color:#8b5e3c; }
+  :root {
+    --bg: #0d0905;
+    --brown-dark: #1a0f07;
+    --brown-mid: #3d1f0d;
+    --cream: #f5e6d0;
+    --tan: #c4956a;
+    --tan-glow: rgba(196,149,106,0.3);
+    --gray: #8a7060;
+    --white: #fdf6ef;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--white); font-family: 'DM Sans', sans-serif; font-weight: 300; overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 24px 56px;
+    backdrop-filter: blur(20px);
+    background: rgba(13,9,5,0.8);
+    border-bottom: 1px solid rgba(196,149,106,0.1);
+  }
+
+  .nav-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-style: italic;
+    color: var(--tan);
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    transition: opacity 0.3s;
+  }
+  .nav-brand:hover { opacity: 0.7; }
+
+  .nav-back {
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gray);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .nav-back:hover { color: var(--tan); }
+
+  /* HERO */
+  .hero {
+    height: 100vh;
+    min-height: 700px;
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
+  }
+
+  .hero-left {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-left img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.55) saturate(0.85);
+    transform: scale(1.06);
+    animation: slow-zoom 14s ease-in-out infinite alternate;
+  }
+
+  @keyframes slow-zoom {
+    from { transform: scale(1.06); }
+    to { transform: scale(1.13); }
+  }
+
+  .hero-left::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, transparent 50%, var(--bg));
+  }
+
+  .hero-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 64px 80px 72px;
+    position: relative;
+  }
+
+  .hero-right::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--tan), transparent);
+    opacity: 0.2;
+  }
+
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--tan);
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.4s;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3rem, 5vw, 5.5rem);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.6s;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--tan);
+    transition: color 0.3s, text-shadow 0.3s;
+  }
+
+  .hero-title em:hover {
+    color: #e0b990;
+    text-shadow: 0 0 40px var(--tan-glow);
+    cursor: default;
+  }
+
+  .hero-sub {
+    font-size: 1rem;
+    color: var(--gray);
+    line-height: 1.85;
+    margin-bottom: 52px;
+    max-width: 360px;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.8s;
+    transition: color 0.3s;
+  }
+
+  .hero-sub:hover { color: #b09878; }
+
+  .hero-btns {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 1s;
+  }
+
+  .btn-primary {
+    padding: 15px 36px;
+    background: var(--tan);
+    color: var(--bg);
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
+    position: relative;
+  }
+
+  .btn-primary:hover {
+    background: #d4a87a;
+    box-shadow: 0 0 40px var(--tan-glow);
+    transform: translateY(-2px);
+  }
+
+  .btn-ghost {
+    padding: 14px 32px;
+    background: transparent;
+    border: 1px solid rgba(196,149,106,0.4);
+    color: var(--tan);
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border-radius: 2px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: border-color 0.3s, background 0.3s, color 0.3s, transform 0.2s;
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--tan);
+    background: rgba(196,149,106,0.1);
+    transform: translateY(-2px);
+  }
+
+  /* BEANS / FEATURES */
+  .features {
+    padding: 140px 56px;
+    max-width: 1160px;
+    margin: 0 auto;
+  }
+
+  .features-header {
+    text-align: center;
+    margin-bottom: 80px;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .features-header.revealed { opacity: 1; transform: translateY(0); }
+
+  .features-header .eyebrow { animation: none; opacity: 1; display: block; margin-bottom: 16px; }
+
+  .features-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3.8rem);
+    font-weight: 600;
+    margin-bottom: 16px;
+    transition: color 0.3s;
+  }
+
+  .features-header h2:hover { color: var(--tan); cursor: default; }
+
+  .features-header p { color: var(--gray); max-width: 420px; margin: 0 auto; line-height: 1.8; }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: rgba(196,149,106,0.08);
+    border: 1px solid rgba(196,149,106,0.1);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .feature-item {
+    padding: 52px 40px;
+    background: var(--brown-dark);
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease, background 0.4s ease;
+  }
+
+  .feature-item.revealed { opacity: 1; transform: translateY(0); }
+
+  .feature-item:hover { background: rgba(30,15,7,0.95); }
+
+  .feature-icon {
+    font-size: 32px;
+    margin-bottom: 24px;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+
+  .feature-item:hover .feature-icon { transform: scale(1.15) rotate(-5deg); }
+
+  .feature-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    transition: color 0.3s;
+  }
+
+  .feature-item:hover .feature-name { color: var(--tan); }
+
+  .feature-desc {
+    font-size: 0.9rem;
+    color: var(--gray);
+    line-height: 1.75;
+    transition: color 0.3s;
+  }
+
+  .feature-item:hover .feature-desc { color: #a08870; }
+
+  /* PRODUCT SHOWCASE */
+  .product {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 600px;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    margin: 0 0 2px;
+  }
+
+  .product.revealed { opacity: 1; transform: translateY(0); }
+
+  .product-img {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .product-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.65) saturate(1.1);
+    transition: transform 0.7s ease;
+  }
+
+  .product:hover .product-img img { transform: scale(1.04); }
+
+  .product-content {
+    background: var(--brown-dark);
+    padding: 80px 72px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .product-content .eyebrow { animation: none; opacity: 1; display: block; margin-bottom: 20px; }
+
+  .product-content h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 3vw, 3rem);
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 24px;
+    transition: color 0.3s;
+  }
+
+  .product-content h2:hover { color: var(--tan); cursor: default; }
+
+  .product-content p {
+    color: var(--gray);
+    line-height: 1.85;
+    margin-bottom: 14px;
+    transition: color 0.3s;
+  }
+
+  .product-content p:hover { color: #b09878; }
+
+  .price-tag {
+    display: inline-block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: var(--tan);
+    margin: 20px 0 32px;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 56px 32px;
+    border-top: 1px solid rgba(196,149,106,0.1);
+    color: var(--gray);
+    font-size: 13px;
+    letter-spacing: 0.05em;
+  }
+
+  footer a { color: var(--tan); text-decoration: none; font-family: 'Cormorant Garamond', serif; font-style: italic; }
+  footer a:hover { text-decoration: underline; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .sparkle {
+    position: fixed; pointer-events: none; z-index: 9999;
+    border-radius: 50%;
+    animation: spark 0.6s ease forwards;
+  }
+
+  @keyframes spark {
+    0% { opacity: 1; transform: translate(0,0) scale(1); }
+    100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0); }
+  }
+
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; height: auto; }
+    .hero-left { height: 50vh; }
+    .hero-left::after { background: linear-gradient(to top, var(--bg), transparent); }
+    .hero-right { padding: 60px 32px 80px; }
+    .hero-right::before { display: none; }
+    .features { padding: 80px 24px; }
+    .features-grid { grid-template-columns: 1fr; }
+    .product { grid-template-columns: 1fr; }
+    .product-img { height: 300px; }
+    .product-content { padding: 52px 32px; }
+    nav { padding: 20px 24px; }
+  }
 </style>
 </head>
 <body>
-<header>
-<h1>Ethnic Coffee Shop</h1>
-<p>Interactive coffee landing page with warm traditional vibes.</p>
-</header>
 
-<div class="main-content">
-  <div class="coffee-card">
-    <img src="https://images.pexels.com/photos/374885/pexels-photo-374885.jpeg" alt="Coffee 1">
-    <h3>Espresso</h3>
-    <p>Strong and rich coffee for true connoisseurs.</p>
-  </div>
-  <div class="coffee-card">
-    <img src="https://images.pexels.com/photos/302899/pexels-photo-302899.jpeg" alt="Coffee 2">
-    <h3>Latte Art</h3>
-    <p>Creamy coffee with handcrafted designs.</p>
-  </div>
-  <div class="coffee-card">
-    <img src="https://images.pexels.com/photos/374885/pexels-photo-374885.jpeg" alt="Coffee 3">
-    <h3>Cappuccino</h3>
-    <p>Traditional aroma with perfect froth.</p>
-  </div>
-</div>
+<nav>
+  <a href="../index.html" class="nav-brand">Studio 3D</a>
+  <a href="../index.html" class="nav-back">← Back to Portfolio</a>
+</nav>
 
-<a class="back" href="../index.html">← Back to Portfolio</a>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=1000&q=80" alt="Coffee pour">
+  </div>
+  <div class="hero-right">
+    <span class="eyebrow">Premium Coffee Demo</span>
+    <h1 class="hero-title">The Art of<br><em>Perfect</em><br>Coffee</h1>
+    <p class="hero-sub">A landing page with depth, motion, and smooth animations built for a premium coffee brand that values the ritual as much as the result.</p>
+    <div class="hero-btns">
+      <a href="#features" class="btn-primary">Explore Blends →</a>
+      <a href="#product" class="btn-ghost">Our Story</a>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="features-header">
+    <span class="eyebrow">Why We're Different</span>
+    <h2>The ritual matters</h2>
+    <p>From sourcing to steaming — every step is deliberate, every cup a ceremony worth repeating.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-item" data-delay="0">
+      <span class="feature-icon">☕</span>
+      <div class="feature-name">Single Origin</div>
+      <p class="feature-desc">Sourced from elevated farms in Ethiopia, Colombia, and Guatemala. Traceable from bean to cup.</p>
+    </div>
+    <div class="feature-item" data-delay="100">
+      <span class="feature-icon">🌿</span>
+      <div class="feature-name">Slow Roasted</div>
+      <p class="feature-desc">Our small-batch roasting technique preserves the unique terroir of each region's harvest.</p>
+    </div>
+    <div class="feature-item" data-delay="200">
+      <span class="feature-icon">✦</span>
+      <div class="feature-name">Precision Crafted</div>
+      <p class="feature-desc">Every bag is profiled, timed, and checked by our roastmaster to ensure consistent excellence.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCT -->
+<section class="product" id="product">
+  <div class="product-img">
+    <img src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=900&q=80" alt="Coffee beans close up">
+  </div>
+  <div class="product-content">
+    <span class="eyebrow">Featured Blend</span>
+    <h2>Midnight<br>Ethiopian Reserve</h2>
+    <p>Dark chocolate, ripe blueberry, and a long honeyed finish. This washed Ethiopian Yirgacheffe is complex, smooth, and deeply satisfying.</p>
+    <p>Grown at 2,100m altitude in the Gedeo Zone. Only available in limited seasonal runs.</p>
+    <div class="price-tag">$32 / 250g</div>
+    <a href="#" class="btn-primary">Add to Cart →</a>
+  </div>
+</section>
+
+<footer>
+  <p>Coffee Landing Page Demo — <a href="../index.html">Studio 3D Portfolio</a> &nbsp;·&nbsp; © 2025 Studio 3D</p>
+</footer>
 
 <script>
-const cards = document.querySelectorAll('.coffee-card');
-cards.forEach(card=>{
-  card.addEventListener('click', ()=>{ alert("Clicked: " + card.querySelector('h3').innerText); });
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const d = parseInt(e.target.dataset.delay || 0);
+      setTimeout(() => e.target.classList.add('revealed'), d);
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.features-header, .feature-item, .product').forEach(el => obs.observe(el));
+
+document.querySelectorAll('.btn-primary, .btn-ghost').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const rect = btn.getBoundingClientRect();
+    const cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
+    const colors = ['#c4956a','#d4a87a','#fde68a','#fff'];
+    for (let i = 0; i < 10; i++) {
+      const s = document.createElement('div');
+      s.className = 'sparkle';
+      const angle = (i/10)*Math.PI*2;
+      const dist = 35 + Math.random()*35;
+      const size = 4 + Math.random()*5;
+      s.style.cssText = `left:${cx-size/2}px;top:${cy-size/2}px;width:${size}px;height:${size}px;background:${colors[Math.floor(Math.random()*colors.length)]};--tx:${Math.cos(angle)*dist}px;--ty:${Math.sin(angle)*dist}px;`;
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 650);
+    }
+  });
 });
 </script>
 </body>
