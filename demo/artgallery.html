@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vault — Contemporary Art Gallery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+:root { --bg: #05040a; --v: #6030c0; --vl: #9060f0; --gold: #c9a84c; --white: #f0ebff; --gray: #5a5080; --dark: #0a0814; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--white); font-family: 'DM Sans', sans-serif; font-weight: 300; overflow-x: hidden; }
+
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; display: flex; justify-content: space-between; align-items: center; padding: 22px 60px; background: rgba(5,4,10,.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(96,48,192,.1); }
+.nav-brand { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-style: italic; color: var(--vl); text-decoration: none; letter-spacing: .06em; }
+.nav-links { display: flex; gap: 40px; }
+.nav-link { font-size: 11px; letter-spacing: .25em; text-transform: uppercase; color: rgba(144,96,240,.35); text-decoration: none; transition: color .3s; }
+.nav-link:hover { color: var(--vl); }
+.nav-back { font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--gray); text-decoration: none; transition: color .3s; border-left: 1px solid rgba(96,48,192,.12); padding-left: 24px; }
+.nav-back:hover { color: var(--vl); }
+
+/* HERO — gallery viewport */
+.hero { position: relative; height: 100vh; overflow: hidden; }
+#galleryCanvas { position: absolute; inset: 0; z-index: 1; cursor: crosshair; }
+
+/* HUD overlays */
+.hud-top { position: absolute; top: 100px; left: 0; right: 0; z-index: 10; text-align: center; pointer-events: none; }
+.hud-eye { font-weight: 200; font-size: 9px; letter-spacing: .55em; text-transform: uppercase; color: rgba(144,96,240,.6); margin-bottom: 16px; display: block; opacity: 0; animation: fu .8s ease forwards .4s; }
+.hud-h1 { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(2.5rem, 5vw, 5rem); line-height: 1.1; opacity: 0; animation: fu 1.2s ease forwards .6s; }
+.hud-h1 em { font-style: italic; color: var(--vl); }
+
+/* Navigation arrows */
+.nav-arrows { position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); z-index: 10; display: flex; gap: 16px; align-items: center; opacity: 0; animation: fu .9s ease forwards 1.2s; }
+.nav-arr { width: 52px; height: 52px; border: 1px solid rgba(144,96,240,.35); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background .3s, border-color .3s, transform .2s; font-size: 18px; color: rgba(144,96,240,.7); background: rgba(5,4,10,.6); backdrop-filter: blur(10px); user-select: none; }
+.nav-arr:hover { background: rgba(96,48,192,.2); border-color: var(--vl); color: var(--white); transform: scale(1.06); }
+.nav-room { font-weight: 200; font-size: 10px; letter-spacing: .35em; text-transform: uppercase; color: rgba(144,96,240,.5); padding: 0 20px; }
+
+/* Art info tooltip */
+.art-tooltip { position: absolute; z-index: 20; background: rgba(10,8,20,.92); border: 1px solid rgba(144,96,240,.2); backdrop-filter: blur(16px); padding: 22px 26px; width: 280px; opacity: 0; pointer-events: none; transition: opacity .35s; }
+.art-tooltip.show { opacity: 1; }
+.att-year { font-weight: 200; font-size: 9px; letter-spacing: .4em; text-transform: uppercase; color: var(--vl); margin-bottom: 8px; }
+.att-title { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 400; color: var(--white); margin-bottom: 4px; line-height: 1.2; }
+.att-artist { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: .95rem; color: var(--gray); margin-bottom: 10px; }
+.att-desc { font-size: .8rem; color: var(--gray); line-height: 1.65; margin-bottom: 14px; }
+.att-price { font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: var(--gold); }
+
+/* CATALOGUE */
+.catalogue { padding: 120px 72px; max-width: 1400px; margin: 0 auto; }
+.cat-hdr { text-align: center; margin-bottom: 72px; opacity: 0; transform: translateY(20px); transition: opacity .8s, transform .8s; }
+.cat-hdr.on { opacity: 1; transform: translateY(0); }
+.cat-eye { font-weight: 200; font-size: 10px; letter-spacing: .45em; text-transform: uppercase; color: var(--vl); margin-bottom: 14px; display: block; }
+.cat-h { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(2rem, 4vw, 3.5rem); color: var(--white); }
+
+.art-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; background: rgba(96,48,192,.05); }
+.art-item { background: var(--dark); opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s ease, background .3s; cursor: pointer; position: relative; overflow: hidden; }
+.art-item.on { opacity: 1; transform: translateY(0); }
+.art-item:hover { background: rgba(16,10,28,.98); }
+.ai-img { aspect-ratio: 4/5; overflow: hidden; position: relative; }
+.ai-img img { width: 100%; height: 100%; object-fit: cover; filter: brightness(.6) saturate(.75); transition: transform .8s, filter .5s; }
+.art-item:hover .ai-img img { transform: scale(1.04); filter: brightness(.75) saturate(.9); }
+.ai-img::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(5,4,10,.98) 0%, transparent 55%); }
+.ai-body { padding: 20px 24px 28px; position: relative; z-index: 2; }
+.ai-year { font-size: 9px; letter-spacing: .4em; text-transform: uppercase; color: var(--vl); margin-bottom: 8px; font-weight: 200; }
+.ai-title { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-weight: 400; color: var(--white); margin-bottom: 4px; letter-spacing: .03em; transition: color .3s; }
+.art-item:hover .ai-title { color: var(--vl); }
+.ai-artist { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: .9rem; color: var(--gray); margin-bottom: 14px; }
+.ai-foot { display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px solid rgba(96,48,192,.08); }
+.ai-price { font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: var(--gold); }
+.ai-btn { font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--vl); text-decoration: none; transition: letter-spacing .3s; }
+.art-item:hover .ai-btn { letter-spacing: .32em; }
+
+footer { border-top: 1px solid rgba(96,48,192,.08); padding: 52px 72px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+.ft-brand { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-style: italic; color: var(--vl); }
+.ft-copy { font-size: 12px; letter-spacing: .1em; color: var(--gray); }
+.ft-back { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--gray); text-decoration: none; transition: color .3s; }
+.ft-back:hover { color: var(--vl); }
+
+@keyframes fu { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+.sp { position: fixed; pointer-events: none; z-index: 9999; border-radius: 50%; animation: spa .65s ease forwards; }
+@keyframes spa { 0% { opacity: 1; transform: translate(0,0) scale(1); } 100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0); } }
+
+@media (max-width: 960px) { nav { padding: 20px 24px; } .nav-links { display: none; } .nav-back { border: none; padding: 0; } .catalogue { padding: 80px 24px; } .art-grid { grid-template-columns: 1fr; } footer { flex-direction: column; text-align: center; padding: 40px 24px; } }
+</style>
+</head>
+<body>
+<nav>
+  <a href="../index.html" class="nav-brand">Vault</a>
+  <div class="nav-links">
+    <a href="#catalogue" class="nav-link">Catalogue</a>
+    <a href="#" class="nav-link">Artists</a>
+    <a href="#" class="nav-link">Visit</a>
+  </div>
+  <a href="../index.html" class="nav-back">← Portfolio</a>
+</nav>
+
+<section class="hero">
+  <canvas id="galleryCanvas"></canvas>
+  <div class="hud-top">
+    <span class="hud-eye">Contemporary Art · London</span>
+    <h1 class="hud-h1">Walk through<br>the <em>gallery.</em></h1>
+  </div>
+  <div class="art-tooltip" id="artTooltip">
+    <div class="att-year" id="attYear">2024</div>
+    <div class="att-title" id="attTitle">Untitled</div>
+    <div class="att-artist" id="attArtist">Artist Name</div>
+    <p class="att-desc" id="attDesc">Description.</p>
+    <div class="att-price" id="attPrice">POA</div>
+  </div>
+  <div class="nav-arrows">
+    <div class="nav-arr" id="btnLeft">←</div>
+    <span class="nav-room" id="roomLabel">Room 1 of 3</span>
+    <div class="nav-arr" id="btnRight">→</div>
+  </div>
+</section>
+
+<section class="catalogue" id="catalogue">
+  <div class="cat-hdr">
+    <span class="cat-eye">Current Exhibition</span>
+    <h2 class="cat-h">Works for Acquisition</h2>
+  </div>
+  <div class="art-grid">
+    <div class="art-item" data-d="0"><div class="ai-img"><img src="https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=600&q=80" alt="Art"></div><div class="ai-body"><div class="ai-year">2024</div><div class="ai-title">Fracture No. 7</div><div class="ai-artist">Lena Vasquez</div><div class="ai-foot"><span class="ai-price">€48,000</span><a href="#" class="ai-btn">Enquire</a></div></div></div>
+    <div class="art-item" data-d="100"><div class="ai-img"><img src="https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=600&q=80" alt="Art"></div><div class="ai-body"><div class="ai-year">2023</div><div class="ai-title">Chromatic Drift</div><div class="ai-artist">Marcus Osei</div><div class="ai-foot"><span class="ai-price">€62,000</span><a href="#" class="ai-btn">Enquire</a></div></div></div>
+    <div class="art-item" data-d="200"><div class="ai-img"><img src="https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=600&q=80" alt="Art"></div><div class="ai-body"><div class="ai-year">2024</div><div class="ai-title">Void Study III</div><div class="ai-artist">Yuki Tanaka</div><div class="ai-foot"><span class="ai-price">€35,500</span><a href="#" class="ai-btn">Enquire</a></div></div></div>
+  </div>
+</section>
+
+<footer>
+  <div class="ft-brand">Vault</div>
+  <div class="ft-copy">Demo by Studio 3D · © 2025</div>
+  <a href="../index.html" class="ft-back">← Back to Portfolio</a>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const ARTWORKS = [
+  { title: 'Fracture No. 7', artist: 'Lena Vasquez', year: '2024', desc: 'Oil and encaustic on canvas. An exploration of structural collapse as a metaphor for institutional failure.', price: '€48,000', url: 'https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=400&q=80' },
+  { title: 'Chromatic Drift', artist: 'Marcus Osei', year: '2023', desc: 'Acrylic and pigment on linen. Colour used as displacement — the canvas as a field of slow migration.', price: '€62,000', url: 'https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=400&q=80' },
+  { title: 'Void Study III', artist: 'Yuki Tanaka', year: '2024', desc: 'Ink on washi paper, mounted. The absence of mark-making as the primary medium. Silence made visible.', price: '€35,500', url: 'https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=400&q=80' },
+  { title: 'Threshold', artist: 'Amara Diallo', year: '2023', desc: 'Mixed media installation. The liminal space between interior and exterior — where identity dissolves.', price: '€88,000', url: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=400&q=80' },
+  { title: 'After the Rain', artist: 'Pia Müller', year: '2024', desc: 'Watercolour and graphite. Memory of landscape, distilled to its emotional residue.', price: '€22,000', url: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400&q=80' },
+  { title: 'Unnamed Force', artist: 'Carlos Ramos', year: '2022', desc: 'Bronze casting with patina. The body in arrested motion — kinetic energy made permanent.', price: '€140,000', url: 'https://images.unsplash.com/photo-1518998053901-5348d3961a04?w=400&q=80' },
+];
+
+// ── THREE.JS GALLERY ROOM ──
+(function() {
+  const canvas = document.getElementById('galleryCanvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.setClearColor(0x05040a, 1);
+  renderer.shadowMap.enabled = true;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(65, innerWidth/innerHeight, .1, 100);
+  camera.position.set(0, 0, 4.5);
+
+  // ── ROOMS ──
+  const ROOM_COUNT = 3;
+  const ROOM_W = 14, ROOM_H = 5, ROOM_D = 9;
+  const rooms = [];
+  const wallMat = new THREE.MeshStandardMaterial({ color: 0x0e0c1a, roughness: .85, metalness: 0 });
+  const floorMat = new THREE.MeshStandardMaterial({ color: 0x0a0816, roughness: .08, metalness: .3 });
+  const ceilMat = new THREE.MeshStandardMaterial({ color: 0x080612, roughness: .95 });
+  const moulMat = new THREE.MeshStandardMaterial({ color: 0x6030c0, emissive: 0x6030c0, emissiveIntensity: .06, roughness: .7 });
+
+  const loader = new THREE.TextureLoader();
+  const artMeshes = [];
+
+  for (let r = 0; r < ROOM_COUNT; r++) {
+    const rg = new THREE.Group();
+    rg.position.x = r * ROOM_W;
+    scene.add(rg);
+    rooms.push(rg);
+
+    // Floor
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_W, ROOM_D), floorMat);
+    floor.rotation.x = -Math.PI/2; floor.position.y = -ROOM_H/2; floor.receiveShadow = true; rg.add(floor);
+    // Ceiling
+    const ceil = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_W, ROOM_D), ceilMat);
+    ceil.rotation.x = Math.PI/2; ceil.position.y = ROOM_H/2; rg.add(ceil);
+    // Back wall
+    const backW = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_W, ROOM_H), wallMat);
+    backW.position.z = -ROOM_D/2; backW.receiveShadow = true; rg.add(backW);
+    // Side walls
+    const leftW = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_D, ROOM_H), wallMat);
+    leftW.rotation.y = Math.PI/2; leftW.position.x = -ROOM_W/2; rg.add(leftW);
+    const rightW = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_D, ROOM_H), wallMat);
+    rightW.rotation.y = -Math.PI/2; rightW.position.x = ROOM_W/2; rg.add(rightW);
+    // Skirting board
+    const skirt = new THREE.Mesh(new THREE.BoxGeometry(ROOM_W, .06, .04), moulMat);
+    skirt.position.set(0, -ROOM_H/2+.03, -ROOM_D/2+.02); rg.add(skirt);
+    // Ceiling cornice glow strip
+    const corniceGeo = new THREE.BoxGeometry(ROOM_W-.2, .04, .04);
+    const corniceMat = new THREE.MeshBasicMaterial({ color: 0x6030c0, transparent: true, opacity: .35, blending: THREE.AdditiveBlending });
+    const cornice = new THREE.Mesh(corniceGeo, corniceMat);
+    cornice.position.set(0, ROOM_H/2-.04, -ROOM_D/2+.02); rg.add(cornice);
+
+    // ARTWORKS on back wall — 2 per room
+    const artIdxBase = r * 2;
+    [-2.5, 2.5].forEach((xOff, ai) => {
+      const idx = (artIdxBase + ai) % ARTWORKS.length;
+      const aw = ARTWORKS[idx];
+      // Frame
+      const frameGeo = new THREE.BoxGeometry(1.85, 2.4, .06);
+      const frameMat2 = new THREE.MeshStandardMaterial({ color: 0xc9a84c, metalness: .7, roughness: .25, emissive: 0x1a1000 });
+      const frame = new THREE.Mesh(frameGeo, frameMat2);
+      frame.position.set(xOff, .3, -ROOM_D/2+.07); frame.castShadow = true; rg.add(frame);
+      // Canvas
+      const canvasGeo = new THREE.PlaneGeometry(1.6, 2.15);
+      const canvasMat = new THREE.MeshBasicMaterial({ color: 0x2a1840 });
+      const canvasMesh = new THREE.Mesh(canvasGeo, canvasMat);
+      canvasMesh.position.set(xOff, .3, -ROOM_D/2+.11);
+      canvasMesh.userData = { aw, room: r };
+      rg.add(canvasMesh); artMeshes.push(canvasMesh);
+      // Load texture
+      loader.load(aw.url, tex => { canvasMat.map = tex; canvasMat.color.setHex(0xffffff); canvasMat.needsUpdate = true; });
+      // Spotlight on artwork
+      const spot = new THREE.SpotLight(0xfff4e0, 2.5, 8, Math.PI/7, .4);
+      spot.position.set(xOff, ROOM_H/2-.2, -ROOM_D/2+2.5);
+      spot.target.position.set(xOff, .3, -ROOM_D/2+.1);
+      spot.castShadow = false; rg.add(spot); rg.add(spot.target);
+      // Label plaque
+      const plaqueGeo = new THREE.BoxGeometry(.5, .12, .02);
+      const plaqueMat = new THREE.MeshStandardMaterial({ color: 0x1a0c30, roughness: .8 });
+      const plaque = new THREE.Mesh(plaqueGeo, plaqueMat);
+      plaque.position.set(xOff, -.95, -ROOM_D/2+.08); rg.add(plaque);
+    });
+
+    // Ambient room light
+    const roomLight = new THREE.PointLight(0x2a1860, 1, 12);
+    roomLight.position.set(0, ROOM_H/2-1, 0); rg.add(roomLight);
+    // Floor reflection strip
+    const stripGeo = new THREE.PlaneGeometry(ROOM_W-1, .04);
+    const stripMat = new THREE.MeshBasicMaterial({ color: 0x6030c0, transparent: true, opacity: .15, blending: THREE.AdditiveBlending });
+    const strip = new THREE.Mesh(stripGeo, stripMat);
+    strip.rotation.x = -Math.PI/2; strip.position.set(0, -ROOM_H/2+.001, -ROOM_D/2+.2); rg.add(strip);
+  }
+
+  // Doorway columns between rooms
+  for (let r = 0; r < ROOM_COUNT-1; r++) {
+    const doorX = r * ROOM_W + ROOM_W/2;
+    [-1.2, 1.2].forEach(xOff => {
+      const col = new THREE.Mesh(new THREE.BoxGeometry(.15, ROOM_H, .15), moulMat.clone());
+      col.position.set(doorX + xOff, 0, 0); scene.add(col);
+    });
+  }
+
+  scene.add(new THREE.AmbientLight(0x110820, 1.5));
+
+  // ROOM NAVIGATION
+  let currentRoom = 0;
+  let targetX = 0;
+  const roomLabel = document.getElementById('roomLabel');
+
+  function navigateTo(room) {
+    currentRoom = Math.max(0, Math.min(ROOM_COUNT-1, room));
+    targetX = currentRoom * ROOM_W;
+    roomLabel.textContent = `Room ${currentRoom+1} of ${ROOM_COUNT}`;
+    const cols = ['#9060f0', '#c9a84c', '#fff'];
+    for (let i = 0; i < 10; i++) {
+      const s = document.createElement('div'); s.className = 'sp';
+      const a = (i/10)*Math.PI*2, d = 20+Math.random()*40, sz = 2+Math.random()*4;
+      const cx = innerWidth/2, cy = innerHeight*.85;
+      s.style.cssText = `left:${cx-sz/2}px;top:${cy-sz/2}px;width:${sz}px;height:${sz}px;background:${cols[i%cols.length]};--tx:${Math.cos(a)*d}px;--ty:${Math.sin(a)*d}px;box-shadow:0 0 5px ${cols[0]}`;
+      document.body.appendChild(s); setTimeout(() => s.remove(), 700);
+    }
+  }
+  document.getElementById('btnLeft').addEventListener('click', () => navigateTo(currentRoom - 1));
+  document.getElementById('btnRight').addEventListener('click', () => navigateTo(currentRoom + 1));
+
+  // Raycaster for artwork click
+  const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+  const tooltip = document.getElementById('artTooltip');
+
+  canvas.addEventListener('click', e => {
+    mouse.x = (e.clientX/innerWidth)*2-1;
+    mouse.y = -(e.clientY/innerHeight)*2+1;
+    raycaster.setFromCamera(mouse, camera);
+    const hits = raycaster.intersectObjects(artMeshes);
+    if (hits.length) {
+      const aw = hits[0].object.userData.aw;
+      document.getElementById('attYear').textContent = aw.year;
+      document.getElementById('attTitle').textContent = aw.title;
+      document.getElementById('attArtist').textContent = aw.artist;
+      document.getElementById('attDesc').textContent = aw.desc;
+      document.getElementById('attPrice').textContent = aw.price;
+      tooltip.style.left = Math.min(e.clientX+20, innerWidth-300)+'px';
+      tooltip.style.top = Math.max(e.clientY-80, 80)+'px';
+      tooltip.classList.add('show');
+      // Sparkle
+      const cols = ['#9060f0', '#c9a84c', '#fff'];
+      for (let i = 0; i < 14; i++) {
+        const s = document.createElement('div'); s.className = 'sp';
+        const a = (i/14)*Math.PI*2, d = 25+Math.random()*50, sz = 2+Math.random()*5;
+        s.style.cssText = `left:${e.clientX-sz/2}px;top:${e.clientY-sz/2}px;width:${sz}px;height:${sz}px;background:${cols[i%cols.length]};--tx:${Math.cos(a)*d}px;--ty:${Math.sin(a)*d}px;box-shadow:0 0 6px ${cols[0]}`;
+        document.body.appendChild(s); setTimeout(() => s.remove(), 700);
+      }
+    } else tooltip.classList.remove('show');
+  });
+
+  canvas.addEventListener('mousemove', e => {
+    mouse.x = (e.clientX/innerWidth)*2-1;
+    mouse.y = -(e.clientY/innerHeight)*2+1;
+    raycaster.setFromCamera(mouse, camera);
+    const hits = raycaster.intersectObjects(artMeshes);
+    canvas.style.cursor = hits.length ? 'pointer' : 'crosshair';
+  });
+
+  window.addEventListener('resize', () => { camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
+
+  let t = 0, mx = 0, my = 0;
+  document.addEventListener('mousemove', e => { mx = (e.clientX/innerWidth-.5)*.3; my = (e.clientY/innerHeight-.5)*.15; });
+
+  function animate() {
+    requestAnimationFrame(animate); t += .009;
+    // Smooth camera travel between rooms
+    camera.position.x += (targetX - camera.position.x) * .045;
+    camera.position.y += (my*.2 - camera.position.y) * .03;
+    camera.position.z = 4.5 + Math.sin(t * .2) * .08;
+    camera.lookAt(camera.position.x, camera.position.y, -5);
+    // Camera sway
+    camera.position.x += mx * .15;
+    renderer.render(scene, camera);
+  }
+  animate();
+})();
+
+// Scroll reveal
+const io = new IntersectionObserver(ee => { ee.forEach(e => { if (e.isIntersecting) { const d = parseInt(e.target.dataset.d || 0); setTimeout(() => e.target.classList.add('on'), d); io.unobserve(e.target); } }); }, { threshold: .1 });
+document.querySelectorAll('.cat-hdr, .art-item').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
