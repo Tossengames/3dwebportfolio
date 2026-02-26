@@ -17,94 +17,121 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden}
-
 #three-bg{position:fixed;inset:0;z-index:0}
 
 /* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:26px 56px;backdrop-filter:blur(20px);background:rgba(4,3,13,.5);border-bottom:1px solid rgba(124,58,237,.1)}
 .nav-logo{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;font-style:italic;letter-spacing:.06em;color:var(--vl);text-decoration:none;transition:color .3s}
 .nav-logo:hover{color:#c084fc}
-.nav-cta{padding:9px 24px;border:1px solid rgba(124,58,237,.5);border-radius:2px;color:var(--white);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:300;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;transition:background .3s,border-color .3s,box-shadow .3s}
+.nav-cta{padding:9px 24px;border:1px solid rgba(124,58,237,.5);color:var(--white);font-size:11px;font-weight:300;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;transition:background .3s,border-color .3s,box-shadow .3s}
 .nav-cta:hover{background:var(--v);border-color:var(--vl);box-shadow:0 0 20px var(--vg)}
 
 /* HERO */
 .hero{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 40px 80px}
-.hero-kicker{font-family:'DM Sans',sans-serif;font-weight:200;font-size:11px;letter-spacing:.5em;text-transform:uppercase;color:var(--vl);margin-bottom:32px;opacity:0;animation:fu 1s ease forwards .3s}
+.hero-kicker{font-weight:200;font-size:11px;letter-spacing:.5em;text-transform:uppercase;color:var(--vl);margin-bottom:32px;opacity:0;animation:fu 1s ease forwards .3s}
 .hero-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(3.5rem,8vw,7.5rem);line-height:1.02;letter-spacing:-.01em;margin-bottom:12px;opacity:0;animation:fu 1.2s ease forwards .5s}
 .hero-title em{font-style:italic;font-weight:300;color:var(--vl)}
 .hero-title strong{font-weight:600;display:block}
-.hero-sub{font-family:'DM Sans',sans-serif;font-weight:200;font-size:clamp(.9rem,1.8vw,1.1rem);color:var(--gray);max-width:480px;line-height:1.9;margin:0 auto 56px;opacity:0;animation:fu 1s ease forwards .8s;letter-spacing:.02em}
+.hero-sub{font-weight:200;font-size:clamp(.9rem,1.8vw,1.1rem);color:var(--gray);max-width:520px;line-height:1.9;margin:0 auto 56px;opacity:0;animation:fu 1s ease forwards .8s;letter-spacing:.02em}
 .hero-divider{width:40px;height:1px;background:linear-gradient(to right,transparent,var(--vl),transparent);margin:0 auto 36px;opacity:0;animation:fu .8s ease forwards .7s}
-
-/* STATS */
 .hero-stats{display:flex;gap:64px;justify-content:center;opacity:0;animation:fu .9s ease forwards 1.1s}
 .hs{text-align:center}
 .hs-n{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:400;color:var(--white);line-height:1}
 .hs-l{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gray);margin-top:4px;font-weight:200}
-
-/* SCROLL */
 .scroll-cue{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px;opacity:0;animation:fu .8s ease forwards 1.4s}
 .sc-bar{width:1px;height:52px;background:linear-gradient(to bottom,transparent,var(--vl));animation:sc-p 2.5s ease-in-out infinite}
 @keyframes sc-p{0%,100%{opacity:.3}50%{opacity:.9}}
 .sc-txt{font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--gray);font-weight:200}
 
-/* DEMOS SECTION */
-.demos{position:relative;z-index:2;padding:60px 0 120px}
-.sec-eyebrow{text-align:center;font-family:'DM Sans',sans-serif;font-weight:200;font-size:10px;letter-spacing:.45em;text-transform:uppercase;color:var(--vl);margin-bottom:16px;opacity:0;transform:translateY(16px);transition:opacity .7s,transform .7s}
+/* DEMOS */
+.demos{position:relative;z-index:2;padding:60px 0 80px}
+.sec-eyebrow{text-align:center;font-weight:200;font-size:10px;letter-spacing:.45em;text-transform:uppercase;color:var(--vl);margin-bottom:14px;opacity:0;transform:translateY(16px);transition:opacity .7s,transform .7s}
 .sec-eyebrow.on{opacity:1;transform:translateY(0)}
-.sec-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2rem,4vw,3.5rem);text-align:center;margin-bottom:72px;letter-spacing:.02em;opacity:0;transform:translateY(16px);transition:opacity .7s .1s,transform .7s .1s}
+.sec-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2rem,4vw,3.5rem);text-align:center;margin-bottom:16px;letter-spacing:.02em;opacity:0;transform:translateY(16px);transition:opacity .7s .1s,transform .7s .1s}
 .sec-title.on{opacity:1;transform:translateY(0)}
+.sec-sub{text-align:center;font-weight:200;font-size:.9rem;color:var(--gray);margin-bottom:52px;letter-spacing:.02em;opacity:0;transform:translateY(16px);transition:opacity .7s .15s,transform .7s .15s;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.8}
+.sec-sub.on{opacity:1;transform:translateY(0)}
 
-.grid{max-width:1240px;margin:0 auto;padding:0 48px;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+/* FILTER */
+.filter-tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:56px;padding:0 48px;opacity:0;transform:translateY(16px);transition:opacity .7s .2s,transform .7s .2s}
+.filter-tabs.on{opacity:1;transform:translateY(0)}
+.ftab{padding:7px 20px;border:1px solid rgba(124,58,237,.2);color:rgba(128,128,160,.6);font-size:10px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:background .3s,border-color .3s,color .3s;background:transparent;font-family:'DM Sans',sans-serif;font-weight:200}
+.ftab:hover{border-color:rgba(168,85,247,.4);color:var(--vl)}
+.ftab.active{background:rgba(124,58,237,.15);border-color:var(--vl);color:var(--vl)}
+
+/* GRID */
+.grid{max-width:1280px;margin:0 auto;padding:0 48px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 
 /* CARD */
-.card{border-radius:4px;overflow:hidden;background:var(--card);border:1px solid rgba(124,58,237,.1);backdrop-filter:blur(16px);opacity:0;transform:translateY(44px);transition:opacity .8s ease,transform .8s ease,border-color .4s,box-shadow .4s;display:flex;flex-direction:column;position:relative}
+.card{overflow:hidden;background:var(--card);border:1px solid rgba(124,58,237,.1);backdrop-filter:blur(16px);opacity:0;transform:translateY(36px);transition:opacity .7s ease,transform .7s ease,border-color .4s,box-shadow .4s;display:flex;flex-direction:column;position:relative;text-decoration:none;color:inherit}
 .card.on{opacity:1;transform:translateY(0)}
-.card:hover{border-color:rgba(168,85,247,.4);box-shadow:0 0 60px rgba(124,58,237,.15),0 24px 60px rgba(0,0,0,.6)}
+.card:hover{border-color:rgba(168,85,247,.4);box-shadow:0 0 50px rgba(124,58,237,.14),0 20px 50px rgba(0,0,0,.55)}
 .card.wide{grid-column:span 2}
+.card.triple{grid-column:span 3}
 
-.cimg{position:relative;overflow:hidden;height:280px;flex-shrink:0}
-.card.wide .cimg{height:420px}
-.cimg img{width:100%;height:100%;object-fit:cover;filter:brightness(.6) saturate(.85);transition:transform 1s ease,filter .5s}
-.card:hover .cimg img{transform:scale(1.06);filter:brightness(.75) saturate(1)}
-.cimg::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(4,3,13,.95) 0%,rgba(4,3,13,.1) 60%,transparent 100%)}
+.cimg{position:relative;overflow:hidden;height:220px;flex-shrink:0}
+.card.wide .cimg{height:280px}
+.card.triple .cimg{height:360px}
+.cimg img{width:100%;height:100%;object-fit:cover;filter:brightness(.55) saturate(.85);transition:transform 1s ease,filter .5s}
+.card:hover .cimg img{transform:scale(1.06);filter:brightness(.72) saturate(1)}
+.cimg::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(4,3,13,.97) 0%,rgba(4,3,13,.1) 60%,transparent 100%)}
+.badge{position:absolute;top:16px;left:16px;z-index:3;font-weight:200;font-size:9px;letter-spacing:.25em;text-transform:uppercase;padding:4px 12px;border:1px solid rgba(168,85,247,.3);background:rgba(4,3,13,.65);backdrop-filter:blur(8px);color:var(--vl)}
+.badge-new{position:absolute;top:16px;right:16px;z-index:3;font-weight:300;font-size:8px;letter-spacing:.2em;text-transform:uppercase;padding:3px 10px;background:rgba(168,85,247,.2);border:1px solid rgba(168,85,247,.38);color:#c084fc}
 
-.badge{position:absolute;top:18px;left:18px;z-index:3;font-family:'DM Sans',sans-serif;font-weight:200;font-size:10px;letter-spacing:.25em;text-transform:uppercase;padding:5px 14px;border:1px solid rgba(168,85,247,.35);background:rgba(4,3,13,.7);backdrop-filter:blur(8px);color:var(--vl)}
-
-.cbody{padding:28px 32px 36px;position:relative;z-index:1;display:flex;flex-direction:column;flex:1}
-.card.wide .cbody{padding:32px 40px 44px}
-.cnum{font-family:'DM Sans',sans-serif;font-weight:200;font-size:10px;letter-spacing:.35em;color:var(--vl);opacity:.6;margin-bottom:8px}
-.ctitle{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(1.4rem,2.2vw,2rem);line-height:1.2;margin-bottom:10px;transition:color .3s;letter-spacing:.02em}
+.cbody{padding:22px 26px 30px;position:relative;z-index:1;display:flex;flex-direction:column;flex:1}
+.card.wide .cbody,.card.triple .cbody{padding:26px 32px 36px}
+.cnum{font-weight:200;font-size:9px;letter-spacing:.35em;color:var(--vl);opacity:.5;margin-bottom:7px}
+.ctitle{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(1.15rem,1.6vw,1.6rem);line-height:1.2;margin-bottom:8px;transition:color .3s;letter-spacing:.02em}
 .card:hover .ctitle{color:var(--vl)}
-.card.wide .ctitle{font-size:clamp(1.6rem,2.8vw,2.5rem)}
-.cdesc{font-family:'DM Sans',sans-serif;font-weight:200;font-size:.88rem;color:var(--gray);line-height:1.8;margin-bottom:20px;flex:1;letter-spacing:.01em}
-.tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:24px}
-.tag{font-size:9px;letter-spacing:.15em;text-transform:uppercase;padding:4px 11px;border:1px solid rgba(124,58,237,.22);color:rgba(128,128,160,.7);transition:border-color .3s,color .3s}
-.card:hover .tag{border-color:rgba(168,85,247,.35);color:rgba(160,144,200,.9)}
+.card.wide .ctitle,.card.triple .ctitle{font-size:clamp(1.35rem,2.2vw,2rem)}
+.cdesc{font-weight:200;font-size:.82rem;color:var(--gray);line-height:1.75;margin-bottom:16px;flex:1}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:20px}
+.tag{font-size:8px;letter-spacing:.14em;text-transform:uppercase;padding:3px 10px;border:1px solid rgba(124,58,237,.2);color:rgba(128,128,160,.65);transition:border-color .3s,color .3s}
+.card:hover .tag{border-color:rgba(168,85,247,.32);color:rgba(160,144,200,.85)}
+.btn{display:inline-flex;align-items:center;gap:9px;padding:10px 24px;background:transparent;border:1px solid rgba(124,58,237,.45);color:var(--white);font-weight:300;font-size:10px;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;transition:background .3s,border-color .3s,box-shadow .3s,transform .2s;width:fit-content;font-family:'DM Sans',sans-serif}
+.btn:hover{background:var(--v);border-color:var(--vl);box-shadow:0 0 22px var(--vg);transform:translateY(-2px)}
+.arr{transition:transform .3s}.btn:hover .arr{transform:translateX(4px)}
 
-.btn{display:inline-flex;align-items:center;gap:10px;padding:11px 28px;background:transparent;border:1px solid rgba(124,58,237,.5);color:var(--white);font-family:'DM Sans',sans-serif;font-weight:300;font-size:11px;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;transition:background .3s,border-color .3s,box-shadow .3s,transform .2s;width:fit-content}
-.btn:hover{background:var(--v);border-color:var(--vl);box-shadow:0 0 24px var(--vg);transform:translateY(-2px)}
-.arr{transition:transform .3s}
-.btn:hover .arr{transform:translateX(4px)}
+/* CATEGORY DIVIDERS */
+.cat-divider{grid-column:span 3;display:flex;align-items:center;gap:20px;padding:28px 0 6px;opacity:0;transform:translateY(12px);transition:opacity .6s,transform .6s}
+.cat-divider.on{opacity:1;transform:translateY(0)}
+.cd-label{font-weight:200;font-size:9px;letter-spacing:.45em;text-transform:uppercase;color:rgba(168,85,247,.45);white-space:nowrap}
+.cd-line{flex:1;height:1px;background:linear-gradient(to right,rgba(124,58,237,.18),transparent)}
 
-/* FOOTER */
+/* CTA */
+.cta-strip{position:relative;z-index:2;padding:80px 48px;text-align:center;border-top:1px solid rgba(124,58,237,.08)}
+.cta-h{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2rem,4vw,3.5rem);margin-bottom:16px;opacity:0;transform:translateY(20px);transition:opacity .8s,transform .8s}
+.cta-h.on{opacity:1;transform:translateY(0)}
+.cta-h em{font-style:italic;color:var(--vl)}
+.cta-sub{font-weight:200;font-size:.95rem;color:var(--gray);margin-bottom:40px;max-width:440px;margin-left:auto;margin-right:auto;line-height:1.8;opacity:0;transform:translateY(20px);transition:opacity .8s .1s,transform .8s .1s}
+.cta-sub.on{opacity:1;transform:translateY(0)}
+.cta-btn{display:inline-flex;align-items:center;gap:12px;padding:16px 48px;background:transparent;border:1px solid var(--vl);color:var(--vl);font-weight:300;font-size:12px;letter-spacing:.25em;text-transform:uppercase;text-decoration:none;font-family:'DM Sans',sans-serif;position:relative;overflow:hidden;opacity:0;transform:translateY(20px);transition:opacity .8s .2s,transform .8s .2s,color .35s,box-shadow .35s}
+.cta-btn.on{opacity:1;transform:translateY(0)}
+.cta-btn::before{content:'';position:absolute;inset:0;background:var(--v);transform:translateX(-100%);transition:transform .35s;z-index:-1}
+.cta-btn:hover{color:var(--white);box-shadow:0 0 40px rgba(124,58,237,.4)}
+.cta-btn:hover::before{transform:translateX(0)}
+
 footer{position:relative;z-index:2;border-top:1px solid rgba(124,58,237,.08);padding:52px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
 .ft-brand{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;font-style:italic;color:var(--vl);letter-spacing:.06em}
-.ft-copy{font-family:'DM Sans',sans-serif;font-weight:200;font-size:12px;letter-spacing:.15em;color:var(--gray)}
+.ft-links{display:flex;gap:32px}
+.ft-link{font-weight:200;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(128,128,160,.5);text-decoration:none;transition:color .3s}
+.ft-link:hover{color:var(--vl)}
+.ft-copy{font-weight:200;font-size:12px;letter-spacing:.15em;color:var(--gray)}
 
 @keyframes fu{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 .sp{position:fixed;pointer-events:none;z-index:9999;border-radius:50%;animation:spa .65s ease forwards}
 @keyframes spa{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(0)}}
 
-@media(max-width:960px){
+@media(max-width:1100px){.grid{grid-template-columns:repeat(2,1fr)}.card.triple{grid-column:span 2}.cat-divider{grid-column:span 2}}
+@media(max-width:720px){
   nav{padding:20px 24px}
-  .hero{padding:110px 24px 70px}
-  .hero-stats{gap:32px}
+  .hero{padding:110px 24px 70px}.hero-stats{gap:32px}
   .grid{grid-template-columns:1fr;padding:0 20px}
-  .card.wide{grid-column:span 1}
-  .card.wide .cimg{height:260px}
-  .cimg{height:220px}
-  footer{flex-direction:column;text-align:center;padding:40px 24px}
+  .card.wide,.card.triple{grid-column:span 1}
+  .cat-divider{grid-column:span 1}
+  .filter-tabs{padding:0 20px}
+  footer{flex-direction:column;text-align:center;padding:40px 24px}.ft-links{flex-direction:column;gap:14px;align-items:center}
+  .cta-strip{padding:60px 24px}
 }
 </style>
 </head>
@@ -114,7 +141,7 @@ footer{position:relative;z-index:2;border-top:1px solid rgba(124,58,237,.08);pad
 
 <nav>
   <a href="#" class="nav-logo">Studio 3D</a>
-  <a href="mailto:hello@studio3d.com" class="nav-cta">Get in Touch</a>
+  <a href="mailto:hello@studio3d.co" class="nav-cta">Get in Touch</a>
 </nav>
 
 <section class="hero">
@@ -124,81 +151,239 @@ footer{position:relative;z-index:2;border-top:1px solid rgba(124,58,237,.08);pad
     for <em>Modern</em> <strong>Brands</strong>
   </h1>
   <div class="hero-divider"></div>
-  <p class="hero-sub">Immersive digital experiences that engage visitors, elevate brands, and transform curiosity into conversion.</p>
+  <p class="hero-sub">Immersive WebGL experiences that engage visitors, elevate brands, and transform curiosity into conversion. Sixteen live demos across every luxury industry.</p>
   <div class="hero-stats">
-    <div class="hs"><div class="hs-n">4+</div><div class="hs-l">Demos</div></div>
+    <div class="hs"><div class="hs-n">16</div><div class="hs-l">Live Demos</div></div>
     <div class="hs"><div class="hs-n">3D</div><div class="hs-l">WebGL</div></div>
     <div class="hs"><div class="hs-n">∞</div><div class="hs-l">Possibilities</div></div>
   </div>
   <div class="scroll-cue"><div class="sc-bar"></div><span class="sc-txt">Explore</span></div>
 </section>
 
-<section class="demos">
+<section class="demos" id="work">
   <div class="sec-eyebrow">Selected Work</div>
-  <div class="sec-title">Four Worlds, Four Approaches</div>
+  <h2 class="sec-title">Sixteen Worlds</h2>
+  <p class="sec-sub">Every demo is a fully designed, production-ready site with custom Three.js scenes, interactive controls, and editorial layouts.</p>
+
+  <div class="filter-tabs">
+    <button class="ftab active" data-filter="all">All (16)</button>
+    <button class="ftab" data-filter="fashion">Fashion</button>
+    <button class="ftab" data-filter="luxury">Luxury</button>
+    <button class="ftab" data-filter="food">Food &amp; Drink</button>
+    <button class="ftab" data-filter="space">Space &amp; Place</button>
+    <button class="ftab" data-filter="data">Data &amp; Tech</button>
+    <button class="ftab" data-filter="nature">Nature</button>
+  </div>
+
   <div class="grid">
 
-    <div class="card wide" data-d="0">
-      <div class="cimg">
-        <span class="badge">Fine Dining</span>
-        <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1400&q=85" alt="Maison">
-      </div>
+    <!-- FASHION & BEAUTY -->
+    <div class="cat-divider"><span class="cd-label">Fashion &amp; Beauty</span><div class="cd-line"></div></div>
+
+    <div class="card wide" data-d="0" data-cat="fashion luxury">
+      <span class="badge-new">Most Impressive</span>
+      <div class="cimg"><span class="badge">Fine Jewellery</span><img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=1000&q=85" alt="Lumière"></div>
       <div class="cbody">
         <div class="cnum">01</div>
-        <div class="ctitle">Maison — Fine Dining Editorial</div>
-        <p class="cdesc">Bold editorial typography over full-bleed photography. A Michelin-calibre restaurant site with 3D silk wave hero, warm lighting, and scroll storytelling that makes every dish feel like art.</p>
-        <div class="tags"><span class="tag">3D Cloth Wave</span><span class="tag">Editorial</span><span class="tag">Parallax</span><span class="tag">Warm Palette</span></div>
-        <a href="demo/food.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
+        <div class="ctitle">Lumière — Fine Jewellery House</div>
+        <p class="cdesc">3D engagement ring with live metal switcher (Gold / Silver / Rose Gold / Platinum) and gem switcher (Diamond / Ruby / Emerald / Sapphire). Orbiting caustic light creates moving reflections across the gem surface. Drag to rotate.</p>
+        <div class="tags"><span class="tag">LatheGeometry</span><span class="tag">MeshPhysical</span><span class="tag">Live Configurator</span><span class="tag">Caustic Light</span></div>
+        <a href="demo/jewellery.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
       </div>
     </div>
 
-    <div class="card" data-d="80">
-      <div class="cimg">
-        <span class="badge">Specialty Coffee</span>
-        <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=900&q=85" alt="Kōhi">
-      </div>
+    <div class="card" data-d="80" data-cat="fashion luxury">
+      <div class="cimg"><span class="badge">Haute Chaussure</span><img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=700&q=85" alt="Heels"></div>
       <div class="cbody">
         <div class="cnum">02</div>
-        <div class="ctitle">Kōhi — Precision Roastery</div>
-        <p class="cdesc">Japanese minimalism with a rotating 3D coffee bean sculpture under studio lighting. Surgical white space. Every element earns its place.</p>
-        <div class="tags"><span class="tag">3D Bean</span><span class="tag">Zen Minimal</span><span class="tag">WebGL</span></div>
-        <a href="demo/coffee.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
+        <div class="ctitle">Maison Soulier — Luxury Heels</div>
+        <p class="cdesc">3D stiletto built with LatheGeometry — toe cap, counter, strap, and gold branding. Live colour switcher across 5 finishes. Custom cursor with trail. Rising dust particles. Editorial ticker strip.</p>
+        <div class="tags"><span class="tag">LatheGeometry</span><span class="tag">Custom Cursor</span><span class="tag">Colour Switcher</span></div>
+        <a href="demo/heels.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
       </div>
     </div>
 
-    <div class="card" data-d="160">
-      <div class="cimg">
-        <span class="badge">Luxury Watches</span>
-        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900&q=85" alt="Chrono">
-      </div>
+    <div class="card" data-d="0" data-cat="fashion luxury">
+      <div class="cimg"><span class="badge">Haute Parfumerie</span><img src="https://images.unsplash.com/photo-1541643600914-78b084683702?w=700&q=85" alt="Obscura"></div>
       <div class="cbody">
         <div class="cnum">03</div>
-        <div class="ctitle">Chrono — Futurist Watch House</div>
-        <p class="cdesc">Interactive 3D mechanical ring system in metallic materials. Auto-rotates cinematically, then responds to drag. A sci-fi horology experience.</p>
-        <div class="tags"><span class="tag">Interactive 3D</span><span class="tag">Metallic</span><span class="tag">Drag Control</span></div>
-        <a href="demo/product.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
-      </div>
-    </div>
-
-    <div class="card wide" data-d="240">
-      <div class="cimg">
-        <span class="badge">Haute Parfumerie</span>
-        <img src="https://images.unsplash.com/photo-1541643600914-78b084683702?w=1400&q=85" alt="Obscura">
-      </div>
-      <div class="cbody">
-        <div class="cnum">04</div>
         <div class="ctitle">Obscura — Gothic Perfume House</div>
-        <p class="cdesc">A 3D glass perfume bottle with refraction shaders, surrounded by gold particle constellations orbiting in volumetric WebGL space. Pitch black, dramatic, cinematic.</p>
-        <div class="tags"><span class="tag">3D Glass Shader</span><span class="tag">Gold Particles</span><span class="tag">Gothic Dark</span><span class="tag">WebGL</span></div>
+        <p class="cdesc">3D glass perfume bottle with refraction shaders, surrounded by gold particle constellations orbiting in volumetric WebGL space. Pitch black, dramatic, cinematic.</p>
+        <div class="tags"><span class="tag">Glass Shader</span><span class="tag">Gold Particles</span><span class="tag">Gothic Dark</span></div>
         <a href="demo/perfume.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
       </div>
     </div>
 
-  </div>
+    <div class="card" data-d="80" data-cat="fashion luxury">
+      <div class="cimg"><span class="badge">Automotive 360°</span><img src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=700&q=85" alt="Apex"></div>
+      <div class="cbody">
+        <div class="cnum">04</div>
+        <div class="ctitle">Apex GT-R — Automotive 360°</div>
+        <p class="cdesc">Full parametric 3D car: body, hood, roof, wheels with spokes, headlights, taillights, windshield, rear wing. Live paint switcher across 5 colours. Drag to rotate 360°.</p>
+        <div class="tags"><span class="tag">Parametric Car</span><span class="tag">Paint Switcher</span><span class="tag">5 Colours</span></div>
+        <a href="demo/automotive.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
+      </div>
+    </div>
+
+    <div class="card" data-d="160" data-cat="luxury">
+      <div class="cimg"><span class="badge">Luxury Watches</span><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700&q=85" alt="Chrono"></div>
+      <div class="cbody">
+        <div class="cnum">05</div>
+        <div class="ctitle">Chrono — Futurist Watch House</div>
+        <p class="cdesc">3D mechanical ring system in metallic materials. Auto-rotates cinematically, responds to drag. Sci-fi horology with precision lighting and dark editorial layout.</p>
+        <div class="tags"><span class="tag">Mechanical 3D</span><span class="tag">Metallic</span><span class="tag">Drag Control</span></div>
+        <a href="demo/product.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
+      </div>
+    </div>
+
+    <!-- FOOD & DRINK -->
+    <div class="cat-divider"><span class="cd-label">Food &amp; Drink</span><div class="cd-line"></div></div>
+
+    <div class="card" data-d="0" data-cat="food">
+      <div class="cimg"><span class="badge">Fine Dining</span><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=700&q=85" alt="Maison"></div>
+      <div class="cbody">
+        <div class="cnum">06</div>
+        <div class="ctitle">Maison — Fine Dining Restaurant</div>
+        <p class="cdesc">3D floating dish with steam particles and orbit lights. Scroll-triggered reveals, full editorial layout with reservation system aesthetic and seasonal menu sections.</p>
+        <div class="tags"><span class="tag">Steam Particles</span><span class="tag">Orbit Lights</span><span class="tag">Editorial</span></div>
+        <a href="demo/food.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
+      </div>
+    </div>
+
+    <div class="card" data-d="80" data-cat="food">
+      <div class="cimg"><span class="badge">Japanese Coffee</span><img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=700&q=85" alt="Kōhi"></div>
+      <div class="cbody">
+        <div class="cnum">07</div>
+        <div class="ctitle">Kōhi — Japanese Coffee House</div>
+        <p class="cdesc">3D ceramic cup with rising steam, animated pour effects, and parallax on scroll. Wabi-sabi aesthetic — sparse, deliberate, poetic. Japanese typography layered over the scene.</p>
+        <div class="tags"><span class="tag">Steam Animation</span><span class="tag">Wabi-sabi</span><span class="tag">Pour Effect</span></div>
+        <a href="demo/coffee.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
+      </div>
+    </div>
+
+    <div class="card" data-d="160" data-cat="food luxury">
+      <div class="cimg"><span class="badge">Bean to Bar</span><img src="https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=700&q=85" alt="Cacao"></div>
+      <div class="cbody">
+        <div class="cnum">08</div>
+        <div class="ctitle">Cacao — Premium Chocolate</div>
+        <p class="cdesc">Segmented 3D chocolate bar with groove details and a floating broken piece. Live variety switcher (Dark / Milk / White / Ruby) swaps material in real time. Cacao dust particle swirl.</p>
+        <div class="tags"><span class="tag">BoxGeometry</span><span class="tag">Material Switcher</span><span class="tag">Particle Dust</span></div>
+        <a href="demo/chocolate.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
+      </div>
+    </div>
+
+    <!-- SPACE & PLACE -->
+    <div class="cat-divider"><span class="cd-label">Space &amp; Place</span><div class="cd-line"></div></div>
+
+    <div class="card wide" data-d="0" data-cat="space">
+      <div class="cimg"><span class="badge">Art Gallery</span><img src="https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=1000&q=85" alt="Vault"></div>
+      <div class="cbody">
+        <div class="cnum">09</div>
+        <div class="ctitle">Vault — 3D Art Gallery Walkthrough</div>
+        <p class="cdesc">Three navigable gallery rooms in Three.js. Spot-lit framed artworks on real geometry walls. Camera glides smoothly between rooms via arrow navigation. Click any artwork to reveal title, artist, year, description, and price.</p>
+        <div class="tags"><span class="tag">3D Rooms</span><span class="tag">Camera Navigation</span><span class="tag">Raycaster</span><span class="tag">Spot Lighting</span></div>
+        <a href="demo/artgallery.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
+      </div>
+    </div>
+
+    <div class="card" data-d="0" data-cat="space">
+      <div class="cimg"><span class="badge">3D Room Builder</span><img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=700&q=85" alt="Form"></div>
+      <div class="cbody">
+        <div class="cnum">10</div>
+        <div class="ctitle">Form — 3D Furniture Studio</div>
+        <p class="cdesc">Fully furnished 3D room — sofa, table, chairs, sideboard, floor lamp, rug. Drag to orbit at any angle. Wood switcher (Walnut / Oak / Ash / Ebony) and fabric switcher (Linen / Velvet / Leather / Bouclé) update live.</p>
+        <div class="tags"><span class="tag">Full 3D Room</span><span class="tag">Orbit Control</span><span class="tag">Dual Switcher</span></div>
+        <a href="demo/furniture.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
+      </div>
+    </div>
+
+    <div class="card" data-d="80" data-cat="space luxury">
+      <div class="cimg"><span class="badge">Luxury Real Estate</span><img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=700&q=85" alt="Haven"></div>
+      <div class="cbody">
+        <div class="cnum">11</div>
+        <div class="ctitle">Haven — Luxury Real Estate</div>
+        <p class="cdesc">Architectural wireframe house from Three.js Line geometry with semi-transparent wall planes and floating data points with connection lines. Slow rotation, teal glow, star field.</p>
+        <div class="tags"><span class="tag">Wireframe Arch</span><span class="tag">Line Geometry</span><span class="tag">Data Points</span></div>
+        <a href="demo/realestate.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
+      </div>
+    </div>
+
+    <div class="card" data-d="160" data-cat="space">
+      <div class="cimg"><span class="badge">Travel Globe</span><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=700&q=85" alt="Atlas"></div>
+      <div class="cbody">
+        <div class="cnum">12</div>
+        <div class="ctitle">Atlas — Interactive Travel Globe</div>
+        <p class="cdesc">Rotating Earth sphere with continent patches, lat/lon grid lines, cloud layer, 3,000 background stars, and 8 clickable destination pins with pulsing rings. Drag to explore any hemisphere.</p>
+        <div class="tags"><span class="tag">Earth Globe</span><span class="tag">Destination Pins</span><span class="tag">Drag Rotate</span></div>
+        <a href="demo/travel.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
+      </div>
+    </div>
+
+    <!-- NATURE & CULTURE -->
+    <div class="cat-divider"><span class="cd-label">Nature &amp; Culture</span><div class="cd-line"></div></div>
+
+    <div class="card wide" data-d="0" data-cat="nature">
+      <div class="cimg"><span class="badge">Japanese Wellness</span><img src="https://images.unsplash.com/photo-1522383225653-ed111181a951?w=1000&q=85" alt="Sakura"></div>
+      <div class="cbody">
+        <div class="cnum">13</div>
+        <div class="ctitle">Sakura — Cherry Blossom Sanctuary</div>
+        <p class="cdesc">Parametric cherry blossom forest with 5 procedural trees built through recursive branching, 600 falling petal particles with real wind simulation, glint sparkle layer, atmospheric FogExp2, and mouse parallax shifting the whole scene.</p>
+        <div class="tags"><span class="tag">Procedural Trees</span><span class="tag">600 Petals</span><span class="tag">Wind Sim</span><span class="tag">Mouse Parallax</span></div>
+        <a href="demo/sakura.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
+      </div>
+    </div>
+
+    <div class="card" data-d="0" data-cat="nature">
+      <div class="cimg"><span class="badge">Rare Books</span><img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=700&q=85" alt="Folio"></div>
+      <div class="cbody">
+        <div class="cnum">14</div>
+        <div class="ctitle">Folio — 3D Interactive Bookshelf</div>
+        <p class="cdesc">3D wooden bookshelf with 8 books. Hover to lean forward, click to reveal info panel — title, author, genre, synopsis. Flickering candle with dynamic point light and shadow mapping.</p>
+        <div class="tags"><span class="tag">Hover Lean</span><span class="tag">Info Panel</span><span class="tag">Candle Light</span></div>
+        <a href="demo/books.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
+      </div>
+    </div>
+
+    <!-- DATA & TECH -->
+    <div class="cat-divider"><span class="cd-label">Data &amp; Technology</span><div class="cd-line"></div></div>
+
+    <div class="card" data-d="0" data-cat="data">
+      <div class="cimg"><span class="badge">Data Platform</span><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=700&q=85" alt="Prism"></div>
+      <div class="cbody">
+        <div class="cnum">15</div>
+        <div class="ctitle">Prism — 3D Statistics Dashboard</div>
+        <p class="cdesc">Three.js 3D bar chart that grows on load. Below: Canvas 2D bar chart, donut chart with legend, animated line chart with two series, and a data table with animated percentage bars. Zero external chart libraries.</p>
+        <div class="tags"><span class="tag">3D Bar Chart</span><span class="tag">Canvas 2D</span><span class="tag">Live Animation</span><span class="tag">KPI Cards</span></div>
+        <a href="demo/stats.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
+      </div>
+    </div>
+
+    <div class="card wide" data-d="80" data-cat="data">
+      <div class="cimg"><span class="badge">Image Gallery</span><img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1000&q=85" alt="Orbit"></div>
+      <div class="cbody">
+        <div class="cnum">16</div>
+        <div class="ctitle">Orbit — Circular Image Formation</div>
+        <p class="cdesc">Eight real images arranged in a spinning 3D ring in WebGL space. Drag to rotate manually. Click any image — it scales up, the ring rotates to bring it front and centre, and an info panel slides up. Star field background with halo particle trail.</p>
+        <div class="tags"><span class="tag">3D Ring Formation</span><span class="tag">Texture Loading</span><span class="tag">Drag Rotate</span><span class="tag">Click Reveal</span></div>
+        <a href="demo/orbit.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
+      </div>
+    </div>
+
+  </div><!-- /grid -->
+</section>
+
+<section class="cta-strip">
+  <h2 class="cta-h">Ready to build something <em>extraordinary?</em></h2>
+  <p class="cta-sub">Every demo here was built from scratch in WebGL. Your brand deserves the same treatment.</p>
+  <a href="mailto:hello@studio3d.co" class="cta-btn">Start a Project <span>→</span></a>
 </section>
 
 <footer>
   <div class="ft-brand">Studio 3D</div>
+  <div class="ft-links">
+    <a href="#work" class="ft-link">Work</a>
+    <a href="mailto:hello@studio3d.co" class="ft-link">Contact</a>
+  </div>
   <div class="ft-copy">© 2025 Studio 3D — All rights reserved</div>
 </footer>
 </div>
@@ -207,113 +392,102 @@ footer{position:relative;z-index:2;border-top:1px solid rgba(124,58,237,.08);pad
 <script>
 // ── THREE.JS PARTICLE NEBULA BACKGROUND ──
 (function(){
-  const canvas = document.getElementById('three-bg');
-  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  const canvas=document.getElementById('three-bg');
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
   renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-  renderer.setSize(innerWidth, innerHeight);
-  renderer.setClearColor(0x04030d, 1);
+  renderer.setSize(innerWidth,innerHeight);
+  renderer.setClearColor(0x04030d,1);
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,0.1,1000);
+  camera.position.z=5;
 
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 1000);
-  camera.position.z = 5;
-
-  // ── PARTICLE LAYERS ──
-  function makeParticles(count, radius, color, size, speed){
-    const geo = new THREE.BufferGeometry();
-    const pos = new Float32Array(count*3);
-    const phases = new Float32Array(count);
+  function makeParticles(count,radius,color,size,speed){
+    const geo=new THREE.BufferGeometry();
+    const pos=new Float32Array(count*3);
     for(let i=0;i<count;i++){
-      const theta = Math.random()*Math.PI*2;
-      const phi = Math.acos(2*Math.random()-1);
-      const r = radius*(0.4+Math.random()*0.6);
-      pos[i*3]   = r*Math.sin(phi)*Math.cos(theta);
-      pos[i*3+1] = r*Math.sin(phi)*Math.sin(theta);
-      pos[i*3+2] = r*Math.cos(phi)-2;
-      phases[i]  = Math.random()*Math.PI*2;
+      const theta=Math.random()*Math.PI*2,phi=Math.acos(2*Math.random()-1),r=radius*(0.4+Math.random()*0.6);
+      pos[i*3]=r*Math.sin(phi)*Math.cos(theta);pos[i*3+1]=r*Math.sin(phi)*Math.sin(theta);pos[i*3+2]=r*Math.cos(phi)-2;
     }
-    geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
-    geo.setAttribute('phase', new THREE.BufferAttribute(phases,1));
-
-    const mat = new THREE.PointsMaterial({
-      color, size, transparent:true, opacity:0.75,
-      blending: THREE.AdditiveBlending, depthWrite:false, sizeAttenuation:true
-    });
-    const pts = new THREE.Points(geo, mat);
-    pts.userData = {speed, basePos: pos.slice(), phases};
-    return pts;
+    geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+    const mat=new THREE.PointsMaterial({color,size,transparent:true,opacity:0.75,blending:THREE.AdditiveBlending,depthWrite:false,sizeAttenuation:true});
+    const pts=new THREE.Points(geo,mat);pts.userData={speed};return pts;
   }
+  const layers=[
+    makeParticles(2800,8,0x7c3aed,0.018,0.0003),
+    makeParticles(1600,5,0xa855f7,0.012,0.0005),
+    makeParticles(800,3,0xc084fc,0.022,0.0007),
+    makeParticles(400,2,0xe879f9,0.030,0.001),
+  ];
+  layers.forEach(l=>scene.add(l));
 
-  const layer1 = makeParticles(2800, 8, 0x7c3aed, 0.018, 0.0003);
-  const layer2 = makeParticles(1600, 5, 0xa855f7, 0.012, 0.0005);
-  const layer3 = makeParticles(800,  3, 0xc084fc, 0.022, 0.0007);
-  const layer4 = makeParticles(400,  2, 0xe879f9, 0.030, 0.001);
-  scene.add(layer1, layer2, layer3, layer4);
-
-  // ── NEBULA GLOW MESHES ──
-  function makeGlow(color, x, y, z, scale){
-    const geo = new THREE.SphereGeometry(1.5,16,16);
-    const mat = new THREE.MeshBasicMaterial({color, transparent:true, opacity:0.04, blending:THREE.AdditiveBlending, depthWrite:false});
-    const m = new THREE.Mesh(geo, mat);
-    m.position.set(x,y,z); m.scale.setScalar(scale);
-    return m;
+  function makeGlow(color,x,y,z,scale){
+    const m=new THREE.Mesh(new THREE.SphereGeometry(1.5,16,16),new THREE.MeshBasicMaterial({color,transparent:true,opacity:0.04,blending:THREE.AdditiveBlending,depthWrite:false}));
+    m.position.set(x,y,z);m.scale.setScalar(scale);return m;
   }
-  scene.add(
-    makeGlow(0x7c3aed,-1,0,-4,2.5),
-    makeGlow(0xa855f7,2,1,-5,2),
-    makeGlow(0x4a0e6b,-2,-1,-3,1.8)
-  );
+  scene.add(makeGlow(0x7c3aed,-1,0,-4,2.5),makeGlow(0xa855f7,2,1,-5,2),makeGlow(0x4a0e6b,-2,-1,-3,1.8));
 
-  // MOUSE
-  let mx=0, my=0;
-  document.addEventListener('mousemove', e=>{
-    mx=(e.clientX/innerWidth-.5)*0.6;
-    my=(e.clientY/innerHeight-.5)*0.4;
-  });
-
-  // RESIZE
-  window.addEventListener('resize',()=>{
-    camera.aspect=innerWidth/innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(innerWidth,innerHeight);
-  });
+  let mx=0,my=0;
+  document.addEventListener('mousemove',e=>{mx=(e.clientX/innerWidth-.5)*0.6;my=(e.clientY/innerHeight-.5)*0.4;});
+  window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
 
   let t=0;
-  function animate(){
-    requestAnimationFrame(animate);
-    t+=0.008;
-
-    [layer1,layer2,layer3,layer4].forEach(pts=>{
-      pts.rotation.y += pts.userData.speed;
-      pts.rotation.x += pts.userData.speed*0.4;
-    });
-
-    // Pulse opacity for star twinkle
-    layer3.material.opacity = 0.55+0.25*Math.sin(t*1.3);
-    layer4.material.opacity = 0.65+0.35*Math.sin(t*2.1);
-
-    // Mouse parallax
-    camera.position.x += (mx - camera.position.x)*0.03;
-    camera.position.y += (-my - camera.position.y)*0.03;
+  (function animate(){
+    requestAnimationFrame(animate);t+=0.008;
+    layers.forEach(l=>{l.rotation.y+=l.userData.speed;l.rotation.x+=l.userData.speed*0.4;});
+    layers[2].material.opacity=0.55+0.25*Math.sin(t*1.3);
+    layers[3].material.opacity=0.65+0.35*Math.sin(t*2.1);
+    camera.position.x+=(mx-camera.position.x)*0.03;
+    camera.position.y+=(-my-camera.position.y)*0.03;
     camera.lookAt(0,0,0);
-
-    renderer.render(scene, camera);
-  }
-  animate();
+    renderer.render(scene,camera);
+  })();
 })();
 
-// SCROLL REVEAL
-const io=new IntersectionObserver(ee=>{ee.forEach(e=>{if(e.isIntersecting){const d=parseInt(e.target.dataset.d||0);setTimeout(()=>e.target.classList.add('on'),d);io.unobserve(e.target)}})},{threshold:.08});
-document.querySelectorAll('.card,.sec-eyebrow,.sec-title').forEach(el=>io.observe(el));
+// ── SCROLL REVEAL ──
+const io=new IntersectionObserver(ee=>{
+  ee.forEach(e=>{if(e.isIntersecting){
+    const d=parseInt(e.target.dataset.d||0);
+    setTimeout(()=>e.target.classList.add('on'),d);
+    io.unobserve(e.target);
+  }});
+},{threshold:.06});
+document.querySelectorAll('.card,.sec-eyebrow,.sec-title,.sec-sub,.filter-tabs,.cat-divider,.cta-h,.cta-sub,.cta-btn').forEach(el=>io.observe(el));
 
-// SPARKLE
-document.querySelectorAll('.btn').forEach(btn=>{
+// ── FILTER TABS ──
+document.querySelectorAll('.ftab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    const filter=tab.dataset.filter;
+    document.querySelectorAll('.card').forEach(card=>{
+      const cats=card.dataset.cat||'';
+      const show=filter==='all'||cats.includes(filter);
+      card.style.display=show?'flex':'none';
+    });
+    document.querySelectorAll('.cat-divider').forEach(d=>{
+      d.style.display=filter==='all'?'flex':'none';
+    });
+    // sparkle
+    const r=tab.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+    const cols=['#a855f7','#c084fc','#fff'];
+    for(let i=0;i<10;i++){
+      const s=document.createElement('div');s.className='sp';
+      const a=(i/10)*Math.PI*2,d=18+Math.random()*32,sz=2+Math.random()*3;
+      s.style.cssText=`left:${cx-sz/2}px;top:${cy-sz/2}px;width:${sz}px;height:${sz}px;background:${cols[i%cols.length]};--tx:${Math.cos(a)*d}px;--ty:${Math.sin(a)*d}px;box-shadow:0 0 4px ${cols[0]}`;
+      document.body.appendChild(s);setTimeout(()=>s.remove(),700);
+    }
+  });
+});
+
+// ── BUTTON SPARKLE ──
+document.querySelectorAll('.btn,.cta-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     const r=btn.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
-    const cols=['#a855f7','#c084fc','#e879f9','#fff','#7c3aed'];
+    const cols=['#a855f7','#c084fc','#e879f9','#fff'];
     for(let i=0;i<14;i++){
       const s=document.createElement('div');s.className='sp';
-      const a=(i/14)*Math.PI*2+Math.random()*.3,d=38+Math.random()*50,sz=3+Math.random()*6;
-      s.style.cssText=`left:${cx-sz/2}px;top:${cy-sz/2}px;width:${sz}px;height:${sz}px;background:${cols[i%cols.length]};--tx:${Math.cos(a)*d}px;--ty:${Math.sin(a)*d}px;box-shadow:0 0 6px ${cols[0]}`;
+      const a=(i/14)*Math.PI*2+Math.random()*.3,d=38+Math.random()*50,sz=3+Math.random()*5;
+      s.style.cssText=`left:${cx-sz/2}px;top:${cy-sz/2}px;width:${sz}px;height:${sz}px;background:${cols[i%cols.length]};--tx:${Math.cos(a)*d}px;--ty:${Math.sin(a)*d}px;box-shadow:0 0 5px ${cols[0]}`;
       document.body.appendChild(s);setTimeout(()=>s.remove(),700);
     }
   });
