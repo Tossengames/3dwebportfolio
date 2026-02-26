@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orbit — Circular Image Gallery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#04030c;--v:#7c3aed;--vl:#a855f7;--white:#f0eeff;--gray:#6060a0}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:22px 60px;background:rgba(4,3,12,.8);backdrop-filter:blur(20px);border-bottom:1px solid rgba(124,58,237,.1)}
+.nav-brand{font-family:'Cormorant Garamond',serif;font-size:22px;font-style:italic;color:var(--vl);text-decoration:none}
+.nav-back{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--gray);text-decoration:none;transition:color .3s}
+.nav-back:hover{color:var(--vl)}
+.hero{position:relative;height:100vh;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+#orbitCanvas{position:absolute;inset:0;z-index:1}
+.hero-ui{position:relative;z-index:10;pointer-events:none}
+.hero-eye{font-weight:200;font-size:10px;letter-spacing:.55em;text-transform:uppercase;color:var(--vl);margin-bottom:20px;display:block;opacity:0;animation:fu .8s ease forwards .3s}
+.hero-h1{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2.5rem,5vw,5rem);line-height:1.1;margin-bottom:16px;opacity:0;animation:fu 1.2s ease forwards .5s}
+.hero-h1 em{font-style:italic;color:var(--vl)}
+.hero-sub{font-weight:200;font-size:.95rem;color:var(--gray);max-width:440px;line-height:1.8;margin:0 auto;opacity:0;animation:fu 1s ease forwards .8s}
+.click-hint{margin-top:32px;font-weight:200;font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:rgba(168,85,247,.4);opacity:0;animation:fu .8s ease forwards 1.2s}
+.info-panel{position:fixed;bottom:40px;left:50%;transform:translateX(-50%) translateY(20px);z-index:20;background:rgba(8,5,20,.92);border:1px solid rgba(124,58,237,.25);backdrop-filter:blur(20px);padding:24px 36px;min-width:420px;text-align:center;opacity:0;pointer-events:none;transition:opacity .4s,transform .4s}
+.info-panel.show{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+.ip-cat{font-weight:200;font-size:9px;letter-spacing:.45em;text-transform:uppercase;color:var(--vl);margin-bottom:8px}
+.ip-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400;color:var(--white);margin-bottom:6px}
+.ip-desc{font-size:.85rem;color:var(--gray);line-height:1.7;margin-bottom:16px}
+.ip-btns{display:flex;gap:12px;justify-content:center}
+.ip-btn{padding:9px 24px;border:1px solid var(--vl);color:var(--vl);font-size:10px;letter-spacing:.22em;text-transform:uppercase;background:transparent;cursor:pointer;transition:background .3s,color .3s;font-family:'DM Sans',sans-serif}
+.ip-btn:hover{background:var(--v);color:#fff}
+.ip-close{padding:9px 18px;border:1px solid rgba(124,58,237,.2);color:rgba(168,85,247,.35);font-size:10px;letter-spacing:.22em;background:transparent;cursor:pointer;transition:color .3s;font-family:'DM Sans',sans-serif}
+.ip-close:hover{color:var(--vl)}
+footer{position:relative;z-index:2;border-top:1px solid rgba(124,58,237,.08);padding:40px 60px;display:flex;justify-content:space-between;align-items:center}
+.ft-brand{font-family:'Cormorant Garamond',serif;font-size:18px;font-style:italic;color:var(--vl)}
+.ft-copy{font-size:11px;letter-spacing:.1em;color:var(--gray)}
+.ft-back{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gray);text-decoration:none;transition:color .3s}
+.ft-back:hover{color:var(--vl)}
+@keyframes fu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.sp{position:fixed;pointer-events:none;z-index:9999;border-radius:50%;animation:spa .65s ease forwards}
+@keyframes spa{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(0)}}
+@media(max-width:768px){nav{padding:18px 24px}.info-panel{min-width:90vw}footer{flex-direction:column;text-align:center;padding:32px 24px;gap:12px}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="../index.html" class="nav-brand">Orbit</a>
+  <a href="../index.html" class="nav-back">← Portfolio</a>
+</nav>
+<section class="hero">
+  <canvas id="orbitCanvas"></canvas>
+  <div class="hero-ui">
+    <span class="hero-eye">Interactive 3D Gallery</span>
+    <h1 class="hero-h1">Images in <em>orbit.</em><br>Click to explore.</h1>
+    <p class="hero-sub">A circular formation of images floating in 3D space. The ring rotates — click any image to bring it forward and reveal its story.</p>
+    <div class="click-hint">← drag to spin · click to select →</div>
+  </div>
+</section>
+<div class="info-panel" id="infoPanel">
+  <div class="ip-cat" id="ipCat">Photography</div>
+  <div class="ip-title" id="ipTitle">Title</div>
+  <p class="ip-desc" id="ipDesc">Description.</p>
+  <div class="ip-btns">
+    <button class="ip-btn">View Full Size</button>
+    <button class="ip-close" id="ipClose">Close ✕</button>
+  </div>
+</div>
+<footer>
+  <div class="ft-brand">Orbit</div>
+  <div class="ft-copy">Demo by Studio 3D · © 2025</div>
+  <a href="../index.html" class="ft-back">← Back to Portfolio</a>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const ITEMS=[
+  {url:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80',cat:'Architecture',title:'Glass & Steel',desc:'Modern architectural photography exploring the geometry of contemporary urban structures and the interplay of light.'},
+  {url:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80',cat:'Landscape',title:'Mountain Dawn',desc:'First light breaking over a glacial mountain range — a fleeting moment that lasts exactly four minutes.'},
+  {url:'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=600&q=80',cat:'Nature',title:'Still Waters',desc:'A lake at absolute stillness, reflecting sky so perfectly the horizon disappears into perfect symmetry.'},
+  {url:'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=600&q=80',cat:'Aerial',title:'Coastal Lines',desc:'Aerial photography revealing the abstract beauty hidden in coastlines, visible only from 500 metres above.'},
+  {url:'https://images.unsplash.com/photo-1445307806294-bff7f67ff225?w=600&q=80',cat:'Urban',title:'Neon Rain',desc:'Night photography in a monsoon — city lights fractured across wet streets. The world rewritten in reflection.'},
+  {url:'https://images.unsplash.com/photo-1448375240586-882707db888b?w=600&q=80',cat:'Forest',title:'Ancient Grove',desc:'Old growth forest in the Pacific Northwest — trees over 800 years old filtering cold winter light to the floor.'},
+  {url:'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=600&q=80',cat:'Astrophotography',title:'Milky Core',desc:'Eight hours of exposure reveal the dense core of our galaxy rising over an alpine ridge at 3,200m.'},
+  {url:'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&q=80',cat:'Mountain',title:'The Ridge',desc:'A climber traverses a razor ridge in the Dolomites — the valley floor 1,400 metres below, hidden in cloud.'},
+];
+
+(function(){
+  const canvas=document.getElementById('orbitCanvas');
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.setClearColor(0x04030c,1);
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(50,innerWidth/innerHeight,.1,100);camera.position.set(0,0,9);
+
+  // Stars
+  const sg=new THREE.BufferGeometry();const sp=new Float32Array(2000*3);
+  for(let i=0;i<2000;i++){const th=Math.random()*Math.PI*2,ph=Math.acos(2*Math.random()-1),r=18+Math.random()*20;sp[i*3]=r*Math.sin(ph)*Math.cos(th);sp[i*3+1]=r*Math.sin(ph)*Math.sin(th);sp[i*3+2]=r*Math.cos(ph);}
+  sg.setAttribute('position',new THREE.BufferAttribute(sp,3));
+  scene.add(new THREE.Points(sg,new THREE.PointsMaterial({color:0xa855f7,size:.04,transparent:true,opacity:.5,blending:THREE.AdditiveBlending,sizeAttenuation:true,depthWrite:false})));
+
+  // Orbit ring guide
+  const orbitRing=new THREE.TorusGeometry(3.8,.006,8,120);
+  scene.add(new THREE.Mesh(orbitRing,new THREE.MeshBasicMaterial({color:0x7c3aed,transparent:true,opacity:.2,blending:THREE.AdditiveBlending})));
+
+  // Image planes in ring
+  const orbitGroup=new THREE.Group();scene.add(orbitGroup);
+  const N=ITEMS.length,R=3.8,PW=1.55,PH=1.1;
+  const planes=[];const loader=new THREE.TextureLoader();
+
+  ITEMS.forEach((item,i)=>{
+    const angle=(i/N)*Math.PI*2;
+    const x=Math.cos(angle)*R,z=Math.sin(angle)*R;
+    const geo=new THREE.PlaneGeometry(PW,PH);
+    const mat=new THREE.MeshBasicMaterial({color:0x2a1060,side:THREE.DoubleSide,transparent:true,opacity:1});
+    const mesh=new THREE.Mesh(geo,mat);
+    mesh.position.set(x,0,z);mesh.lookAt(0,0,0);
+    mesh.userData={i,angle,item};orbitGroup.add(mesh);planes.push(mesh);
+
+    // Frame lines
+    const pts=[new THREE.Vector3(-PW/2-0.04,-PH/2-0.04,0),new THREE.Vector3(PW/2+0.04,-PH/2-0.04,0),new THREE.Vector3(PW/2+0.04,PH/2+0.04,0),new THREE.Vector3(-PW/2-0.04,PH/2+0.04,0),new THREE.Vector3(-PW/2-0.04,-PH/2-0.04,0)];
+    const frameGeo=new THREE.BufferGeometry().setFromPoints(pts);
+    const frame=new THREE.Line(frameGeo,new THREE.LineBasicMaterial({color:0x7c3aed,transparent:true,opacity:.45}));
+    frame.position.set(x,0,z);frame.lookAt(0,0,0);orbitGroup.add(frame);
+
+    loader.load(item.url,tex=>{mat.map=tex;mat.color.setHex(0xffffff);mat.needsUpdate=true;});
+  });
+
+  // Halo particles
+  const hc=180;const hp=new Float32Array(hc*3);const hph=new Float32Array(hc);
+  for(let i=0;i<hc;i++){const a=Math.random()*Math.PI*2,r=3.5+Math.random()*.7;hp[i*3]=Math.cos(a)*r;hp[i*3+1]=(Math.random()-.5)*.5;hp[i*3+2]=Math.sin(a)*r;hph[i]=Math.random()*Math.PI*2;}
+  const haloGeo=new THREE.BufferGeometry();haloGeo.setAttribute('position',new THREE.BufferAttribute(hp,3));
+  const haloMat=new THREE.PointsMaterial({color:0xa855f7,size:.035,transparent:true,opacity:.7,blending:THREE.AdditiveBlending,depthWrite:false,sizeAttenuation:true});
+  scene.add(new THREE.Points(haloGeo,haloMat));
+
+  scene.add(new THREE.AmbientLight(0x2a1060,4));
+  const pl=new THREE.PointLight(0x7c3aed,3,15);pl.position.set(0,4,0);scene.add(pl);
+
+  // Interaction
+  const raycaster=new THREE.Raycaster();const mouse=new THREE.Vector2();
+  const panel=document.getElementById('infoPanel');
+  let selectedIdx=-1,autoRotate=true,rotSpeed=.005;
+  let isDragging=false,prevX=0,dragVel=0,userCtrl=false,uTo;
+  let camRot=0;
+
+  canvas.addEventListener('mousedown',e=>{isDragging=true;prevX=e.clientX;userCtrl=true;clearTimeout(uTo);autoRotate=false;});
+  window.addEventListener('mouseup',()=>{isDragging=false;uTo=setTimeout(()=>{if(selectedIdx<0){autoRotate=true;}},2000);});
+  window.addEventListener('mousemove',e=>{if(!isDragging)return;const dx=e.clientX-prevX;dragVel=dx*.005;orbitGroup.rotation.y+=dx*.005;prevX=e.clientX;});
+
+  canvas.addEventListener('click',e=>{
+    if(Math.abs(dragVel)>.01){dragVel=0;return;}
+    mouse.x=(e.clientX/innerWidth)*2-1;mouse.y=-(e.clientY/innerHeight)*2+1;
+    raycaster.setFromCamera(mouse,camera);
+    const hits=raycaster.intersectObjects(planes);
+    if(hits.length){
+      const idx=planes.indexOf(hits[0].object);
+      if(idx>=0){
+        selectedIdx=idx;autoRotate=false;
+        const item=ITEMS[idx];
+        document.getElementById('ipCat').textContent=item.cat;
+        document.getElementById('ipTitle').textContent=item.title;
+        document.getElementById('ipDesc').textContent=item.desc;
+        panel.classList.add('show');
+        // Rotate so selected item faces camera
+        const targetAngle=-planes[idx].userData.angle;
+        const rotateToTarget=()=>{
+          const diff=targetAngle-orbitGroup.rotation.y;
+          const shortest=((diff+Math.PI)%(Math.PI*2))-Math.PI;
+          if(Math.abs(shortest)>.01){orbitGroup.rotation.y+=shortest*.08;requestAnimationFrame(rotateToTarget);}
+        };rotateToTarget();
+        // Sparkle
+        const cols=['#a855f7','#c084fc','#fff'];
+        for(let i=0;i<16;i++){const s=document.createElement('div');s.className='sp';const a=(i/16)*Math.PI*2,d=30+Math.random()*55,sz=2+Math.random()*5;s.style.cssText=`left:${e.clientX-sz/2}px;top:${e.clientY-sz/2}px;width:${sz}px;height:${sz}px;background:${cols[i%cols.length]};--tx:${Math.cos(a)*d}px;--ty:${Math.sin(a)*d}px;box-shadow:0 0 6px ${cols[0]}`;document.body.appendChild(s);setTimeout(()=>s.remove(),700);}
+      }
+    } else {panel.classList.remove('show');selectedIdx=-1;autoRotate=true;}
+  });
+
+  document.getElementById('ipClose').addEventListener('click',()=>{panel.classList.remove('show');selectedIdx=-1;autoRotate=true;});
+
+  window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
+
+  let t=0,mx=0,my=0;
+  document.addEventListener('mousemove',e=>{mx=(e.clientX/innerWidth-.5)*.3;my=(e.clientY/innerHeight-.5)*.2;});
+
+  function animate(){
+    requestAnimationFrame(animate);t+=.009;
+    if(autoRotate)orbitGroup.rotation.y+=rotSpeed;
+    else if(!isDragging){dragVel*=.93;orbitGroup.rotation.y+=dragVel;}
+
+    planes.forEach((p,i)=>{
+      const isSel=i===selectedIdx;
+      const ts=isSel?1.18:1;
+      p.scale.x+=(ts-p.scale.x)*.08;p.scale.y+=(ts-p.scale.y)*.08;
+      const tb=isSel?0.22:0;
+      p.position.z+=(tb-p.position.z)*.08; // forward in local space — approximation
+    });
+
+    camera.position.x+=(mx*.5-camera.position.x)*.03;
+    camera.position.y+=(-my*.3-camera.position.y)*.03;camera.lookAt(0,0,0);
+    haloMat.opacity=.5+Math.sin(t*1.5)*.2;pl.intensity=3+Math.sin(t)*.8;
+    renderer.render(scene,camera);
+  }
+  animate();
+})();
+</script>
+</body>
+</html>
