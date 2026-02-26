@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cacao — Premium Chocolate House</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080402;--gold:#c9a84c;--cream:#f5e8d0;--warm:#e8c890;--gray:#7a5a3a;--white:#fdf4e0}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:22px 60px;background:rgba(8,4,2,.8);backdrop-filter:blur(20px);border-bottom:1px solid rgba(201,168,76,.1)}
+.nav-brand{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;font-style:italic;color:var(--gold);text-decoration:none}
+.nav-links{display:flex;gap:40px}
+.nav-link{font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:rgba(201,168,76,.4);text-decoration:none;transition:color .3s}
+.nav-link:hover{color:var(--gold)}
+.nav-back{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--gray);text-decoration:none;transition:color .3s;border-left:1px solid rgba(201,168,76,.12);padding-left:24px}
+.nav-back:hover{color:var(--gold)}
+.hero{position:relative;height:100vh;overflow:hidden;display:flex;align-items:center}
+#cacaoCanvas{position:absolute;inset:0;z-index:1;cursor:grab}
+#cacaoCanvas:active{cursor:grabbing}
+.hero-content{position:relative;z-index:10;padding:0 0 0 80px;max-width:440px;pointer-events:none}
+.hero-eye{font-weight:200;font-size:10px;letter-spacing:.55em;text-transform:uppercase;color:var(--gold);margin-bottom:24px;display:block;opacity:0;animation:fu .8s ease forwards .3s}
+.hero-h1{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(3rem,5.5vw,5.5rem);line-height:1.06;margin-bottom:20px;opacity:0;animation:fu 1.2s ease forwards .5s}
+.hero-h1 em{font-style:italic;color:var(--gold)}
+.hero-sub{font-size:.95rem;color:var(--gray);line-height:1.9;margin-bottom:40px;font-weight:200;opacity:0;animation:fu 1s ease forwards .8s}
+.hero-ctas{display:flex;gap:14px;opacity:0;animation:fu .9s ease forwards 1s;pointer-events:all}
+.btn-gold{padding:12px 32px;background:transparent;border:1px solid var(--gold);color:var(--gold);font-size:11px;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;transition:background .3s,color .3s,box-shadow .3s,transform .2s;display:inline-flex;align-items:center;gap:9px;position:relative;overflow:hidden}
+.btn-gold::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,#7a5c20,var(--gold));transform:translateX(-100%);transition:transform .3s;z-index:-1}
+.btn-gold:hover{color:#080402;box-shadow:0 0 28px rgba(201,168,76,.3);transform:translateY(-2px)}
+.btn-gold:hover::before{transform:translateX(0)}
+.drag-hint{position:absolute;bottom:38px;left:50%;transform:translateX(-50%);z-index:10;font-weight:200;font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:rgba(201,168,76,.35);opacity:0;animation:fu .8s ease forwards 1.5s}
+.flavour-picker{position:absolute;right:80px;top:50%;transform:translateY(-50%);z-index:10;display:flex;flex-direction:column;gap:8px;opacity:0;animation:fu .9s ease forwards 1.3s}
+.fp-label{font-weight:200;font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:rgba(201,168,76,.4);margin-bottom:6px;text-align:right}
+.fl-row{display:flex;flex-direction:column;align-items:center;gap:4px}
+.fl-btn{width:48px;height:48px;border-radius:4px;border:2px solid transparent;cursor:pointer;transition:transform .2s,border-color .3s,box-shadow .3s}
+.fl-btn.active{border-color:var(--gold);box-shadow:0 0 16px rgba(201,168,76,.3);transform:scale(1.1)}
+.fl-btn:hover:not(.active){transform:scale(1.06)}
+.fl-btn[data-fl="dark"]{background:linear-gradient(135deg,#1a0a04,#3a1a08)}
+.fl-btn[data-fl="milk"]{background:linear-gradient(135deg,#6a3a18,#c07840)}
+.fl-btn[data-fl="white"]{background:linear-gradient(135deg,#f0e0c0,#d4b880)}
+.fl-btn[data-fl="ruby"]{background:linear-gradient(135deg,#6a1a20,#c04050)}
+.fl-name{font-weight:200;font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:rgba(201,168,76,.45)}
+.collection{padding:120px 80px;max-width:1400px;margin:0 auto}
+.coll-h{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2rem,4vw,3.5rem);margin-bottom:72px;letter-spacing:.02em;opacity:0;transform:translateY(20px);transition:opacity .8s,transform .8s;text-align:center;color:var(--cream)}
+.coll-h.on{opacity:1;transform:translateY(0)}
+.bars{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;background:rgba(201,168,76,.05)}
+.bar{background:rgba(14,8,4,.9);opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease,background .3s;cursor:pointer}
+.bar.on{opacity:1;transform:translateY(0)}
+.bar:hover{background:rgba(26,12,6,.95)}
+.bar-img{aspect-ratio:1;overflow:hidden;position:relative}
+.bar-img img{width:100%;height:100%;object-fit:cover;filter:brightness(.65) saturate(.9);transition:transform .7s,filter .4s}
+.bar:hover .bar-img img{transform:scale(1.06);filter:brightness(.8) saturate(1.1)}
+.bar-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(8,4,2,.98) 0%,transparent 60%)}
+.bar-body{padding:20px 22px 28px}
+.bar-pct{font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;font-weight:200}
+.bar-name{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;color:var(--cream);margin-bottom:6px;transition:color .3s}
+.bar:hover .bar-name{color:var(--gold)}
+.bar-origin{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.9rem;color:var(--gray);margin-bottom:16px}
+.bar-foot{display:flex;justify-content:space-between;align-items:center;padding-top:12px;border-top:1px solid rgba(201,168,76,.08)}
+.bar-price{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--warm)}
+.bar-add{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);text-decoration:none;transition:letter-spacing .3s}
+.bar:hover .bar-add{letter-spacing:.3em}
+.prov{padding:100px 80px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1300px;margin:0 auto;opacity:0;transform:translateY(40px);transition:opacity .9s,transform .9s}
+.prov.on{opacity:1;transform:translateY(0)}
+.prov-img img{width:100%;height:520px;object-fit:cover;filter:brightness(.7) saturate(.9)}
+.prov-text .eye{font-size:9px;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:22px;font-weight:200}
+.prov-text h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(1.8rem,3vw,3rem);line-height:1.2;color:var(--cream);margin-bottom:22px}
+.prov-text p{font-size:.9rem;color:var(--gray);line-height:2;margin-bottom:14px;font-weight:200}
+.prov-text blockquote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:rgba(201,168,76,.6);border-left:1px solid rgba(201,168,76,.25);padding-left:20px;margin:24px 0;line-height:1.75}
+footer{border-top:1px solid rgba(201,168,76,.07);padding:52px 80px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
+.ft-brand{font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;color:var(--gold)}
+.ft-copy{font-size:12px;letter-spacing:.1em;color:var(--gray)}
+.ft-back{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gray);text-decoration:none;transition:color .3s}
+.ft-back:hover{color:var(--gold)}
+@keyframes fu{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.sp{position:fixed;pointer-events:none;z-index:9999;border-radius:50%;animation:spa .65s ease forwards}
+@keyframes spa{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(0)}}
+@media(max-width:960px){nav{padding:20px 24px}.nav-links{display:none}.nav-back{border:none;padding:0}.hero-content{padding:0 0 0 28px}.flavour-picker{right:20px}.collection{padding:80px 24px}.bars{grid-template-columns:repeat(2,1fr)}.prov{grid-template-columns:1fr;padding:80px 28px;gap:40px}.prov-img img{height:300px}footer{flex-direction:column;text-align:center;padding:40px 24px}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="../index.html" class="nav-brand">Cacao</a>
+  <div class="nav-links"><a href="#collection" class="nav-link">Collection</a><a href="#provenance" class="nav-link">Provenance</a></div>
+  <a href="../index.html" class="nav-back">← Portfolio</a>
+</nav>
+<section class="hero">
+  <canvas id="cacaoCanvas"></canvas>
+  <div class="hero-content">
+    <span class="hero-eye">Bean to Bar · Single Origin</span>
+    <h1 class="hero-h1">Dark.<br><em>Complex.</em><br>Irreplaceable.</h1>
+    <p class="hero-sub">Premium single-origin chocolate crafted from ethically sourced cacao. Every bar tells the story of its terroir.</p>
+    <div class="hero-ctas"><a href="#collection" class="btn-gold">Shop Collection →</a></div>
+  </div>
+  <div class="flavour-picker">
+    <div class="fp-label">Variety</div>
+    <div class="fl-row"><div class="fl-btn active" data-fl="dark"></div><div class="fl-name">Dark 85%</div></div>
+    <div class="fl-row"><div class="fl-btn" data-fl="milk"></div><div class="fl-name">Milk 45%</div></div>
+    <div class="fl-row"><div class="fl-btn" data-fl="white"></div><div class="fl-name">White</div></div>
+    <div class="fl-row"><div class="fl-btn" data-fl="ruby"></div><div class="fl-name">Ruby</div></div>
+  </div>
+  <div class="drag-hint">✦ drag to rotate ✦</div>
+</section>
+<section class="collection" id="collection">
+  <h2 class="coll-h">Single Origin Bars</h2>
+  <div class="bars">
+    <div class="bar" data-d="0"><div class="bar-img"><img src="https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=500&q=80" alt="Chocolate"></div><div class="bar-body"><div class="bar-pct">85% Cacao</div><div class="bar-name">Ecuador Noir</div><div class="bar-origin">Arriba Nacional, Guayas Valley</div><div class="bar-foot"><span class="bar-price">€18</span><a href="#" class="bar-add">Add →</a></div></div></div>
+    <div class="bar" data-d="80"><div class="bar-img"><img src="https://images.unsplash.com/photo-1511381939415-e44015466834?w=500&q=80" alt="Chocolate"></div><div class="bar-body"><div class="bar-pct">72% Cacao</div><div class="bar-name">Madagascar Rouge</div><div class="bar-origin">Criollo, Sambirano Valley</div><div class="bar-foot"><span class="bar-price">€22</span><a href="#" class="bar-add">Add →</a></div></div></div>
+    <div class="bar" data-d="160"><div class="bar-img"><img src="https://images.unsplash.com/photo-1606312619070-d48b4c652a52?w=500&q=80" alt="Chocolate"></div><div class="bar-body"><div class="bar-pct">68% Cacao</div><div class="bar-name">Peru Floral</div><div class="bar-origin">Porcelana, Piura Alto</div><div class="bar-foot"><span class="bar-price">€26</span><a href="#" class="bar-add">Add →</a></div></div></div>
+    <div class="bar" data-d="240"><div class="bar-img"><img src="https://images.unsplash.com/photo-1481391319762-47dff72954d9?w=500&q=80" alt="Chocolate"></div><div class="bar-body"><div class="bar-pct">Ruby Cacao</div><div class="bar-name">Ruby Ceylon</div><div class="bar-origin">Ruby RB1, Sri Lanka</div><div class="bar-foot"><span class="bar-price">€32</span><a href="#" class="bar-add">Add →</a></div></div></div>
+  </div>
+</section>
+<section class="prov" id="provenance">
+  <div class="prov-img"><img src="https://images.unsplash.com/photo-1606312619070-d48b4c652a52?w=800&q=85" alt="Farm"></div>
+  <div class="prov-text">
+    <span class="eye">Direct Trade</span>
+    <h2>Where chocolate begins — the farm.</h2>
+    <p>We work directly with seven farming cooperatives paying three times the commodity price for beans selected by hand.</p>
+    <blockquote>"The finest chocolate is not made in a factory. It begins with a farmer who cares."</blockquote>
+    <p>Each bar carries a batch number traceable to the farm, harvest month, and fermentation protocol used.</p>
+  </div>
+</section>
+<footer>
+  <div class="ft-brand">Cacao</div>
+  <div class="ft-copy">Demo by Studio 3D · © 2025</div>
+  <a href="../index.html" class="ft-back">← Back to Portfolio</a>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const FLAVOURS={dark:{mid:0x2a1208,top:0x1a0a04,bot:0x3a1a0c,emissive:0x0a0402,rough:.45,metal:.1},milk:{mid:0xaa6030,top:0x7a4020,bot:0xc07840,emissive:0x2a1008,rough:.5,metal:.05},white:{mid:0xe0c898,top:0xf0e0c0,bot:0xd4b880,emissive:0x3a2808,rough:.55,metal:.02},ruby:{mid:0x8a2830,top:0x5a1018,bot:0xb04050,emissive:0x200408,rough:.4,metal:.08}};
+(function(){
+  const canvas=document.getElementById('cacaoCanvas');
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.setClearColor(0x080402,1);renderer.shadowMap.enabled=true;
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(42,innerWidth/innerHeight,0.1,100);camera.position.set(0,.5,6.5);camera.lookAt(0,0,0);
+  const barGroup=new THREE.Group();scene.add(barGroup);
+
+  function buildBar(fl){
+    while(barGroup.children.length)barGroup.remove(barGroup.children[0]);
+    const f=FLAVOURS[fl];
+    const mat=new THREE.MeshStandardMaterial({color:f.mid,emissive:f.emissive,emissiveIntensity:.3,roughness:f.rough,metalness:f.metal});
+    const topMat=new THREE.MeshStandardMaterial({color:f.top,emissive:f.emissive,emissiveIntensity:.2,roughness:f.rough+.1,metalness:f.metal});
+    const botMat=new THREE.MeshStandardMaterial({color:f.bot,emissive:f.emissive,emissiveIntensity:.15,roughness:f.rough+.05,metalness:f.metal});
+    const main=new THREE.Mesh(new THREE.BoxGeometry(2.8,1.8,.28),[mat,mat,topMat,botMat,mat,mat]);main.castShadow=true;barGroup.add(main);
+    for(let r=0;r<3;r++)for(let c=0;c<4;c++){
+      const m=new THREE.Mesh(new THREE.BoxGeometry(.6,.44,.06),topMat);m.position.set(-1.05+c*.7,.55-r*.55,.18);m.castShadow=true;barGroup.add(m);
+    }
+    const stripe=new THREE.Mesh(new THREE.BoxGeometry(2.6,.018,.3),new THREE.MeshStandardMaterial({color:f.bot,emissive:f.bot,emissiveIntensity:.15,roughness:.3,metalness:.2}));stripe.position.y=.65;barGroup.add(stripe);
+    stripe.clone().position.y=0;barGroup.add(stripe.clone());
+  }
+  buildBar('dark');
+
+  const chip=new THREE.Mesh(new THREE.BoxGeometry(.58,.52,.26),new THREE.MeshStandardMaterial({color:0x1a0a04,emissive:0x0a0402,emissiveIntensity:.2,roughness:.45,metalness:.1}));chip.position.set(2.2,.6,.2);chip.rotation.set(.3,-.4,.2);chip.castShadow=true;scene.add(chip);
+
+  const dc=300;const dp=new Float32Array(dc*3);const dv=new Float32Array(dc*3);
+  for(let i=0;i<dc;i++){dp[i*3]=(Math.random()-.5)*8;dp[i*3+1]=(Math.random()-.5)*6;dp[i*3+2]=(Math.random()-.5)*4;dv[i*3]=(Math.random()-.5)*.004;dv[i*3+1]=(Math.random()-.5)*.003;dv[i*3+2]=(Math.random()-.5)*.003;}
+  const dustGeo=new THREE.BufferGeometry();dustGeo.setAttribute('position',new THREE.BufferAttribute(dp,3));
+  const dust=new THREE.Points(dustGeo,new THREE.PointsMaterial({color:0x6a3a18,size:.025,transparent:true,opacity:.6,blending:THREE.AdditiveBlending,depthWrite:false,sizeAttenuation:true}));scene.add(dust);
+
+  const base=new THREE.Mesh(new THREE.PlaneGeometry(14,14),new THREE.MeshStandardMaterial({color:0x0e0804,roughness:.05,metalness:.3}));base.rotation.x=-Math.PI/2;base.position.y=-1.3;base.receiveShadow=true;scene.add(base);
+
+  scene.add(new THREE.AmbientLight(0x1a0a04,2));
+  const key=new THREE.SpotLight(0xfff4d0,5,20,Math.PI/4,.3);key.position.set(3,6,5);key.target.position.set(0,0,0);key.castShadow=true;scene.add(key,key.target);
+  const fill=new THREE.PointLight(0xc07840,2,10);fill.position.set(-4,2,2);scene.add(fill);
+  scene.add(Object.assign(new THREE.PointLight(0xffa020,1.2,8),{position:{x:3,y:1,z:-3}}));
+
+  let isDragging=false,prevX=0,prevY=0,velX=0,velY=0,userCtrl=false,uTo;
+  canvas.addEventListener('mousedown',e=>{isDragging=true;prevX=e.clientX;prevY=e.clientY;userCtrl=true;clearTimeout(uTo)});
+  window.addEventListener('mouseup',()=>{isDragging=false;uTo=setTimeout(()=>{userCtrl=false},4000)});
+  window.addEventListener('mousemove',e=>{if(!isDragging)return;const dx=e.clientX-prevX,dy=e.clientY-prevY;velX=dx*.006;velY=dy*.004;barGroup.rotation.y+=dx*.006;barGroup.rotation.x=Math.max(-.6,Math.min(.6,barGroup.rotation.x+dy*.004));prevX=e.clientX;prevY=e.clientY;});
+
+  document.querySelectorAll('.fl-btn').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.fl-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');buildBar(btn.dataset.fl);const r=btn.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;const cols=['#c9a84c','#f0c060','#fff'];for(let i=0;i<12;i++){const s=document.createElement('div');s.className='sp';const a=(i/12)*Math.PI*2,d=24+Math.random()*44,sz=2+Math.random()*4;s.style.cssText=`left:${cx-sz/2}px;top:${cy-sz/2}px;width:${sz}px;height:${sz}px;background:${cols[i%cols.length]};--tx:${Math.cos(a)*d}px;--ty:${Math.sin(a)*d}px;box-shadow:0 0 5px ${cols[0]}`;document.body.appendChild(s);setTimeout(()=>s.remove(),700);}});});
+
+  window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+
+  let t=0;
+  function animate(){
+    requestAnimationFrame(animate);t+=.009;
+    if(!userCtrl){barGroup.rotation.y+=.005;barGroup.rotation.x=Math.sin(t*.3)*.08;}
+    else if(!isDragging){velX*=.91;velY*=.91;barGroup.rotation.y+=velX;barGroup.rotation.x+=velY;}
+    chip.rotation.y+=.003;chip.position.y=.6+Math.sin(t*.7)*.08;
+    const dpa=dust.geometry.attributes.position;
+    for(let i=0;i<dc;i++){dpa.setXYZ(i,dpa.getX(i)+dv[i*3],dpa.getY(i)+dv[i*3+1],dpa.getZ(i)+dv[i*3+2]);if(Math.abs(dpa.getX(i))>5||Math.abs(dpa.getY(i))>4)dpa.setXYZ(i,(Math.random()-.5)*8,(Math.random()-.5)*6,(Math.random()-.5)*4);}
+    dpa.needsUpdate=true;dust.rotation.y=t*.02;fill.intensity=2+Math.sin(t*.9)*.5;
+    renderer.render(scene,camera);
+  }
+  animate();
+})();
+const io=new IntersectionObserver(ee=>{ee.forEach(e=>{if(e.isIntersecting){const d=parseInt(e.target.dataset.d||0);setTimeout(()=>e.target.classList.add('on'),d);io.unobserve(e.target)}})},{threshold:.1});
+document.querySelectorAll('.coll-h,.bar,.prov').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
