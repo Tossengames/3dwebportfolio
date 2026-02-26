@@ -3,256 +3,178 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Prism — 3D Data Dashboard</title>
+<title>Haven — Luxury Real Estate</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#010409;--c1:#00d4ff;--c2:#a855f7;--c3:#22cc88;--c4:#ff6644;--c5:#ffd040;--white:#e8f4ff;--gray:#4a5870;--dark:#060c18}
+:root{--bg:#03060f;--teal:#0099aa;--teall:#00ccdd;--gold:#c9a84c;--white:#e8f6f8;--gray:#4a6070;--dark:#060c18}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden}
-nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:18px 56px;background:rgba(1,4,9,.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,212,255,.08)}
-.nav-brand{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:20px;letter-spacing:.3em;text-transform:uppercase;color:var(--c1);text-decoration:none}
-.nav-sub{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.3em;color:rgba(0,212,255,.35)}
-.nav-back{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gray);text-decoration:none;transition:color .3s}
-.nav-back:hover{color:var(--c1)}
-
-/* HERO — full Three.js dashboard */
-.hero{position:relative;height:100vh;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
-#statsCanvas{position:absolute;inset:0;z-index:1}
-.hero-ui{position:relative;z-index:10;pointer-events:none;margin-bottom:20px}
-.hero-eye{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.4em;color:rgba(0,212,255,.6);margin-bottom:18px;display:block;opacity:0;animation:fu .8s ease forwards .3s}
-.hero-h1{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:clamp(2.5rem,5vw,5rem);letter-spacing:.06em;text-transform:uppercase;line-height:1;opacity:0;animation:fu 1s ease forwards .5s}
-.hero-h1 em{font-style:normal;color:var(--c1)}
-.hero-sub{font-family:'DM Sans',sans-serif;font-weight:200;font-size:.9rem;color:var(--gray);max-width:480px;margin:14px auto 0;line-height:1.8;opacity:0;animation:fu .9s ease forwards .8s}
-
-/* KPI CARDS */
-.kpis{position:relative;z-index:10;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(0,212,255,.06);max-width:1000px;width:90%;opacity:0;animation:fu .9s ease forwards 1.2s}
-.kpi{background:rgba(6,12,24,.9);padding:20px 24px;backdrop-filter:blur(10px);transition:background .3s}
-.kpi:hover{background:rgba(10,18,36,.95)}
-.kpi-v{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.8rem;letter-spacing:.05em;margin-bottom:2px}
-.kpi-l{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:.28em;text-transform:uppercase;color:var(--gray)}
-.kpi-d{font-family:'Share Tech Mono',monospace;font-size:9px;margin-top:4px}
-
-/* DASHBOARD SECTIONS */
-.dashboard{padding:80px 60px 120px;max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:24px}
-.panel{background:rgba(6,12,24,.9);border:1px solid rgba(0,212,255,.08);padding:32px;opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
-.panel.on{opacity:1;transform:translateY(0)}
-.panel:hover{border-color:rgba(0,212,255,.16)}
-.panel-wide{grid-column:span 2}
-.panel-h{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--c1);margin-bottom:22px;display:flex;align-items:center;gap:10px}
-.panel-h::before{content:'';width:20px;height:1px;background:var(--c1);opacity:.5}
-
-/* Charts rendered in canvas sub-panels */
-.chart-canvas{width:100%;display:block}
-
-/* Data Table */
-.data-table{width:100%;border-collapse:collapse}
-.data-table th{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:.25em;text-transform:uppercase;color:rgba(0,212,255,.4);text-align:left;padding:8px 12px;border-bottom:1px solid rgba(0,212,255,.08);font-weight:400}
-.data-table td{font-family:'DM Sans',sans-serif;font-size:.85rem;padding:10px 12px;border-bottom:1px solid rgba(0,212,255,.04);color:var(--gray);transition:color .3s}
-.data-table tr:hover td{color:var(--white)}
-.data-table td:first-child{color:var(--white)}
-.pct-bar{height:4px;background:rgba(0,212,255,.12);border-radius:2px;margin-top:4px;overflow:hidden}
-.pct-fill{height:100%;border-radius:2px;transition:width 1.5s ease}
-
-footer{border-top:1px solid rgba(0,212,255,.06);padding:40px 60px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
-.ft-brand{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:17px;letter-spacing:.28em;text-transform:uppercase;color:var(--c1)}
-.ft-copy{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--gray)}
-.ft-back{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gray);text-decoration:none;transition:color .3s}
-.ft-back:hover{color:var(--c1)}
-
-@keyframes fu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-@media(max-width:960px){nav{padding:18px 24px}.kpis{grid-template-columns:repeat(2,1fr)}.dashboard{grid-template-columns:1fr;padding:60px 24px}.panel-wide{grid-column:span 1}footer{flex-direction:column;text-align:center;padding:32px 24px}}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:22px 60px;background:rgba(3,6,15,.8);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,153,170,.1)}
+.nav-brand{font-family:'Cormorant Garamond',serif;font-size:22px;font-style:italic;color:var(--teall);text-decoration:none}
+.nav-links{display:flex;gap:40px}
+.nav-link{font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:rgba(0,204,221,.35);text-decoration:none;transition:color .3s}
+.nav-link:hover{color:var(--teall)}
+.nav-back{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--gray);text-decoration:none;transition:color .3s;border-left:1px solid rgba(0,153,170,.12);padding-left:24px}
+.nav-back:hover{color:var(--teall)}
+.hero{position:relative;height:100vh;overflow:hidden;display:flex;align-items:center}
+#reCanvas{position:absolute;inset:0;z-index:1}
+.hero-content{position:relative;z-index:10;padding:0 0 0 72px;max-width:460px;pointer-events:none}
+.hero-eye{font-weight:200;font-size:10px;letter-spacing:.55em;text-transform:uppercase;color:var(--teall);margin-bottom:24px;display:block;opacity:0;animation:fu .8s ease forwards .3s}
+.hero-h1{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(3rem,5.5vw,5.5rem);line-height:1.05;margin-bottom:20px;opacity:0;animation:fu 1.2s ease forwards .5s}
+.hero-h1 em{font-style:italic;color:var(--teall)}
+.hero-sub{font-size:.95rem;color:var(--gray);line-height:1.9;margin-bottom:40px;font-weight:200;opacity:0;animation:fu 1s ease forwards .8s}
+.hero-ctas{display:flex;gap:14px;opacity:0;animation:fu .9s ease forwards 1s;pointer-events:all}
+.btn-teal{padding:12px 32px;background:transparent;border:1px solid var(--teall);color:var(--teall);font-size:11px;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;transition:background .3s,color .3s,box-shadow .3s,transform .2s;display:inline-flex;align-items:center;gap:9px;position:relative;overflow:hidden}
+.btn-teal::before{content:'';position:absolute;inset:0;background:var(--teal);transform:translateX(-100%);transition:transform .3s;z-index:-1}
+.btn-teal:hover{color:var(--white);box-shadow:0 0 28px rgba(0,153,170,.35);transform:translateY(-2px)}
+.btn-teal:hover::before{transform:translateX(0)}
+.stat-bar{background:rgba(6,12,24,.9);border-top:1px solid rgba(0,153,170,.1);border-bottom:1px solid rgba(0,153,170,.1)}
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);max-width:1200px;margin:0 auto}
+.stat{padding:22px 32px;border-right:1px solid rgba(0,153,170,.08);display:flex;flex-direction:column;gap:5px}
+.stat:last-child{border-right:none}
+.stat-n{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;color:var(--teall)}
+.stat-l{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gray);font-weight:200}
+.listings{padding:120px 72px;max-width:1400px;margin:0 auto}
+.lst-h{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2rem,4vw,3.5rem);margin-bottom:72px;letter-spacing:.02em;opacity:0;transform:translateY(20px);transition:opacity .8s,transform .8s;color:var(--white)}
+.lst-h.on{opacity:1;transform:translateY(0)}
+.lst-h span{color:var(--teall)}
+.grid{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:3px;height:620px}
+.prop{position:relative;overflow:hidden;background:var(--dark);opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease;cursor:pointer}
+.prop.on{opacity:1;transform:translateY(0)}
+.prop:first-child{grid-row:span 2}
+.prop img{width:100%;height:100%;object-fit:cover;filter:brightness(.55) saturate(.7);transition:transform .8s,filter .5s}
+.prop:hover img{transform:scale(1.06);filter:brightness(.7) saturate(.9)}
+.prop::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(3,6,15,.98) 0%,transparent 55%)}
+.prop-info{position:absolute;bottom:20px;left:20px;z-index:2}
+.prop-type{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--teall);font-weight:200;margin-bottom:6px}
+.prop-name{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;color:var(--white);margin-bottom:3px}
+.prop-loc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.88rem;color:var(--gray)}
+.prop-price{position:absolute;top:16px;right:16px;z-index:2;font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--gold);background:rgba(3,6,15,.7);padding:4px 12px;border:1px solid rgba(201,168,76,.18)}
+footer{border-top:1px solid rgba(0,153,170,.08);padding:52px 72px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
+.ft-brand{font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;color:var(--teall)}
+.ft-copy{font-size:12px;letter-spacing:.1em;color:var(--gray)}
+.ft-back{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gray);text-decoration:none;transition:color .3s}
+.ft-back:hover{color:var(--teall)}
+@keyframes fu{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.sp{position:fixed;pointer-events:none;z-index:9999;border-radius:50%;animation:spa .65s ease forwards}
+@keyframes spa{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(0)}}
+@media(max-width:960px){nav{padding:20px 24px}.nav-links{display:none}.nav-back{border:none;padding:0}.hero-content{padding:0 0 0 28px}.listings{padding:80px 24px}.grid{grid-template-columns:1fr 1fr;grid-template-rows:auto;height:auto}.prop:first-child{grid-row:span 1;grid-column:span 2}footer{flex-direction:column;text-align:center;padding:40px 24px}}
 </style>
 </head>
 <body>
 <nav>
-  <div>
-    <a href="../index.html" class="nav-brand">Prism</a>
-    <div class="nav-sub">// DATA INTELLIGENCE PLATFORM</div>
-  </div>
+  <a href="../index.html" class="nav-brand">Haven</a>
+  <div class="nav-links"><a href="#listings" class="nav-link">Listings</a><a href="#" class="nav-link">Services</a></div>
   <a href="../index.html" class="nav-back">← Portfolio</a>
 </nav>
-
 <section class="hero">
-  <canvas id="statsCanvas"></canvas>
-  <div class="hero-ui">
-    <span class="hero-eye">// LIVE DASHBOARD · Q4 2025</span>
-    <h1 class="hero-h1">Data in<br><em>Three</em> Dimensions</h1>
-    <p class="hero-sub">Analytics that make sense at a glance. 3D charts, real-time metrics, and beautiful data visualisation — all in the browser.</p>
-  </div>
-  <div class="kpis">
-    <div class="kpi"><div class="kpi-v" style="color:var(--c1)">€4.2M</div><div class="kpi-l">Revenue MTD</div><div class="kpi-d" style="color:var(--c3)">↑ +18.4%</div></div>
-    <div class="kpi"><div class="kpi-v" style="color:var(--c2)">12,840</div><div class="kpi-l">Active Users</div><div class="kpi-d" style="color:var(--c3)">↑ +6.2%</div></div>
-    <div class="kpi"><div class="kpi-v" style="color:var(--c3)">94.2%</div><div class="kpi-l">Satisfaction</div><div class="kpi-d" style="color:var(--c3)">↑ +2.1%</div></div>
-    <div class="kpi"><div class="kpi-v" style="color:var(--c4)">38ms</div><div class="kpi-l">Avg Response</div><div class="kpi-d" style="color:var(--c3)">↓ −12ms</div></div>
+  <canvas id="reCanvas"></canvas>
+  <div class="hero-content">
+    <span class="hero-eye">Luxury Real Estate</span>
+    <h1 class="hero-h1">Find your<br><em>exceptional</em><br>home.</h1>
+    <p class="hero-sub">Curated luxury properties across the world's most desirable addresses. We don't list properties — we match people with places that feel inevitable.</p>
+    <div class="hero-ctas"><a href="#listings" class="btn-teal">View Listings →</a></div>
   </div>
 </section>
-
-<div class="dashboard">
-  <div class="panel panel-wide" data-d="0">
-    <div class="panel-h">Revenue by Month (2025)</div>
-    <canvas class="chart-canvas" id="barChart" height="200"></canvas>
-  </div>
-  <div class="panel" data-d="80">
-    <div class="panel-h">Traffic Sources</div>
-    <canvas class="chart-canvas" id="donutChart" height="200"></canvas>
-  </div>
-  <div class="panel" data-d="160">
-    <div class="panel-h">Top Markets</div>
-    <table class="data-table">
-      <thead><tr><th>Market</th><th>Revenue</th><th>Share</th></tr></thead>
-      <tbody id="tableBody"></tbody>
-    </table>
-  </div>
-  <div class="panel panel-wide" data-d="240">
-    <div class="panel-h">Weekly Active Users</div>
-    <canvas class="chart-canvas" id="lineChart" height="140"></canvas>
+<div class="stat-bar">
+  <div class="stat-row">
+    <div class="stat"><div class="stat-n">340+</div><div class="stat-l">Active Listings</div></div>
+    <div class="stat"><div class="stat-n">28</div><div class="stat-l">Countries</div></div>
+    <div class="stat"><div class="stat-n">€2.4B</div><div class="stat-l">Sold This Year</div></div>
+    <div class="stat"><div class="stat-n">98%</div><div class="stat-l">Client Satisfaction</div></div>
   </div>
 </div>
-
+<section class="listings" id="listings">
+  <h2 class="lst-h">Featured <span>Properties</span></h2>
+  <div class="grid">
+    <div class="prop" data-d="0"><img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=900&q=85" alt="Villa"><div class="prop-info"><div class="prop-type">Villa</div><div class="prop-name">Côte d'Azur Masterwork</div><div class="prop-loc">Cap Ferrat, France</div></div><div class="prop-price">€12.5M</div></div>
+    <div class="prop" data-d="80"><img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=85" alt="Penthouse"><div class="prop-info"><div class="prop-type">Penthouse</div><div class="prop-name">The Observatory</div><div class="prop-loc">Monaco</div></div><div class="prop-price">€8.2M</div></div>
+    <div class="prop" data-d="160"><img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&q=85" alt="Estate"><div class="prop-info"><div class="prop-type">Estate</div><div class="prop-name">Tuscany Hills</div><div class="prop-loc">Siena, Italy</div></div><div class="prop-price">€5.8M</div></div>
+    <div class="prop" data-d="240"><img src="https://images.unsplash.com/photo-1480074568708-e7b720bb3f09?w=600&q=85" alt="Modern"><div class="prop-info"><div class="prop-type">Modern Villa</div><div class="prop-name">Glass Canyon</div><div class="prop-loc">Marbella, Spain</div></div><div class="prop-price">€4.1M</div></div>
+    <div class="prop" data-d="320"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=85" alt="Contemporary"><div class="prop-info"><div class="prop-type">Contemporary</div><div class="prop-name">Lakeshore Pavilion</div><div class="prop-loc">Geneva, Switzerland</div></div><div class="prop-price">€9.7M</div></div>
+  </div>
+</section>
 <footer>
-  <div class="ft-brand">Prism</div>
-  <div class="ft-copy">// DEMO BY STUDIO 3D · © 2025</div>
+  <div class="ft-brand">Haven</div>
+  <div class="ft-copy">Demo by Studio 3D · © 2025</div>
   <a href="../index.html" class="ft-back">← Back to Portfolio</a>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-// THREE.JS BACKGROUND — 3D bar chart floating in space
 (function(){
-  const canvas=document.getElementById('statsCanvas');
-  const renderer=new THREE.WebGLRenderer({canvas,antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.setClearColor(0x010409,1);
-  const scene=new THREE.Scene();scene.fog=new THREE.FogExp2(0x010409,.04);
-  const camera=new THREE.PerspectiveCamera(50,innerWidth/innerHeight,.1,100);camera.position.set(0,3,9);camera.lookAt(0,1,0);
+  const canvas=document.getElementById('reCanvas');
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.setClearColor(0x03060f,1);
+  const scene=new THREE.Scene();scene.fog=new THREE.FogExp2(0x03060f,.04);
+  const camera=new THREE.PerspectiveCamera(45,innerWidth/innerHeight,.1,100);camera.position.set(0,2,10);camera.lookAt(0,0,0);
 
-  const chartGroup=new THREE.Group();scene.add(chartGroup);chartGroup.position.set(0,.5,0);
+  // ARCHITECTURAL WIREFRAME — stylised house/building
+  const houseGroup=new THREE.Group();scene.add(houseGroup);houseGroup.position.set(2.5,-.5,0);
 
-  const DATA=[0.45,0.62,0.55,0.78,0.71,0.85,0.69,0.92,0.88,0.95,0.82,1.0];
-  const COLS=[0x00d4ff,0xa855f7,0x22cc88,0xff6644,0xffd040,0x00d4ff,0xa855f7,0x22cc88,0xff6644,0xffd040,0x00d4ff,0xa855f7];
-  const bars=[];
-  DATA.forEach((v,i)=>{
-    const h=v*3.5;const x=(i-5.5)*.55;
-    const geo=new THREE.BoxGeometry(.38,h,.38);
-    const mat=new THREE.MeshStandardMaterial({color:COLS[i%COLS.length],emissive:COLS[i%COLS.length],emissiveIntensity:.3,roughness:.2,metalness:.4,transparent:true,opacity:.85});
-    const bar=new THREE.Mesh(geo,mat);bar.position.set(x,h/2-1.75,0);bar.castShadow=true;bar.userData={targetH:h,currentH:0,mat};
-    chartGroup.add(bar);bars.push(bar);
-    // Glow top cap
-    const capGeo=new THREE.BoxGeometry(.42,.04,.42);
-    const capMat=new THREE.MeshBasicMaterial({color:COLS[i%COLS.length],transparent:true,opacity:.9,blending:THREE.AdditiveBlending});
-    const cap=new THREE.Mesh(capGeo,capMat);cap.position.set(x,h-1.75+.02,0);chartGroup.add(cap);bar.userData.cap=cap;
+  function addEdge(pts,col=0x00ccdd,op=.5){
+    const g=new THREE.BufferGeometry().setFromPoints(pts.map(p=>new THREE.Vector3(...p)));
+    const l=new THREE.Line(g,new THREE.LineBasicMaterial({color:col,transparent:true,opacity:op}));houseGroup.add(l);return l;
+  }
+  // Foundation
+  [[[−2,0,−1],[2,0,−1]],[[2,0,−1],[2,0,1]],[[2,0,1],[−2,0,1]],[[−2,0,1],[−2,0,−1]]].forEach(p=>addEdge(p));
+  // Walls vertical
+  [[−2,0,−1],[−2,2.2,−1]],[[2,0,−1],[2,2.2,−1]],[[2,0,1],[2,2.2,1]],[[−2,0,1],[−2,2.2,1]];
+  [[[−2,0,−1],[−2,2.2,−1]],[[2,0,−1],[2,2.2,−1]],[[2,0,1],[2,2.2,1]],[[−2,0,1],[−2,2.2,1]]].forEach(p=>addEdge(p));
+  // Roof base
+  [[[−2,2.2,−1],[2,2.2,−1]],[[2,2.2,−1],[2,2.2,1]],[[2,2.2,1],[−2,2.2,1]],[[−2,2.2,1],[−2,2.2,−1]]].forEach(p=>addEdge(p));
+  // Roof ridge
+  [[[−2,3.2,0],[2,3.2,0]],[[−2,2.2,−1],[−2,3.2,0]],[[−2,2.2,1],[−2,3.2,0]],[[2,2.2,−1],[2,3.2,0]],[[2,2.2,1],[2,3.2,0]]].forEach(p=>addEdge(p));
+  // Windows
+  [[[−1,1,−1.01],[−.3,1,−1.01]],[[−.3,1,−1.01],[−.3,1.8,−1.01]],[[−.3,1.8,−1.01],[−1,1.8,−1.01]],[[−1,1.8,−1.01],[−1,1,−1.01]]].forEach(p=>addEdge(p,0x0099aa,.35));
+  [[[.3,1,−1.01],[1,1,−1.01]],[[1,1,−1.01],[1,1.8,−1.01]],[[1,1.8,−1.01],[.3,1.8,−1.01]],[[.3,1.8,−1.01],[.3,1,−1.01]]].forEach(p=>addEdge(p,0x0099aa,.35));
+  // Door
+  [[[−.35,0,−1.01],[−.35,1.4,−1.01]],[[.35,0,−1.01],[.35,1.4,−1.01]],[[−.35,1.4,−1.01],[.35,1.4,−1.01]]].forEach(p=>addEdge(p,0x00ccdd,.4));
+
+  // Semi-transparent planes
+  const wallMat=new THREE.MeshBasicMaterial({color:0x003344,transparent:true,opacity:.08,side:THREE.DoubleSide,blending:THREE.AdditiveBlending});
+  [[0,1.1,−1,4.4,2.2],[0,1.1,1,4.4,2.2],[−2,1.1,0,2,2.2,true]].forEach(([x,y,z,w,h,r])=>{
+    const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),wallMat);m.position.set(x,y,z);if(r)m.rotation.y=Math.PI/2;houseGroup.add(m);
   });
 
-  // Base grid
-  const baseGeo=new THREE.PlaneGeometry(8,.04);const baseMat=new THREE.MeshStandardMaterial({color:0x0a1428,roughness:1});
-  const base=new THREE.Mesh(baseGeo,baseMat);base.rotation.x=-Math.PI/2;base.position.y=-1.75;chartGroup.add(base);
-  for(let i=0;i<=12;i++){const x=(i-6)*.55;const lG=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(x,-1.74,-0.2),new THREE.Vector3(x,-1.74,.6)]);chartGroup.add(new THREE.Line(lG,new THREE.LineBasicMaterial({color:0x0a1428,transparent:true,opacity:.4})));}
+  // FLOATING DATA POINTS
+  const dataGroup=new THREE.Group();scene.add(dataGroup);
+  [[−3,1,−2],[−3.5,2.5,−1],[−3,3.5,0],[−3.5,1.5,1],[−2.5,2,2]].forEach(([x,y,z])=>{
+    const g=new THREE.SphereGeometry(.04,8,8);
+    const m=new THREE.MeshBasicMaterial({color:0x00ccdd,transparent:true,opacity:.8,blending:THREE.AdditiveBlending});
+    const dot=new THREE.Mesh(g,m);dot.position.set(x,y,z);dataGroup.add(dot);
+    // Connection lines to house
+    const lG=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(x,y,z),new THREE.Vector3(2.5+Math.cos(z)*.5,y*.4,0)]);
+    dataGroup.add(new THREE.Line(lG,new THREE.LineBasicMaterial({color:0x0099aa,transparent:true,opacity:.2})));
+  });
 
-  // Floating data particles
-  const ptGeo=new THREE.BufferGeometry();const pc=300;const pp=new Float32Array(pc*3);const pph=new Float32Array(pc);
-  for(let i=0;i<pc;i++){pp[i*3]=(Math.random()-.5)*14;pp[i*3+1]=(Math.random()-.5)*8+2;pp[i*3+2]=(Math.random()-.5)*8-2;pph[i]=Math.random()*Math.PI*2;}
-  ptGeo.setAttribute('position',new THREE.BufferAttribute(pp,3));
-  const ptMat=new THREE.PointsMaterial({color:0x00d4ff,size:.04,transparent:true,opacity:.5,blending:THREE.AdditiveBlending,depthWrite:false,sizeAttenuation:true});
-  scene.add(new THREE.Points(ptGeo,ptMat));
+  // Background grid
+  const gridH=10,gridW=20;const gridGeo=new THREE.BufferGeometry();const gp=[];
+  for(let i=0;i<=gridH;i++){const y=−2+i*.5;gp.push(−10,y,−8,10,y,−8);}
+  for(let i=0;i<=20;i++){const x=−10+i;gp.push(x,−2,−8,x,3,−8);}
+  gridGeo.setAttribute('position',new THREE.BufferAttribute(new Float32Array(gp),3));
+  scene.add(new THREE.LineSegments(gridGeo,new THREE.LineBasicMaterial({color:0x001a2a,transparent:true,opacity:.4})));
 
-  scene.add(new THREE.AmbientLight(0x001122,2));
-  const key=new THREE.PointLight(0x00d4ff,3,14);key.position.set(0,6,4);scene.add(key);
-  const fill=new THREE.PointLight(0xa855f7,2,10);fill.position.set(-5,2,-2);scene.add(fill);
+  // Stars
+  const sg=new THREE.BufferGeometry();const sp=new Float32Array(1500*3);
+  for(let i=0;i<1500;i++){sp[i*3]=(Math.random()−.5)*40;sp[i*3+1]=(Math.random()−.5)*20+5;sp[i*3+2]=−15+Math.random()*5;}
+  sg.setAttribute('position',new THREE.BufferAttribute(sp,3));
+  scene.add(new THREE.Points(sg,new THREE.PointsMaterial({color:0x4488aa,size:.06,transparent:true,opacity:.6,sizeAttenuation:true})));
 
-  let t=0,growing=true;
-  function animate(){requestAnimationFrame(animate);t+=.01;
-    // Bar grow animation
-    if(growing){let allDone=true;bars.forEach(b=>{const target=b.userData.targetH;b.userData.currentH=Math.min(target,b.userData.currentH+target*.025);if(b.userData.currentH<target)allDone=false;const h=b.userData.currentH;b.scale.y=h/b.userData.targetH;b.position.y=(h/2)-1.75;b.userData.cap.position.y=h-1.75+.02;});if(allDone)growing=false;}
-    chartGroup.rotation.y=Math.sin(t*.15)*.18;chartGroup.rotation.x=Math.sin(t*.1)*.05;
-    // Pulse emissive
-    bars.forEach((b,i)=>{b.material.emissiveIntensity=.25+Math.sin(t*1.2+i*.3)*.12;});
-    key.intensity=3+Math.sin(t*.9)*.6;ptMat.opacity=.4+Math.sin(t*1.3)*.15;
-    renderer.render(scene,camera);}
-  animate();
+  scene.add(new THREE.AmbientLight(0x001a2a,3));
+  const tealLight=new THREE.PointLight(0x00ccdd,2.5,12);tealLight.position.set(−3,4,2);scene.add(tealLight);
+  const blueLight=new THREE.PointLight(0x0033aa,1.5,10);blueLight.position.set(4,2,−2);scene.add(blueLight);
+
+  let mx=0,my=0;document.addEventListener('mousemove',e=>{mx=(e.clientX/innerWidth−.5)*.6;my=(e.clientY/innerHeight−.5)*.3;});
   window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+
+  let t=0;
+  function animate(){requestAnimationFrame(animate);t+=.009;houseGroup.rotation.y+=.003;dataGroup.rotation.y+=.003;tealLight.intensity=2.5+Math.sin(t*1.1)*.6;camera.position.x+=(mx*.5−camera.position.x)*.025;camera.position.y+=(−my*.3+2−camera.position.y)*.025;camera.lookAt(0,0,0);renderer.render(scene,camera);}
+  animate();
 })();
 
-// 2D CANVAS CHARTS
-function drawBar(ctx,w,h){
-  const data=[420,680,550,780,710,850,690,920,880,950,820,1000];
-  const max=1000,pad=40,barW=(w-pad*2)/data.length*.65,gap=(w-pad*2)/data.length;
-  ctx.clearRect(0,0,w,h);
-  // Grid
-  ctx.strokeStyle='rgba(0,212,255,.06)';ctx.lineWidth=1;
-  for(let i=0;i<=5;i++){const y=h-30-((h-60)/5)*i;ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(w-pad,y);ctx.stroke();}
-  // Bars
-  data.forEach((v,i)=>{
-    const x=pad+i*gap+(gap-barW)/2;const bh=((h-60)/max)*v;const y=h-30-bh;
-    const cols=['#00d4ff','#a855f7','#22cc88','#ff6644','#ffd040'];
-    ctx.fillStyle=cols[i%cols.length]+'44';ctx.fillRect(x,y,barW,bh);
-    ctx.strokeStyle=cols[i%cols.length];ctx.lineWidth=1.5;ctx.strokeRect(x,y,barW,bh);
-    // Value
-    ctx.fillStyle='rgba(232,244,255,.6)';ctx.font='9px Share Tech Mono';ctx.textAlign='center';ctx.fillText(v>999?'1.0M':v+'k',x+barW/2,y-5);
-    // Month
-    const months=['J','F','M','A','M','J','J','A','S','O','N','D'];
-    ctx.fillStyle='rgba(74,88,112,.8)';ctx.font='8px Share Tech Mono';ctx.fillText(months[i],x+barW/2,h-14);
-  });
-}
-
-function drawDonut(ctx,w,h){
-  const data=[{v:.38,c:'#00d4ff',l:'Organic'},{v:.24,c:'#a855f7',l:'Paid'},{v:.18,c:'#22cc88',l:'Social'},{v:.12,c:'#ff6644',l:'Referral'},{v:.08,c:'#ffd040',l:'Direct'}];
-  ctx.clearRect(0,0,w,h);
-  const cx=w*.38,cy=h/2,r=Math.min(w,h)*.32,inner=r*.6;
-  let angle=-Math.PI/2;
-  data.forEach(d=>{
-    const slice=d.v*Math.PI*2;
-    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,angle,angle+slice);ctx.closePath();
-    ctx.fillStyle=d.c+'55';ctx.fill();
-    ctx.strokeStyle=d.c;ctx.lineWidth=2;ctx.stroke();
-    angle+=slice;
-  });
-  // Hole
-  ctx.beginPath();ctx.arc(cx,cy,inner,0,Math.PI*2);ctx.fillStyle='#060c18';ctx.fill();
-  // Center text
-  ctx.fillStyle='rgba(0,212,255,.9)';ctx.font='bold 20px Rajdhani';ctx.textAlign='center';ctx.fillText('100%',cx,cy+4);
-  ctx.fillStyle='rgba(74,88,112,.7)';ctx.font='8px Share Tech Mono';ctx.fillText('TRAFFIC',cx,cy+16);
-  // Legend
-  let ly=20;data.forEach(d=>{ctx.fillStyle=d.c;ctx.fillRect(w*.75,ly,10,10);ctx.fillStyle='rgba(232,244,255,.6)';ctx.font='10px DM Sans';ctx.textAlign='left';ctx.fillText(d.l+' '+(d.v*100).toFixed(0)+'%',w*.75+16,ly+9);ly+=24;});
-}
-
-function drawLine(ctx,w,h){
-  const weeks=['W1','W2','W3','W4','W5','W6','W7','W8','W9','W10','W11','W12'];
-  const data1=[8200,8800,9100,8600,9400,9800,10200,9900,11000,11400,12000,12840];
-  const data2=[6000,6400,6800,6500,7000,7200,7600,7400,8000,8200,8600,9100];
-  ctx.clearRect(0,0,w,h);
-  const pad=48,max=14000;
-  // Grid
-  ctx.strokeStyle='rgba(0,212,255,.06)';ctx.lineWidth=1;
-  for(let i=0;i<=4;i++){const y=20+((h-50)/4)*i;ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(w-20,y);ctx.stroke();}
-  // Lines
-  [[data1,'#00d4ff','Active'],[data2,'#a855f7','New']].forEach(([d,col,lbl])=>{
-    const step=(w-pad-20)/(d.length-1);
-    ctx.strokeStyle=col;ctx.lineWidth=2;ctx.beginPath();
-    d.forEach((v,i)=>{const x=pad+i*step,y=20+((h-50)/max)*(max-v);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
-    ctx.stroke();
-    // Fill
-    ctx.save();ctx.beginPath();d.forEach((v,i)=>{const x=pad+i*step,y=20+((h-50)/max)*(max-v);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});ctx.lineTo(pad+(d.length-1)*step,h-30);ctx.lineTo(pad,h-30);ctx.closePath();ctx.fillStyle=col+'18';ctx.fill();ctx.restore();
-    // Dots
-    d.forEach((v,i)=>{const x=pad+i*step,y=20+((h-50)/max)*(max-v);ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fillStyle=col;ctx.fill();});
-  });
-  // Labels
-  weeks.forEach((w2,i)=>{ctx.fillStyle='rgba(74,88,112,.7)';ctx.font='8px Share Tech Mono';ctx.textAlign='center';ctx.fillText(w2,pad+i*((w-pad-20)/(weeks.length-1)),h-14);});
-}
-
-// Table data
-const MARKETS=[{m:'United States',r:'€1.42M',s:34},{m:'United Kingdom',r:'€0.68M',s:16},{m:'Germany',r:'€0.52M',s:12},{m:'France',r:'€0.44M',s:11},{m:'Japan',r:'€0.38M',s:9}];
-const tb=document.getElementById('tableBody');
-MARKETS.forEach(m=>{tb.innerHTML+=`<tr><td>${m.m}</td><td>${m.r}</td><td><div>${(m.s)+'%'}</div><div class="pct-bar"><div class="pct-fill" style="width:0%;background:${['#00d4ff','#a855f7','#22cc88','#ff6644','#ffd040'][MARKETS.indexOf(m)%5]}" data-w="${m.s}"></div></div></td></tr>`;});
-
-// Scroll reveal + chart draw
-const io=new IntersectionObserver(ee=>{ee.forEach(e=>{if(e.isIntersecting){const d=parseInt(e.target.dataset.d||0);setTimeout(()=>{e.target.classList.add('on');drawCharts();animateBars();},d);io.unobserve(e.target)}})},{threshold:.1});
-document.querySelectorAll('.panel').forEach(el=>io.observe(el));
-
-function drawCharts(){
-  const bc=document.getElementById('barChart');bc.width=bc.offsetWidth;bc.height=200;drawBar(bc.getContext('2d'),bc.width,bc.height);
-  const dc=document.getElementById('donutChart');dc.width=dc.offsetWidth;dc.height=200;drawDonut(dc.getContext('2d'),dc.width,dc.height);
-  const lc=document.getElementById('lineChart');lc.width=lc.offsetWidth;lc.height=140;drawLine(lc.getContext('2d'),lc.width,lc.height);
-}
-function animateBars(){document.querySelectorAll('.pct-fill').forEach(el=>{el.style.width=el.dataset.w+'%';});}
+const io=new IntersectionObserver(ee=>{ee.forEach(e=>{if(e.isIntersecting){const d=parseInt(e.target.dataset.d||0);setTimeout(()=>e.target.classList.add('on'),d);io.unobserve(e.target)}})},{threshold:.1});
+document.querySelectorAll('.lst-h,.prop').forEach(el=>io.observe(el));
 </script>
 </body>
 </html>
