@@ -3,135 +3,230 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Studio 3D — Interactive Experiences</title>
+<title>3DJESTER — Immersive 3D Web Experiences</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#04030d;
-  --v:#7c3aed;--vl:#a855f7;--vg:rgba(124,58,237,.3);
-  --gold:#c9a84c;
-  --white:#f0eeff;--gray:#8080a0;
-  --card:rgba(10,8,22,.8);
+  --bg:#0d0a1f;
+  --bg2:#12103a;
+  --v:#7c3aed;
+  --vl:#a78bfa;
+  --vb:#60a5fa;
+  --pink:#f472b6;
+  --cyan:#22d3ee;
+  --gold:#fbbf24;
+  --white:#ffffff;
+  --offwhite:#e8e4ff;
+  --text:#c4b8ff;
+  --textmid:#a89fd4;
+  --card:rgba(20,16,50,.75);
+  --border:rgba(167,139,250,.18);
+  --glow:rgba(124,58,237,.35);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden}
+body{background:var(--bg);color:var(--offwhite);font-family:'DM Sans',sans-serif;font-weight:400;overflow-x:hidden;line-height:1.6}
 #three-bg{position:fixed;inset:0;z-index:0}
 
-/* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:26px 56px;backdrop-filter:blur(20px);background:rgba(4,3,13,.5);border-bottom:1px solid rgba(124,58,237,.1)}
-.nav-logo{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;font-style:italic;letter-spacing:.06em;color:var(--vl);text-decoration:none;transition:color .3s}
-.nav-logo:hover{color:#c084fc}
-.nav-cta{padding:9px 24px;border:1px solid rgba(124,58,237,.5);color:var(--white);font-size:11px;font-weight:300;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;transition:background .3s,border-color .3s,box-shadow .3s}
-.nav-cta:hover{background:var(--v);border-color:var(--vl);box-shadow:0 0 20px var(--vg)}
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:22px 56px;backdrop-filter:blur(24px);background:rgba(13,10,31,.7);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;font-style:italic;letter-spacing:.08em;color:var(--white);text-decoration:none;transition:color .3s;text-shadow:0 0 20px rgba(167,139,250,.6)}
+.nav-logo span{color:var(--vl)}
+.nav-links{display:flex;gap:36px;align-items:center}
+.nav-link{font-size:12px;font-weight:400;letter-spacing:.18em;text-transform:uppercase;color:var(--textmid);text-decoration:none;transition:color .3s}
+.nav-link:hover{color:var(--white)}
+.nav-cta{padding:10px 26px;background:linear-gradient(135deg,var(--v),#4f46e5);color:var(--white);font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;transition:transform .2s,box-shadow .3s;box-shadow:0 0 20px rgba(124,58,237,.4);border:none;cursor:pointer;font-family:'DM Sans',sans-serif}
+.nav-cta:hover{transform:translateY(-2px);box-shadow:0 0 36px rgba(124,58,237,.7)}
+.nav-cta:active{transform:scale(.96)}
 
-/* HERO */
+/* ── HERO ── */
 .hero{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 40px 80px}
-.hero-kicker{font-weight:200;font-size:11px;letter-spacing:.5em;text-transform:uppercase;color:var(--vl);margin-bottom:32px;opacity:0;animation:fu 1s ease forwards .3s}
-.hero-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(3.5rem,8vw,7.5rem);line-height:1.02;letter-spacing:-.01em;margin-bottom:12px;opacity:0;animation:fu 1.2s ease forwards .5s}
-.hero-title em{font-style:italic;font-weight:300;color:var(--vl)}
-.hero-title strong{font-weight:600;display:block}
-.hero-sub{font-weight:200;font-size:clamp(.9rem,1.8vw,1.1rem);color:var(--gray);max-width:520px;line-height:1.9;margin:0 auto 56px;opacity:0;animation:fu 1s ease forwards .8s;letter-spacing:.02em}
-.hero-divider{width:40px;height:1px;background:linear-gradient(to right,transparent,var(--vl),transparent);margin:0 auto 36px;opacity:0;animation:fu .8s ease forwards .7s}
-.hero-stats{display:flex;gap:64px;justify-content:center;opacity:0;animation:fu .9s ease forwards 1.1s}
-.hs{text-align:center}
-.hs-n{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:400;color:var(--white);line-height:1}
-.hs-l{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gray);margin-top:4px;font-weight:200}
-.scroll-cue{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px;opacity:0;animation:fu .8s ease forwards 1.4s}
-.sc-bar{width:1px;height:52px;background:linear-gradient(to bottom,transparent,var(--vl));animation:sc-p 2.5s ease-in-out infinite}
-@keyframes sc-p{0%,100%{opacity:.3}50%{opacity:.9}}
-.sc-txt{font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--gray);font-weight:200}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 18px;background:rgba(167,139,250,.12);border:1px solid rgba(167,139,250,.3);color:var(--vl);font-size:11px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;margin-bottom:36px;opacity:0;animation:fu 1s ease forwards .3s}
+.hero-badge::before{content:'';width:6px;height:6px;background:var(--cyan);border-radius:50%;animation:pulse-dot 2s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.6)}}
+.hero-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(3.2rem,8vw,7.5rem);line-height:1;letter-spacing:-.01em;margin-bottom:8px;opacity:0;animation:fu 1.2s ease forwards .5s;color:var(--white)}
+.hero-title em{font-style:italic;background:linear-gradient(135deg,var(--vl),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-title strong{font-weight:600;display:block;color:var(--white)}
+.hero-divider{width:60px;height:2px;background:linear-gradient(to right,transparent,var(--vl),var(--cyan),transparent);margin:28px auto;opacity:0;animation:fu .8s ease forwards .7s}
+.hero-sub{font-weight:400;font-size:clamp(1rem,2vw,1.2rem);color:var(--text);max-width:560px;line-height:1.85;margin:0 auto 52px;opacity:0;animation:fu 1s ease forwards .8s}
+.hero-buttons{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;opacity:0;animation:fu .9s ease forwards 1s}
 
-/* DEMOS */
-.demos{position:relative;z-index:2;padding:60px 0 80px}
-.sec-eyebrow{text-align:center;font-weight:200;font-size:10px;letter-spacing:.45em;text-transform:uppercase;color:var(--vl);margin-bottom:14px;opacity:0;transform:translateY(16px);transition:opacity .7s,transform .7s}
-.sec-eyebrow.on{opacity:1;transform:translateY(0)}
-.sec-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2rem,4vw,3.5rem);text-align:center;margin-bottom:16px;letter-spacing:.02em;opacity:0;transform:translateY(16px);transition:opacity .7s .1s,transform .7s .1s}
+/* ── BUTTONS ── */
+.btn-primary{padding:14px 40px;background:linear-gradient(135deg,var(--v),#4f46e5);color:var(--white);font-size:12px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:transform .2s,box-shadow .3s;box-shadow:0 0 24px rgba(124,58,237,.45);position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:10px}
+.btn-primary::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);opacity:0;transition:opacity .3s}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 8px 40px rgba(124,58,237,.65)}
+.btn-primary:hover::after{opacity:1}
+.btn-primary:active{transform:scale(.96) translateY(0)}
+
+.btn-secondary{padding:13px 36px;background:transparent;color:var(--white);font-size:12px;font-weight:400;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;border:1px solid rgba(167,139,250,.4);cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .3s,border-color .3s,transform .2s,box-shadow .3s;display:inline-flex;align-items:center;gap:10px}
+.btn-secondary:hover{background:rgba(167,139,250,.1);border-color:var(--vl);transform:translateY(-3px);box-shadow:0 8px 30px rgba(124,58,237,.25)}
+.btn-secondary:active{transform:scale(.96)}
+
+/* Arrow animation */
+.arr{display:inline-block;transition:transform .3s}
+.btn-primary:hover .arr,.btn-secondary:hover .arr{transform:translateX(5px)}
+
+/* RIPPLE effect */
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.3);transform:scale(0);animation:ripple-anim .6s linear;pointer-events:none}
+@keyframes ripple-anim{to{transform:scale(4);opacity:0}}
+
+/* ── STATS ── */
+.hero-stats{display:flex;gap:0;justify-content:center;margin-top:64px;opacity:0;animation:fu .9s ease forwards 1.2s;border:1px solid var(--border);background:rgba(20,16,50,.5);backdrop-filter:blur(16px)}
+.hs{text-align:center;padding:24px 48px;border-right:1px solid var(--border)}
+.hs:last-child{border-right:none}
+.hs-n{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:400;color:var(--white);line-height:1;background:linear-gradient(135deg,var(--white),var(--vl));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hs-l{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--textmid);margin-top:6px;font-weight:400}
+
+/* SCROLL CUE */
+.scroll-cue{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px;opacity:0;animation:fu .8s ease forwards 1.5s}
+.sc-bar{width:1px;height:52px;background:linear-gradient(to bottom,transparent,var(--vl));animation:sc-p 2.5s ease-in-out infinite}
+@keyframes sc-p{0%,100%{opacity:.2}50%{opacity:1}}
+.sc-txt{font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--textmid);font-weight:400}
+
+/* ── WHAT I DO STRIP ── */
+.what-strip{position:relative;z-index:2;padding:72px 56px;background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(96,165,250,.06));border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.what-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:32px}
+.what-item{text-align:center;opacity:0;transform:translateY(20px);transition:opacity .7s,transform .7s}
+.what-item.on{opacity:1;transform:translateY(0)}
+.wi-icon{font-size:2rem;margin-bottom:14px;display:block}
+.wi-title{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;color:var(--white);margin-bottom:8px}
+.wi-desc{font-size:.88rem;color:var(--text);line-height:1.7}
+
+/* ── DEMOS SECTION ── */
+.demos{position:relative;z-index:2;padding:80px 0 80px}
+.sec-label{text-align:center;font-size:11px;font-weight:500;letter-spacing:.4em;text-transform:uppercase;color:var(--cyan);margin-bottom:14px;opacity:0;transform:translateY(16px);transition:opacity .7s,transform .7s}
+.sec-label.on{opacity:1;transform:translateY(0)}
+.sec-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2.2rem,4vw,3.8rem);text-align:center;margin-bottom:14px;opacity:0;transform:translateY(16px);transition:opacity .7s .08s,transform .7s .08s;color:var(--white)}
 .sec-title.on{opacity:1;transform:translateY(0)}
-.sec-sub{text-align:center;font-weight:200;font-size:.9rem;color:var(--gray);margin-bottom:52px;letter-spacing:.02em;opacity:0;transform:translateY(16px);transition:opacity .7s .15s,transform .7s .15s;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.8}
+.sec-title em{font-style:italic;background:linear-gradient(135deg,var(--vl),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sec-sub{text-align:center;font-size:1rem;color:var(--text);margin-bottom:56px;max-width:520px;margin-left:auto;margin-right:auto;line-height:1.8;opacity:0;transform:translateY(16px);transition:opacity .7s .14s,transform .7s .14s}
 .sec-sub.on{opacity:1;transform:translateY(0)}
 
 /* FILTER */
-.filter-tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:56px;padding:0 48px;opacity:0;transform:translateY(16px);transition:opacity .7s .2s,transform .7s .2s}
+.filter-tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:52px;padding:0 48px;opacity:0;transform:translateY(16px);transition:opacity .7s .18s,transform .7s .18s}
 .filter-tabs.on{opacity:1;transform:translateY(0)}
-.ftab{padding:7px 20px;border:1px solid rgba(124,58,237,.2);color:rgba(128,128,160,.6);font-size:10px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:background .3s,border-color .3s,color .3s;background:transparent;font-family:'DM Sans',sans-serif;font-weight:200}
-.ftab:hover{border-color:rgba(168,85,247,.4);color:var(--vl)}
-.ftab.active{background:rgba(124,58,237,.15);border-color:var(--vl);color:var(--vl)}
+.ftab{padding:8px 22px;border:1px solid var(--border);color:var(--textmid);font-size:11px;font-weight:400;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;transition:all .3s;background:transparent;font-family:'DM Sans',sans-serif}
+.ftab:hover{border-color:var(--vl);color:var(--white)}
+.ftab.active{background:linear-gradient(135deg,rgba(124,58,237,.3),rgba(96,165,250,.2));border-color:var(--vl);color:var(--white);box-shadow:0 0 16px rgba(124,58,237,.25)}
 
 /* GRID */
-.grid{max-width:1280px;margin:0 auto;padding:0 48px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid{max-width:1280px;margin:0 auto;padding:0 48px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 
 /* CARD */
-.card{overflow:hidden;background:var(--card);border:1px solid rgba(124,58,237,.1);backdrop-filter:blur(16px);opacity:0;transform:translateY(36px);transition:opacity .7s ease,transform .7s ease,border-color .4s,box-shadow .4s;display:flex;flex-direction:column;position:relative;text-decoration:none;color:inherit}
+.card{overflow:hidden;background:var(--card);border:1px solid var(--border);backdrop-filter:blur(20px);opacity:0;transform:translateY(36px);transition:opacity .7s ease,transform .7s ease,border-color .4s,box-shadow .4s;display:flex;flex-direction:column;position:relative;text-decoration:none;color:inherit}
 .card.on{opacity:1;transform:translateY(0)}
-.card:hover{border-color:rgba(168,85,247,.4);box-shadow:0 0 50px rgba(124,58,237,.14),0 20px 50px rgba(0,0,0,.55)}
+.card:hover{border-color:rgba(167,139,250,.5);box-shadow:0 0 60px rgba(124,58,237,.2),0 24px 60px rgba(0,0,0,.5)}
 .card.wide{grid-column:span 2}
-.card.triple{grid-column:span 3}
 
-.cimg{position:relative;overflow:hidden;height:220px;flex-shrink:0}
-.card.wide .cimg{height:280px}
-.card.triple .cimg{height:360px}
-.cimg img{width:100%;height:100%;object-fit:cover;filter:brightness(.55) saturate(.85);transition:transform 1s ease,filter .5s}
-.card:hover .cimg img{transform:scale(1.06);filter:brightness(.72) saturate(1)}
-.cimg::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(4,3,13,.97) 0%,rgba(4,3,13,.1) 60%,transparent 100%)}
-.badge{position:absolute;top:16px;left:16px;z-index:3;font-weight:200;font-size:9px;letter-spacing:.25em;text-transform:uppercase;padding:4px 12px;border:1px solid rgba(168,85,247,.3);background:rgba(4,3,13,.65);backdrop-filter:blur(8px);color:var(--vl)}
-.badge-new{position:absolute;top:16px;right:16px;z-index:3;font-weight:300;font-size:8px;letter-spacing:.2em;text-transform:uppercase;padding:3px 10px;background:rgba(168,85,247,.2);border:1px solid rgba(168,85,247,.38);color:#c084fc}
+.cimg{position:relative;overflow:hidden;height:230px;flex-shrink:0}
+.card.wide .cimg{height:300px}
+.cimg img{width:100%;height:100%;object-fit:cover;filter:brightness(.6) saturate(.8);transition:transform 1s ease,filter .5s}
+.card:hover .cimg img{transform:scale(1.07);filter:brightness(.78) saturate(1.1)}
+.cimg::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(13,10,31,.98) 0%,rgba(13,10,31,.2) 55%,transparent 100%)}
 
-.cbody{padding:22px 26px 30px;position:relative;z-index:1;display:flex;flex-direction:column;flex:1}
-.card.wide .cbody,.card.triple .cbody{padding:26px 32px 36px}
-.cnum{font-weight:200;font-size:9px;letter-spacing:.35em;color:var(--vl);opacity:.5;margin-bottom:7px}
-.ctitle{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(1.15rem,1.6vw,1.6rem);line-height:1.2;margin-bottom:8px;transition:color .3s;letter-spacing:.02em}
+.badge{position:absolute;top:16px;left:16px;z-index:3;font-size:9px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;padding:5px 13px;background:linear-gradient(135deg,rgba(124,58,237,.5),rgba(96,165,250,.3));border:1px solid rgba(167,139,250,.4);color:var(--white);backdrop-filter:blur(8px)}
+.badge-feat{position:absolute;top:16px;right:16px;z-index:3;font-size:8px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;padding:4px 11px;background:linear-gradient(135deg,rgba(251,191,36,.2),rgba(244,114,182,.2));border:1px solid rgba(251,191,36,.4);color:var(--gold)}
+
+.cbody{padding:24px 28px 32px;position:relative;z-index:1;display:flex;flex-direction:column;flex:1}
+.card.wide .cbody{padding:28px 34px 38px}
+.cnum{font-size:10px;font-weight:500;letter-spacing:.35em;color:var(--cyan);opacity:.7;margin-bottom:8px}
+.ctitle{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(1.2rem,1.8vw,1.7rem);line-height:1.2;margin-bottom:10px;transition:color .3s;color:var(--white)}
 .card:hover .ctitle{color:var(--vl)}
-.card.wide .ctitle,.card.triple .ctitle{font-size:clamp(1.35rem,2.2vw,2rem)}
-.cdesc{font-weight:200;font-size:.82rem;color:var(--gray);line-height:1.75;margin-bottom:16px;flex:1}
-.tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:20px}
-.tag{font-size:8px;letter-spacing:.14em;text-transform:uppercase;padding:3px 10px;border:1px solid rgba(124,58,237,.2);color:rgba(128,128,160,.65);transition:border-color .3s,color .3s}
-.card:hover .tag{border-color:rgba(168,85,247,.32);color:rgba(160,144,200,.85)}
-.btn{display:inline-flex;align-items:center;gap:9px;padding:10px 24px;background:transparent;border:1px solid rgba(124,58,237,.45);color:var(--white);font-weight:300;font-size:10px;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;transition:background .3s,border-color .3s,box-shadow .3s,transform .2s;width:fit-content;font-family:'DM Sans',sans-serif}
-.btn:hover{background:var(--v);border-color:var(--vl);box-shadow:0 0 22px var(--vg);transform:translateY(-2px)}
-.arr{transition:transform .3s}.btn:hover .arr{transform:translateX(4px)}
+.card.wide .ctitle{font-size:clamp(1.4rem,2.4vw,2.1rem)}
+.cdesc{font-size:.88rem;color:var(--text);line-height:1.78;margin-bottom:18px;flex:1}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:22px}
+.tag{font-size:9px;font-weight:400;letter-spacing:.12em;text-transform:uppercase;padding:4px 11px;border:1px solid rgba(167,139,250,.2);color:var(--textmid);transition:all .3s;background:rgba(167,139,250,.04)}
+.card:hover .tag{border-color:rgba(167,139,250,.4);color:var(--offwhite);background:rgba(167,139,250,.1)}
 
-/* CATEGORY DIVIDERS */
-.cat-divider{grid-column:span 3;display:flex;align-items:center;gap:20px;padding:28px 0 6px;opacity:0;transform:translateY(12px);transition:opacity .6s,transform .6s}
+.card-btn{display:inline-flex;align-items:center;gap:9px;padding:10px 24px;background:linear-gradient(135deg,rgba(124,58,237,.25),rgba(96,165,250,.15));border:1px solid rgba(167,139,250,.35);color:var(--white);font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;transition:all .3s;width:fit-content;font-family:'DM Sans',sans-serif;position:relative;overflow:hidden}
+.card-btn:hover{background:linear-gradient(135deg,var(--v),#4f46e5);border-color:var(--vl);box-shadow:0 0 24px rgba(124,58,237,.5);transform:translateY(-2px)}
+.card-btn:active{transform:scale(.96)}
+
+/* CAT DIVIDERS */
+.cat-divider{grid-column:span 3;display:flex;align-items:center;gap:20px;padding:32px 0 8px;opacity:0;transform:translateY(12px);transition:opacity .6s,transform .6s}
 .cat-divider.on{opacity:1;transform:translateY(0)}
-.cd-label{font-weight:200;font-size:9px;letter-spacing:.45em;text-transform:uppercase;color:rgba(168,85,247,.45);white-space:nowrap}
-.cd-line{flex:1;height:1px;background:linear-gradient(to right,rgba(124,58,237,.18),transparent)}
+.cd-label{font-size:10px;font-weight:500;letter-spacing:.4em;text-transform:uppercase;color:var(--cyan);white-space:nowrap}
+.cd-line{flex:1;height:1px;background:linear-gradient(to right,rgba(96,165,250,.3),transparent)}
 
-/* CTA */
-.cta-strip{position:relative;z-index:2;padding:80px 48px;text-align:center;border-top:1px solid rgba(124,58,237,.08)}
-.cta-h{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2rem,4vw,3.5rem);margin-bottom:16px;opacity:0;transform:translateY(20px);transition:opacity .8s,transform .8s}
+/* ── MARQUEE STRIP ── */
+.marquee-wrap{position:relative;z-index:2;overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:rgba(20,16,50,.6);padding:18px 0}
+.marquee-track{display:flex;gap:0;animation:marquee 28s linear infinite;white-space:nowrap}
+.marquee-track:hover{animation-play-state:paused}
+.mq-item{padding:0 52px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:var(--textmid);border-right:1px solid var(--border);flex-shrink:0}
+.mq-item span{color:var(--vl);margin:0 8px}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ── CONTACT SECTION ── */
+.contact{position:relative;z-index:2;padding:100px 56px;background:linear-gradient(135deg,rgba(124,58,237,.06),rgba(96,165,250,.04))}
+.contact-inner{max-width:760px;margin:0 auto}
+.contact .sec-label{text-align:left}
+.contact .sec-title{text-align:left;margin-bottom:12px}
+.contact .sec-sub{text-align:left;margin-left:0;margin-bottom:48px}
+
+/* FORM */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.form-group{display:flex;flex-direction:column;gap:8px}
+.form-group.full{grid-column:span 2}
+.form-label{font-size:10px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--textmid)}
+.form-input,.form-select,.form-textarea{background:rgba(20,16,50,.7);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:.93rem;font-weight:400;padding:13px 16px;transition:border-color .3s,box-shadow .3s;outline:none;width:100%;-webkit-appearance:none}
+.form-input::placeholder,.form-textarea::placeholder{color:rgba(167,139,250,.3)}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--vl);box-shadow:0 0 0 3px rgba(124,58,237,.15)}
+.form-select{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a78bfa' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+.form-select option{background:#1a1640;color:var(--white)}
+.form-textarea{resize:vertical;min-height:130px;line-height:1.7}
+
+/* Submit button */
+.form-submit{margin-top:8px;padding:15px 48px;background:linear-gradient(135deg,var(--v),#4f46e5);color:var(--white);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;border:none;cursor:pointer;transition:transform .2s,box-shadow .3s;box-shadow:0 0 24px rgba(124,58,237,.45);position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:12px}
+.form-submit:hover{transform:translateY(-3px);box-shadow:0 8px 40px rgba(124,58,237,.65)}
+.form-submit:active{transform:scale(.96)}
+.form-submit.loading{pointer-events:none;opacity:.7}
+
+/* Success message */
+.form-success{display:none;text-align:center;padding:48px 32px;background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.2)}
+.form-success.show{display:block}
+.fs-icon{font-size:2.5rem;margin-bottom:16px;display:block}
+.fs-title{font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--white);margin-bottom:10px}
+.fs-sub{font-size:.95rem;color:var(--text)}
+
+/* ── CTA STRIP ── */
+.cta-strip{position:relative;z-index:2;padding:100px 48px;text-align:center;background:linear-gradient(135deg,rgba(124,58,237,.1),rgba(96,165,250,.07));border-top:1px solid var(--border)}
+.cta-h{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2.2rem,4.5vw,4rem);margin-bottom:18px;color:var(--white);opacity:0;transform:translateY(20px);transition:opacity .8s,transform .8s;line-height:1.1}
 .cta-h.on{opacity:1;transform:translateY(0)}
-.cta-h em{font-style:italic;color:var(--vl)}
-.cta-sub{font-weight:200;font-size:.95rem;color:var(--gray);margin-bottom:40px;max-width:440px;margin-left:auto;margin-right:auto;line-height:1.8;opacity:0;transform:translateY(20px);transition:opacity .8s .1s,transform .8s .1s}
+.cta-h em{font-style:italic;background:linear-gradient(135deg,var(--vl),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.cta-sub{font-size:1.05rem;color:var(--text);margin-bottom:44px;max-width:460px;margin-left:auto;margin-right:auto;line-height:1.85;opacity:0;transform:translateY(20px);transition:opacity .8s .1s,transform .8s .1s}
 .cta-sub.on{opacity:1;transform:translateY(0)}
-.cta-btn{display:inline-flex;align-items:center;gap:12px;padding:16px 48px;background:transparent;border:1px solid var(--vl);color:var(--vl);font-weight:300;font-size:12px;letter-spacing:.25em;text-transform:uppercase;text-decoration:none;font-family:'DM Sans',sans-serif;position:relative;overflow:hidden;opacity:0;transform:translateY(20px);transition:opacity .8s .2s,transform .8s .2s,color .35s,box-shadow .35s}
-.cta-btn.on{opacity:1;transform:translateY(0)}
-.cta-btn::before{content:'';position:absolute;inset:0;background:var(--v);transform:translateX(-100%);transition:transform .35s;z-index:-1}
-.cta-btn:hover{color:var(--white);box-shadow:0 0 40px rgba(124,58,237,.4)}
-.cta-btn:hover::before{transform:translateX(0)}
+.cta-buttons{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;opacity:0;transform:translateY(20px);transition:opacity .8s .2s,transform .8s .2s}
+.cta-buttons.on{opacity:1;transform:translateY(0)}
 
-footer{position:relative;z-index:2;border-top:1px solid rgba(124,58,237,.08);padding:52px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
-.ft-brand{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;font-style:italic;color:var(--vl);letter-spacing:.06em}
+/* ── FOOTER ── */
+footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:52px 56px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;background:rgba(13,10,31,.8)}
+.ft-brand{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;font-style:italic;color:var(--white);letter-spacing:.08em;text-shadow:0 0 20px rgba(167,139,250,.4)}
+.ft-brand span{color:var(--vl)}
 .ft-links{display:flex;gap:32px}
-.ft-link{font-weight:200;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(128,128,160,.5);text-decoration:none;transition:color .3s}
-.ft-link:hover{color:var(--vl)}
-.ft-copy{font-weight:200;font-size:12px;letter-spacing:.15em;color:var(--gray)}
+.ft-link{font-size:11px;font-weight:400;letter-spacing:.18em;text-transform:uppercase;color:var(--textmid);text-decoration:none;transition:color .3s}
+.ft-link:hover{color:var(--white)}
+.ft-copy{font-size:12px;color:var(--textmid)}
 
-@keyframes fu{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.sp{position:fixed;pointer-events:none;z-index:9999;border-radius:50%;animation:spa .65s ease forwards}
+/* ── SPARKLE ── */
+.sp{position:fixed;pointer-events:none;z-index:9999;border-radius:50%;animation:spa .7s ease forwards}
 @keyframes spa{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(0)}}
 
-@media(max-width:1100px){.grid{grid-template-columns:repeat(2,1fr)}.card.triple{grid-column:span 2}.cat-divider{grid-column:span 2}}
+/* ── ANIMATIONS ── */
+@keyframes fu{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){.grid{grid-template-columns:repeat(2,1fr)}.cat-divider{grid-column:span 2}.what-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:720px){
-  nav{padding:20px 24px}
-  .hero{padding:110px 24px 70px}.hero-stats{gap:32px}
-  .grid{grid-template-columns:1fr;padding:0 20px}
-  .card.wide,.card.triple{grid-column:span 1}
-  .cat-divider{grid-column:span 1}
+  nav{padding:18px 22px}.nav-links{display:none}
+  .hero{padding:110px 24px 70px}.hero-stats{flex-direction:column;gap:0}.hs{border-right:none!important;border-bottom:1px solid var(--border);padding:18px 32px}
+  .grid{grid-template-columns:1fr;padding:0 20px}.card.wide{grid-column:span 1}.cat-divider{grid-column:span 1}
   .filter-tabs{padding:0 20px}
+  .what-strip{padding:52px 24px}.what-grid{grid-template-columns:1fr 1fr}
+  .form-grid{grid-template-columns:1fr}.form-group.full{grid-column:span 1}
+  .contact{padding:72px 24px}
+  .cta-strip{padding:72px 24px}
   footer{flex-direction:column;text-align:center;padding:40px 24px}.ft-links{flex-direction:column;gap:14px;align-items:center}
-  .cta-strip{padding:60px 24px}
 }
 </style>
 </head>
@@ -139,136 +234,119 @@ footer{position:relative;z-index:2;border-top:1px solid rgba(124,58,237,.08);pad
 <canvas id="three-bg"></canvas>
 <div style="position:relative;z-index:2">
 
+<!-- NAV -->
 <nav>
-  <a href="#" class="nav-logo">Studio 3D</a>
-  <a href="mailto:hello@studio3d.co" class="nav-cta">Get in Touch</a>
+  <a href="#" class="nav-logo">3D<span>JESTER</span></a>
+  <div class="nav-links">
+    <a href="#work" class="nav-link">Work</a>
+    <a href="#contact" class="nav-link">Contact</a>
+  </div>
+  <a href="#contact" class="nav-cta">Start a Project</a>
 </nav>
 
+<!-- HERO -->
 <section class="hero">
-  <div class="hero-kicker">Premium Digital Experiences</div>
+  <div class="hero-badge">✦ Available for new projects</div>
   <h1 class="hero-title">
-    Interactive 3D Websites<br>
-    for <em>Modern</em> <strong>Brands</strong>
+    Immersive 3D Websites<br>
+    for <em>Premium</em> <strong>Brands</strong>
   </h1>
   <div class="hero-divider"></div>
-  <p class="hero-sub">Immersive WebGL experiences that engage visitors, elevate brands, and transform curiosity into conversion. Sixteen live demos across every luxury industry.</p>
+  <p class="hero-sub">I build interactive 3D web experiences that stop visitors mid-scroll. Products that float, rotate, and respond — running natively in any browser, no app needed.</p>
+  <div class="hero-buttons">
+    <a href="#work" class="btn-primary">See My Work <span class="arr">→</span></a>
+    <a href="#contact" class="btn-secondary">Start a Project <span class="arr">→</span></a>
+  </div>
   <div class="hero-stats">
-    <div class="hs"><div class="hs-n">16</div><div class="hs-l">Live Demos</div></div>
+    <div class="hs"><div class="hs-n">8</div><div class="hs-l">Live Demos</div></div>
     <div class="hs"><div class="hs-n">3D</div><div class="hs-l">WebGL</div></div>
+    <div class="hs"><div class="hs-n">USA &amp; EU</div><div class="hs-l">Clients</div></div>
     <div class="hs"><div class="hs-n">∞</div><div class="hs-l">Possibilities</div></div>
   </div>
-  <div class="scroll-cue"><div class="sc-bar"></div><span class="sc-txt">Explore</span></div>
+  <div class="scroll-cue"><div class="sc-bar"></div><span class="sc-txt">Scroll to explore</span></div>
 </section>
 
+<!-- WHAT I DO -->
+<div class="what-strip">
+  <div class="what-grid">
+    <div class="what-item">
+      <span class="wi-icon">🌐</span>
+      <div class="wi-title">3D Hero Experiences</div>
+      <p class="wi-desc">An interactive 3D scene as the centrepiece of your website. Products that float and respond to your visitors.</p>
+    </div>
+    <div class="what-item" style="transition-delay:.1s">
+      <span class="wi-icon">🎨</span>
+      <div class="wi-title">Product Configurators</div>
+      <p class="wi-desc">Let visitors switch colours, materials, and variants in real time — right in the browser.</p>
+    </div>
+    <div class="what-item" style="transition-delay:.2s">
+      <span class="wi-icon">✦</span>
+      <div class="wi-title">Immersive Landing Pages</div>
+      <p class="wi-desc">Full single-page brand sites with 3D scenes, editorial layouts, and collection showcases.</p>
+    </div>
+    <div class="what-item" style="transition-delay:.3s">
+      <span class="wi-icon">⚡</span>
+      <div class="wi-title">Clean Code Delivery</div>
+      <p class="wi-desc">Self-contained HTML/CSS/JS files — drop into any website or host standalone. No plugins, no monthly fees.</p>
+    </div>
+  </div>
+</div>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="mq-item">Interactive 3D <span>✦</span> Browser Native</span>
+    <span class="mq-item">Luxury Brands <span>✦</span> Premium Experiences</span>
+    <span class="mq-item">WebGL Powered <span>✦</span> Zero Plugins</span>
+    <span class="mq-item">USA &amp; Europe <span>✦</span> Remote Worldwide</span>
+    <span class="mq-item">Clean Code Delivery <span>✦</span> Your Hosting</span>
+    <span class="mq-item">Interactive 3D <span>✦</span> Browser Native</span>
+    <span class="mq-item">Luxury Brands <span>✦</span> Premium Experiences</span>
+    <span class="mq-item">WebGL Powered <span>✦</span> Zero Plugins</span>
+    <span class="mq-item">USA &amp; Europe <span>✦</span> Remote Worldwide</span>
+    <span class="mq-item">Clean Code Delivery <span>✦</span> Your Hosting</span>
+  </div>
+</div>
+
+<!-- DEMOS -->
 <section class="demos" id="work">
-  <div class="sec-eyebrow">Selected Work</div>
-  <h2 class="sec-title">Sixteen Worlds</h2>
-  <p class="sec-sub">Every demo is a fully designed, production-ready site with custom Three.js scenes, interactive controls, and editorial layouts.</p>
+  <div class="sec-label">Selected Work</div>
+  <h2 class="sec-title">Eight <em>Worlds</em></h2>
+  <p class="sec-sub">Every demo is a fully designed, production-ready experience — custom built, not a template.</p>
 
   <div class="filter-tabs">
-    <button class="ftab active" data-filter="all">All (16)</button>
-    <button class="ftab" data-filter="fashion">Fashion</button>
-    <button class="ftab" data-filter="luxury">Luxury</button>
-    <button class="ftab" data-filter="food">Food &amp; Drink</button>
-    <button class="ftab" data-filter="space">Space &amp; Place</button>
-    <button class="ftab" data-filter="data">Data &amp; Tech</button>
+    <button class="ftab active" data-filter="all">All (8)</button>
     <button class="ftab" data-filter="nature">Nature</button>
+    <button class="ftab" data-filter="space">Space &amp; Place</button>
+    <button class="ftab" data-filter="food">Food &amp; Drink</button>
+    <button class="ftab" data-filter="data">Data &amp; Tech</button>
   </div>
 
   <div class="grid">
 
-    <!-- FASHION & BEAUTY -->
-    <div class="cat-divider"><span class="cd-label">Fashion &amp; Beauty</span><div class="cd-line"></div></div>
+    <!-- NATURE -->
+    <div class="cat-divider"><span class="cd-label">Nature &amp; Wellness</span><div class="cd-line"></div></div>
 
-    <div class="card wide" data-d="0" data-cat="fashion luxury">
-      <span class="badge-new">Most Impressive</span>
-      <div class="cimg"><span class="badge">Fine Jewellery</span><img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=1000&q=85" alt="Lumière"></div>
+    <div class="card wide" data-d="0" data-cat="nature">
+      <span class="badge-feat">Most Impressive</span>
+      <div class="cimg"><span class="badge">Japanese Wellness</span><img src="https://images.unsplash.com/photo-1522383225653-ed111181a951?w=1000&q=85" alt="Sakura"></div>
       <div class="cbody">
         <div class="cnum">01</div>
-        <div class="ctitle">Lumière — Fine Jewellery House</div>
-        <p class="cdesc">3D engagement ring with live metal switcher (Gold / Silver / Rose Gold / Platinum) and gem switcher (Diamond / Ruby / Emerald / Sapphire). Orbiting caustic light creates moving reflections across the gem surface. Drag to rotate.</p>
-        <div class="tags"><span class="tag">LatheGeometry</span><span class="tag">MeshPhysical</span><span class="tag">Live Configurator</span><span class="tag">Caustic Light</span></div>
-        <a href="demo/jewellery.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
+        <div class="ctitle">Sakura — Cherry Blossom Sanctuary</div>
+        <p class="cdesc">Procedural cherry blossom forest with 5 branching trees, 600 falling petals with real wind simulation, glint sparkle layer, atmospheric fog, and full mouse parallax — the entire scene shifts as you move.</p>
+        <div class="tags"><span class="tag">Procedural Trees</span><span class="tag">600 Petals</span><span class="tag">Wind Physics</span><span class="tag">Mouse Parallax</span></div>
+        <a href="demo/sakura.html" target="_blank" class="card-btn">View Demo <span class="arr">→</span></a>
       </div>
     </div>
 
-    <div class="card" data-d="80" data-cat="fashion luxury">
-      <div class="cimg"><span class="badge">Haute Chaussure</span><img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=700&q=85" alt="Heels"></div>
+    <div class="card" data-d="80" data-cat="nature">
+      <div class="cimg"><span class="badge">Rare Books</span><img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=700&q=85" alt="Folio"></div>
       <div class="cbody">
         <div class="cnum">02</div>
-        <div class="ctitle">Maison Soulier — Luxury Heels</div>
-        <p class="cdesc">3D stiletto built with LatheGeometry — toe cap, counter, strap, and gold branding. Live colour switcher across 5 finishes. Custom cursor with trail. Rising dust particles. Editorial ticker strip.</p>
-        <div class="tags"><span class="tag">LatheGeometry</span><span class="tag">Custom Cursor</span><span class="tag">Colour Switcher</span></div>
-        <a href="demo/heels.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
-      </div>
-    </div>
-
-    <div class="card" data-d="0" data-cat="fashion luxury">
-      <div class="cimg"><span class="badge">Haute Parfumerie</span><img src="https://images.unsplash.com/photo-1541643600914-78b084683702?w=700&q=85" alt="Obscura"></div>
-      <div class="cbody">
-        <div class="cnum">03</div>
-        <div class="ctitle">Obscura — Gothic Perfume House</div>
-        <p class="cdesc">3D glass perfume bottle with refraction shaders, surrounded by gold particle constellations orbiting in volumetric WebGL space. Pitch black, dramatic, cinematic.</p>
-        <div class="tags"><span class="tag">Glass Shader</span><span class="tag">Gold Particles</span><span class="tag">Gothic Dark</span></div>
-        <a href="demo/perfume.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
-      </div>
-    </div>
-
-    <div class="card" data-d="80" data-cat="fashion luxury">
-      <div class="cimg"><span class="badge">Automotive 360°</span><img src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=700&q=85" alt="Apex"></div>
-      <div class="cbody">
-        <div class="cnum">04</div>
-        <div class="ctitle">Apex GT-R — Automotive 360°</div>
-        <p class="cdesc">Full parametric 3D car: body, hood, roof, wheels with spokes, headlights, taillights, windshield, rear wing. Live paint switcher across 5 colours. Drag to rotate 360°.</p>
-        <div class="tags"><span class="tag">Parametric Car</span><span class="tag">Paint Switcher</span><span class="tag">5 Colours</span></div>
-        <a href="demo/automotive.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
-      </div>
-    </div>
-
-    <div class="card" data-d="160" data-cat="luxury">
-      <div class="cimg"><span class="badge">Luxury Watches</span><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700&q=85" alt="Chrono"></div>
-      <div class="cbody">
-        <div class="cnum">05</div>
-        <div class="ctitle">Chrono — Futurist Watch House</div>
-        <p class="cdesc">3D mechanical ring system in metallic materials. Auto-rotates cinematically, responds to drag. Sci-fi horology with precision lighting and dark editorial layout.</p>
-        <div class="tags"><span class="tag">Mechanical 3D</span><span class="tag">Metallic</span><span class="tag">Drag Control</span></div>
-        <a href="demo/product.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
-      </div>
-    </div>
-
-    <!-- FOOD & DRINK -->
-    <div class="cat-divider"><span class="cd-label">Food &amp; Drink</span><div class="cd-line"></div></div>
-
-    <div class="card" data-d="0" data-cat="food">
-      <div class="cimg"><span class="badge">Fine Dining</span><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=700&q=85" alt="Maison"></div>
-      <div class="cbody">
-        <div class="cnum">06</div>
-        <div class="ctitle">Maison — Fine Dining Restaurant</div>
-        <p class="cdesc">3D floating dish with steam particles and orbit lights. Scroll-triggered reveals, full editorial layout with reservation system aesthetic and seasonal menu sections.</p>
-        <div class="tags"><span class="tag">Steam Particles</span><span class="tag">Orbit Lights</span><span class="tag">Editorial</span></div>
-        <a href="demo/food.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
-      </div>
-    </div>
-
-    <div class="card" data-d="80" data-cat="food">
-      <div class="cimg"><span class="badge">Japanese Coffee</span><img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=700&q=85" alt="Kōhi"></div>
-      <div class="cbody">
-        <div class="cnum">07</div>
-        <div class="ctitle">Kōhi — Japanese Coffee House</div>
-        <p class="cdesc">3D ceramic cup with rising steam, animated pour effects, and parallax on scroll. Wabi-sabi aesthetic — sparse, deliberate, poetic. Japanese typography layered over the scene.</p>
-        <div class="tags"><span class="tag">Steam Animation</span><span class="tag">Wabi-sabi</span><span class="tag">Pour Effect</span></div>
-        <a href="demo/coffee.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
-      </div>
-    </div>
-
-    <div class="card" data-d="160" data-cat="food luxury">
-      <div class="cimg"><span class="badge">Bean to Bar</span><img src="https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=700&q=85" alt="Cacao"></div>
-      <div class="cbody">
-        <div class="cnum">08</div>
-        <div class="ctitle">Cacao — Premium Chocolate</div>
-        <p class="cdesc">Segmented 3D chocolate bar with groove details and a floating broken piece. Live variety switcher (Dark / Milk / White / Ruby) swaps material in real time. Cacao dust particle swirl.</p>
-        <div class="tags"><span class="tag">BoxGeometry</span><span class="tag">Material Switcher</span><span class="tag">Particle Dust</span></div>
-        <a href="demo/chocolate.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
+        <div class="ctitle">Folio — 3D Interactive Bookshelf</div>
+        <p class="cdesc">3D wooden bookshelf with 8 books — hover to lean forward, click to reveal full info panel. Flickering candle with dynamic point light casting live shadows across the scene.</p>
+        <div class="tags"><span class="tag">Hover Interaction</span><span class="tag">Info Panel</span><span class="tag">Candle Light</span></div>
+        <a href="demo/books.html" target="_blank" class="card-btn">View Demo <span class="arr">→</span></a>
       </div>
     </div>
 
@@ -278,69 +356,47 @@ footer{position:relative;z-index:2;border-top:1px solid rgba(124,58,237,.08);pad
     <div class="card wide" data-d="0" data-cat="space">
       <div class="cimg"><span class="badge">Art Gallery</span><img src="https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=1000&q=85" alt="Vault"></div>
       <div class="cbody">
-        <div class="cnum">09</div>
+        <div class="cnum">03</div>
         <div class="ctitle">Vault — 3D Art Gallery Walkthrough</div>
-        <p class="cdesc">Three navigable gallery rooms in Three.js. Spot-lit framed artworks on real geometry walls. Camera glides smoothly between rooms via arrow navigation. Click any artwork to reveal title, artist, year, description, and price.</p>
-        <div class="tags"><span class="tag">3D Rooms</span><span class="tag">Camera Navigation</span><span class="tag">Raycaster</span><span class="tag">Spot Lighting</span></div>
-        <a href="demo/artgallery.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
+        <p class="cdesc">Three fully navigable gallery rooms in WebGL. Spot-lit framed artworks on real 3D walls. Camera glides between rooms via arrow navigation. Click any artwork to reveal title, artist, year, description, and price.</p>
+        <div class="tags"><span class="tag">3D Rooms</span><span class="tag">Camera Navigation</span><span class="tag">Click to Reveal</span><span class="tag">Spot Lighting</span></div>
+        <a href="demo/artgallery.html" target="_blank" class="card-btn">View Demo <span class="arr">→</span></a>
       </div>
     </div>
 
     <div class="card" data-d="0" data-cat="space">
-      <div class="cimg"><span class="badge">3D Room Builder</span><img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=700&q=85" alt="Form"></div>
-      <div class="cbody">
-        <div class="cnum">10</div>
-        <div class="ctitle">Form — 3D Furniture Studio</div>
-        <p class="cdesc">Fully furnished 3D room — sofa, table, chairs, sideboard, floor lamp, rug. Drag to orbit at any angle. Wood switcher (Walnut / Oak / Ash / Ebony) and fabric switcher (Linen / Velvet / Leather / Bouclé) update live.</p>
-        <div class="tags"><span class="tag">Full 3D Room</span><span class="tag">Orbit Control</span><span class="tag">Dual Switcher</span></div>
-        <a href="demo/furniture.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
-      </div>
-    </div>
-
-    <div class="card" data-d="80" data-cat="space luxury">
       <div class="cimg"><span class="badge">Luxury Real Estate</span><img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=700&q=85" alt="Haven"></div>
       <div class="cbody">
-        <div class="cnum">11</div>
+        <div class="cnum">04</div>
         <div class="ctitle">Haven — Luxury Real Estate</div>
-        <p class="cdesc">Architectural wireframe house from Three.js Line geometry with semi-transparent wall planes and floating data points with connection lines. Slow rotation, teal glow, star field.</p>
+        <p class="cdesc">Architectural wireframe house built entirely from 3D line geometry — semi-transparent walls, floating data points with connection lines, teal glow effects, and a deep star field backdrop.</p>
         <div class="tags"><span class="tag">Wireframe Arch</span><span class="tag">Line Geometry</span><span class="tag">Data Points</span></div>
-        <a href="demo/realestate.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
+        <a href="demo/realestate.html" target="_blank" class="card-btn">View Demo <span class="arr">→</span></a>
       </div>
     </div>
 
-    <div class="card" data-d="160" data-cat="space">
+    <div class="card" data-d="80" data-cat="space">
       <div class="cimg"><span class="badge">Travel Globe</span><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=700&q=85" alt="Atlas"></div>
       <div class="cbody">
-        <div class="cnum">12</div>
+        <div class="cnum">05</div>
         <div class="ctitle">Atlas — Interactive Travel Globe</div>
-        <p class="cdesc">Rotating Earth sphere with continent patches, lat/lon grid lines, cloud layer, 3,000 background stars, and 8 clickable destination pins with pulsing rings. Drag to explore any hemisphere.</p>
+        <p class="cdesc">Rotating Earth with continent patches, lat/lon grid lines, cloud layer, 3,000 background stars, and 8 clickable destination pins with pulsing rings. Drag any direction to explore.</p>
         <div class="tags"><span class="tag">Earth Globe</span><span class="tag">Destination Pins</span><span class="tag">Drag Rotate</span></div>
-        <a href="demo/travel.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
+        <a href="demo/travel.html" target="_blank" class="card-btn">View Demo <span class="arr">→</span></a>
       </div>
     </div>
 
-    <!-- NATURE & CULTURE -->
-    <div class="cat-divider"><span class="cd-label">Nature &amp; Culture</span><div class="cd-line"></div></div>
+    <!-- FOOD & DRINK -->
+    <div class="cat-divider"><span class="cd-label">Food &amp; Drink</span><div class="cd-line"></div></div>
 
-    <div class="card wide" data-d="0" data-cat="nature">
-      <div class="cimg"><span class="badge">Japanese Wellness</span><img src="https://images.unsplash.com/photo-1522383225653-ed111181a951?w=1000&q=85" alt="Sakura"></div>
+    <div class="card" data-d="0" data-cat="food">
+      <div class="cimg"><span class="badge">Bean to Bar</span><img src="https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=700&q=85" alt="Cacao"></div>
       <div class="cbody">
-        <div class="cnum">13</div>
-        <div class="ctitle">Sakura — Cherry Blossom Sanctuary</div>
-        <p class="cdesc">Parametric cherry blossom forest with 5 procedural trees built through recursive branching, 600 falling petal particles with real wind simulation, glint sparkle layer, atmospheric FogExp2, and mouse parallax shifting the whole scene.</p>
-        <div class="tags"><span class="tag">Procedural Trees</span><span class="tag">600 Petals</span><span class="tag">Wind Sim</span><span class="tag">Mouse Parallax</span></div>
-        <a href="demo/sakura.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
-      </div>
-    </div>
-
-    <div class="card" data-d="0" data-cat="nature">
-      <div class="cimg"><span class="badge">Rare Books</span><img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=700&q=85" alt="Folio"></div>
-      <div class="cbody">
-        <div class="cnum">14</div>
-        <div class="ctitle">Folio — 3D Interactive Bookshelf</div>
-        <p class="cdesc">3D wooden bookshelf with 8 books. Hover to lean forward, click to reveal info panel — title, author, genre, synopsis. Flickering candle with dynamic point light and shadow mapping.</p>
-        <div class="tags"><span class="tag">Hover Lean</span><span class="tag">Info Panel</span><span class="tag">Candle Light</span></div>
-        <a href="demo/books.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
+        <div class="cnum">06</div>
+        <div class="ctitle">Cacao — Premium Chocolate</div>
+        <p class="cdesc">Segmented 3D chocolate bar with groove details and a floating broken piece. Live variety switcher — Dark, Milk, White, Ruby — swaps material colour, roughness and glow in real time.</p>
+        <div class="tags"><span class="tag">Material Switcher</span><span class="tag">Particle Dust</span><span class="tag">Drag Rotate</span></div>
+        <a href="demo/chocolate.html" target="_blank" class="card-btn">View Demo <span class="arr">→</span></a>
       </div>
     </div>
 
@@ -350,94 +406,200 @@ footer{position:relative;z-index:2;border-top:1px solid rgba(124,58,237,.08);pad
     <div class="card" data-d="0" data-cat="data">
       <div class="cimg"><span class="badge">Data Platform</span><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=700&q=85" alt="Prism"></div>
       <div class="cbody">
-        <div class="cnum">15</div>
+        <div class="cnum">07</div>
         <div class="ctitle">Prism — 3D Statistics Dashboard</div>
-        <p class="cdesc">Three.js 3D bar chart that grows on load. Below: Canvas 2D bar chart, donut chart with legend, animated line chart with two series, and a data table with animated percentage bars. Zero external chart libraries.</p>
-        <div class="tags"><span class="tag">3D Bar Chart</span><span class="tag">Canvas 2D</span><span class="tag">Live Animation</span><span class="tag">KPI Cards</span></div>
-        <a href="demo/stats.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
+        <p class="cdesc">Three.js 3D bar chart that grows on load. Below: animated Canvas bar chart, donut chart with legend, dual-line chart, and a data table with live percentage bars. Zero chart libraries.</p>
+        <div class="tags"><span class="tag">3D Bar Chart</span><span class="tag">Canvas 2D</span><span class="tag">Animated Data</span></div>
+        <a href="demo/stats.html" target="_blank" class="card-btn">View Demo <span class="arr">→</span></a>
       </div>
     </div>
 
     <div class="card wide" data-d="80" data-cat="data">
       <div class="cimg"><span class="badge">Image Gallery</span><img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1000&q=85" alt="Orbit"></div>
       <div class="cbody">
-        <div class="cnum">16</div>
+        <div class="cnum">08</div>
         <div class="ctitle">Orbit — Circular Image Formation</div>
-        <p class="cdesc">Eight real images arranged in a spinning 3D ring in WebGL space. Drag to rotate manually. Click any image — it scales up, the ring rotates to bring it front and centre, and an info panel slides up. Star field background with halo particle trail.</p>
-        <div class="tags"><span class="tag">3D Ring Formation</span><span class="tag">Texture Loading</span><span class="tag">Drag Rotate</span><span class="tag">Click Reveal</span></div>
-        <a href="demo/orbit.html" target="_blank" class="btn">View Demo <span class="arr">→</span></a>
+        <p class="cdesc">Eight real images spinning in a 3D ring in WebGL space. Drag to rotate manually. Click any image — it scales forward, the ring rotates to bring it centre stage, and an info panel slides up from below.</p>
+        <div class="tags"><span class="tag">3D Ring</span><span class="tag">Texture Loading</span><span class="tag">Drag Rotate</span><span class="tag">Click Reveal</span></div>
+        <a href="demo/orbit.html" target="_blank" class="card-btn">View Demo <span class="arr">→</span></a>
       </div>
     </div>
 
-  </div><!-- /grid -->
+  </div>
+
+  <!-- MID CTA -->
+  <div style="text-align:center;margin-top:72px;opacity:0;transform:translateY(20px);transition:opacity .8s,transform .8s" class="mid-cta">
+    <p style="font-size:1.1rem;color:var(--text);margin-bottom:24px">Like what you see? Let's build something for your brand.</p>
+    <a href="#contact" class="btn-primary">Start a Conversation <span class="arr">→</span></a>
+  </div>
 </section>
 
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="contact-inner">
+    <div class="sec-label" style="opacity:1;transform:none">Get In Touch</div>
+    <h2 class="sec-title" style="opacity:1;transform:none">Let's build something <em>extraordinary</em></h2>
+    <p class="sec-sub" style="opacity:1;transform:none;margin-bottom:48px">Tell me about your project. I'll come back to you within 24 hours.</p>
+
+    <form id="contactForm">
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label" for="fname">Full Name *</label>
+          <input class="form-input" type="text" id="fname" name="entry.NAME_ID" placeholder="Your name" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="femail">Email Address *</label>
+          <input class="form-input" type="email" id="femail" name="entry.EMAIL_ID" placeholder="your@email.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="fbrand">Brand / Company Name</label>
+          <input class="form-input" type="text" id="fbrand" name="entry.BRAND_ID" placeholder="Your brand name">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="ftype">Project Type *</label>
+          <select class="form-select" id="ftype" name="entry.TYPE_ID" required>
+            <option value="" disabled selected>Select project type</option>
+            <option>3D Hero Section</option>
+            <option>Full Landing Page</option>
+            <option>Product Configurator</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="fbudget">Budget Range *</label>
+          <select class="form-select" id="fbudget" name="entry.BUDGET_ID" required>
+            <option value="" disabled selected>Select your budget</option>
+            <option>$500 – $1,000</option>
+            <option>$1,000 – $2,000</option>
+            <option>$2,000 – $3,000</option>
+            <option>$3,000+</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="fhow">How did you find me?</label>
+          <select class="form-select" id="fhow" name="entry.HOW_ID">
+            <option value="" disabled selected>Select one</option>
+            <option>Instagram</option>
+            <option>LinkedIn</option>
+            <option>Google</option>
+            <option>Referral</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label class="form-label" for="fmsg">Tell me about your project *</label>
+          <textarea class="form-textarea" id="fmsg" name="entry.MSG_ID" placeholder="Describe your brand, what you need, any inspiration you have, your timeline..." required></textarea>
+        </div>
+      </div>
+      <button type="submit" class="form-submit" id="submitBtn">
+        Send Message <span class="arr">→</span>
+      </button>
+    </form>
+
+    <div class="form-success" id="formSuccess">
+      <span class="fs-icon">✦</span>
+      <div class="fs-title">Message received.</div>
+      <p class="fs-sub">I'll be back in touch within 24 hours.<br>In the meantime, follow along on Instagram: <strong>@3djester.dev</strong></p>
+    </div>
+
+    <p style="margin-top:28px;font-size:.85rem;color:var(--textmid)">Or email directly: <a href="mailto:3djesterstudio@gmail.com" style="color:var(--vl);text-decoration:none">3djesterstudio@gmail.com</a></p>
+  </div>
+</section>
+
+<!-- BOTTOM CTA -->
 <section class="cta-strip">
-  <h2 class="cta-h">Ready to build something <em>extraordinary?</em></h2>
-  <p class="cta-sub">Every demo here was built from scratch in WebGL. Your brand deserves the same treatment.</p>
-  <a href="mailto:hello@studio3d.co" class="cta-btn">Start a Project <span>→</span></a>
+  <h2 class="cta-h">Your brand deserves a website<br>as good as your <em>product.</em></h2>
+  <p class="cta-sub">Most luxury brands have a stunning Instagram and a flat, forgettable website. Let's fix that.</p>
+  <div class="cta-buttons">
+    <a href="#contact" class="btn-primary">Start a Project <span class="arr">→</span></a>
+    <a href="mailto:3djesterstudio@gmail.com" class="btn-secondary">Email Directly <span class="arr">→</span></a>
+  </div>
 </section>
 
 <footer>
-  <div class="ft-brand">Studio 3D</div>
+  <div class="ft-brand">3D<span>JESTER</span></div>
   <div class="ft-links">
     <a href="#work" class="ft-link">Work</a>
-    <a href="mailto:hello@studio3d.co" class="ft-link">Contact</a>
+    <a href="#contact" class="ft-link">Contact</a>
+    <a href="https://instagram.com/3djester.dev" target="_blank" class="ft-link">Instagram</a>
   </div>
-  <div class="ft-copy">© 2025 Studio 3D — All rights reserved</div>
+  <div class="ft-copy">© 2026 3DJESTER — All rights reserved</div>
 </footer>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-// ── THREE.JS PARTICLE NEBULA BACKGROUND ──
+// ── THREE.JS BACKGROUND — bright nebula with purple + blue + pink ──
 (function(){
   const canvas=document.getElementById('three-bg');
   const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
   renderer.setPixelRatio(Math.min(devicePixelRatio,2));
   renderer.setSize(innerWidth,innerHeight);
-  renderer.setClearColor(0x04030d,1);
+  renderer.setClearColor(0x0d0a1f,1);
   const scene=new THREE.Scene();
   const camera=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,0.1,1000);
   camera.position.z=5;
 
-  function makeParticles(count,radius,color,size,speed){
+  // Bright vibrant particle layers
+  function makeParticles(count,radius,color,size,speed,opacity){
     const geo=new THREE.BufferGeometry();
     const pos=new Float32Array(count*3);
     for(let i=0;i<count;i++){
-      const theta=Math.random()*Math.PI*2,phi=Math.acos(2*Math.random()-1),r=radius*(0.4+Math.random()*0.6);
-      pos[i*3]=r*Math.sin(phi)*Math.cos(theta);pos[i*3+1]=r*Math.sin(phi)*Math.sin(theta);pos[i*3+2]=r*Math.cos(phi)-2;
+      const theta=Math.random()*Math.PI*2,phi=Math.acos(2*Math.random()-1),r=radius*(0.3+Math.random()*0.7);
+      pos[i*3]=r*Math.sin(phi)*Math.cos(theta);
+      pos[i*3+1]=r*Math.sin(phi)*Math.sin(theta);
+      pos[i*3+2]=r*Math.cos(phi)-1;
     }
     geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
-    const mat=new THREE.PointsMaterial({color,size,transparent:true,opacity:0.75,blending:THREE.AdditiveBlending,depthWrite:false,sizeAttenuation:true});
-    const pts=new THREE.Points(geo,mat);pts.userData={speed};return pts;
+    const mat=new THREE.PointsMaterial({color,size,transparent:true,opacity,blending:THREE.AdditiveBlending,depthWrite:false,sizeAttenuation:true});
+    const pts=new THREE.Points(geo,mat);
+    pts.userData={speed,baseOp:opacity};
+    return pts;
   }
+
   const layers=[
-    makeParticles(2800,8,0x7c3aed,0.018,0.0003),
-    makeParticles(1600,5,0xa855f7,0.012,0.0005),
-    makeParticles(800,3,0xc084fc,0.022,0.0007),
-    makeParticles(400,2,0xe879f9,0.030,0.001),
+    makeParticles(3000,9,0x7c3aed,0.022,0.00025,0.9),  // purple
+    makeParticles(2000,6,0x60a5fa,0.016,0.0004,0.85),   // blue
+    makeParticles(1200,4,0xa78bfa,0.028,0.0006,0.8),    // light purple
+    makeParticles(600,3,0xf472b6,0.034,0.0009,0.75),    // pink
+    makeParticles(300,2,0x22d3ee,0.040,0.0012,0.9),     // cyan bright
   ];
   layers.forEach(l=>scene.add(l));
 
-  function makeGlow(color,x,y,z,scale){
-    const m=new THREE.Mesh(new THREE.SphereGeometry(1.5,16,16),new THREE.MeshBasicMaterial({color,transparent:true,opacity:0.04,blending:THREE.AdditiveBlending,depthWrite:false}));
+  // Glowing nebula spheres — brighter and more colourful
+  function makeGlow(color,x,y,z,scale,op){
+    const m=new THREE.Mesh(
+      new THREE.SphereGeometry(1.5,16,16),
+      new THREE.MeshBasicMaterial({color,transparent:true,opacity:op,blending:THREE.AdditiveBlending,depthWrite:false})
+    );
     m.position.set(x,y,z);m.scale.setScalar(scale);return m;
   }
-  scene.add(makeGlow(0x7c3aed,-1,0,-4,2.5),makeGlow(0xa855f7,2,1,-5,2),makeGlow(0x4a0e6b,-2,-1,-3,1.8));
+  scene.add(
+    makeGlow(0x7c3aed,-1.5,0.5,-4,3,.07),
+    makeGlow(0x60a5fa,2,-0.5,-5,2.5,.06),
+    makeGlow(0xf472b6,-0.5,1.5,-3,1.8,.05),
+    makeGlow(0x22d3ee,1.5,-1,-4,2,.05),
+    makeGlow(0xa78bfa,0,0,-6,4,.04),
+  );
 
   let mx=0,my=0;
-  document.addEventListener('mousemove',e=>{mx=(e.clientX/innerWidth-.5)*0.6;my=(e.clientY/innerHeight-.5)*0.4;});
+  document.addEventListener('mousemove',e=>{mx=(e.clientX/innerWidth-.5)*0.5;my=(e.clientY/innerHeight-.5)*0.35;});
   window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
 
   let t=0;
   (function animate(){
-    requestAnimationFrame(animate);t+=0.008;
-    layers.forEach(l=>{l.rotation.y+=l.userData.speed;l.rotation.x+=l.userData.speed*0.4;});
-    layers[2].material.opacity=0.55+0.25*Math.sin(t*1.3);
-    layers[3].material.opacity=0.65+0.35*Math.sin(t*2.1);
-    camera.position.x+=(mx-camera.position.x)*0.03;
-    camera.position.y+=(-my-camera.position.y)*0.03;
+    requestAnimationFrame(animate);t+=0.007;
+    layers.forEach((l,i)=>{
+      l.rotation.y+=l.userData.speed;
+      l.rotation.x+=l.userData.speed*0.35;
+      l.rotation.z+=l.userData.speed*0.15;
+    });
+    // Pulse opacity for twinkling
+    layers[2].material.opacity=0.7+0.25*Math.sin(t*1.4);
+    layers[3].material.opacity=0.6+0.3*Math.sin(t*2.2+1);
+    layers[4].material.opacity=0.8+0.2*Math.sin(t*1.8+2);
+    camera.position.x+=(mx-camera.position.x)*0.025;
+    camera.position.y+=(-my-camera.position.y)*0.025;
     camera.lookAt(0,0,0);
     renderer.render(scene,camera);
   })();
@@ -451,7 +613,7 @@ const io=new IntersectionObserver(ee=>{
     io.unobserve(e.target);
   }});
 },{threshold:.06});
-document.querySelectorAll('.card,.sec-eyebrow,.sec-title,.sec-sub,.filter-tabs,.cat-divider,.cta-h,.cta-sub,.cta-btn').forEach(el=>io.observe(el));
+document.querySelectorAll('.card,.sec-label,.sec-title,.sec-sub,.filter-tabs,.cat-divider,.cta-h,.cta-sub,.cta-buttons,.what-item,.mid-cta').forEach(el=>io.observe(el));
 
 // ── FILTER TABS ──
 document.querySelectorAll('.ftab').forEach(tab=>{
@@ -461,36 +623,83 @@ document.querySelectorAll('.ftab').forEach(tab=>{
     const filter=tab.dataset.filter;
     document.querySelectorAll('.card').forEach(card=>{
       const cats=card.dataset.cat||'';
-      const show=filter==='all'||cats.includes(filter);
-      card.style.display=show?'flex':'none';
+      card.style.display=(filter==='all'||cats.includes(filter))?'flex':'none';
     });
     document.querySelectorAll('.cat-divider').forEach(d=>{
       d.style.display=filter==='all'?'flex':'none';
     });
-    // sparkle
-    const r=tab.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
-    const cols=['#a855f7','#c084fc','#fff'];
-    for(let i=0;i<10;i++){
-      const s=document.createElement('div');s.className='sp';
-      const a=(i/10)*Math.PI*2,d=18+Math.random()*32,sz=2+Math.random()*3;
-      s.style.cssText=`left:${cx-sz/2}px;top:${cy-sz/2}px;width:${sz}px;height:${sz}px;background:${cols[i%cols.length]};--tx:${Math.cos(a)*d}px;--ty:${Math.sin(a)*d}px;box-shadow:0 0 4px ${cols[0]}`;
-      document.body.appendChild(s);setTimeout(()=>s.remove(),700);
-    }
+    sparkle(tab,['#a78bfa','#60a5fa','#f472b6']);
   });
 });
 
-// ── BUTTON SPARKLE ──
-document.querySelectorAll('.btn,.cta-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    const r=btn.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
-    const cols=['#a855f7','#c084fc','#e879f9','#fff'];
-    for(let i=0;i<14;i++){
-      const s=document.createElement('div');s.className='sp';
-      const a=(i/14)*Math.PI*2+Math.random()*.3,d=38+Math.random()*50,sz=3+Math.random()*5;
-      s.style.cssText=`left:${cx-sz/2}px;top:${cy-sz/2}px;width:${sz}px;height:${sz}px;background:${cols[i%cols.length]};--tx:${Math.cos(a)*d}px;--ty:${Math.sin(a)*d}px;box-shadow:0 0 5px ${cols[0]}`;
-      document.body.appendChild(s);setTimeout(()=>s.remove(),700);
-    }
+// ── RIPPLE on buttons ──
+function addRipple(el){
+  el.addEventListener('click',function(e){
+    const r=this.getBoundingClientRect();
+    const rip=document.createElement('span');
+    rip.className='ripple';
+    const size=Math.max(r.width,r.height)*2;
+    rip.style.cssText=`width:${size}px;height:${size}px;left:${e.clientX-r.left-size/2}px;top:${e.clientY-r.top-size/2}px`;
+    this.appendChild(rip);
+    setTimeout(()=>rip.remove(),700);
   });
+}
+document.querySelectorAll('.btn-primary,.btn-secondary,.card-btn,.form-submit,.nav-cta').forEach(addRipple);
+
+// ── SPARKLE ──
+function sparkle(el,cols){
+  const r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+  for(let i=0;i<14;i++){
+    const s=document.createElement('div');s.className='sp';
+    const a=(i/14)*Math.PI*2+Math.random()*.3,d=24+Math.random()*50,sz=2+Math.random()*5;
+    s.style.cssText=`left:${cx-sz/2}px;top:${cy-sz/2}px;width:${sz}px;height:${sz}px;background:${cols[i%cols.length]};--tx:${Math.cos(a)*d}px;--ty:${Math.sin(a)*d}px;box-shadow:0 0 6px ${cols[0]}`;
+    document.body.appendChild(s);setTimeout(()=>s.remove(),750);
+  }
+}
+document.querySelectorAll('.btn-primary,.btn-secondary,.card-btn,.cta-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>sparkle(btn,['#a78bfa','#60a5fa','#f472b6','#22d3ee','#fff']));
+});
+
+// ── CONTACT FORM — Google Forms silent submit ──
+// IMPORTANT: Replace the URL below with your actual Google Forms POST URL
+// and replace each entry.XXXXX with your actual field IDs
+const FORM_URL='https://docs.google.com/forms/d/e/YOUR_FORM_ID/formResponse';
+
+document.getElementById('contactForm').addEventListener('submit',async function(e){
+  e.preventDefault();
+  const btn=document.getElementById('submitBtn');
+  btn.classList.add('loading');
+  btn.textContent='Sending...';
+
+  const data=new FormData(this);
+  // Map our named fields to Google Forms entry IDs
+  // You need to replace these entry IDs with your real ones
+  const params=new URLSearchParams({
+    'entry.NAME_ID':   data.get('entry.NAME_ID'),
+    'entry.EMAIL_ID':  data.get('entry.EMAIL_ID'),
+    'entry.BRAND_ID':  data.get('entry.BRAND_ID'),
+    'entry.TYPE_ID':   data.get('entry.TYPE_ID'),
+    'entry.BUDGET_ID': data.get('entry.BUDGET_ID'),
+    'entry.HOW_ID':    data.get('entry.HOW_ID'),
+    'entry.MSG_ID':    data.get('entry.MSG_ID'),
+  });
+
+  try{
+    // Silent background submit using no-cors
+    await fetch(FORM_URL,{
+      method:'POST',
+      mode:'no-cors',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:params.toString()
+    });
+  }catch(err){
+    // no-cors fetch always "fails" from JS perspective but data still sends
+  }
+
+  // Show success regardless — no-cors doesn't let us read the response
+  document.getElementById('contactForm').style.display='none';
+  document.getElementById('formSuccess').classList.add('show');
+  sparkle(btn,['#22d3ee','#a78bfa','#f472b6','#fff']);
 });
 </script>
 </body>
