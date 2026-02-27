@@ -5,193 +5,368 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cacao — Premium Chocolate House</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#080402;--gold:#c9a84c;--cream:#f5e8d0;--warm:#e8c890;--gray:#7a5a3a;--white:#fdf4e0}
+:root{
+  --bg:#1a0d06;--bg2:#2a1509;
+  --brown:#6b3a1f;--mid:#8b4f28;
+  --gold:#c9903a;--gold2:#e8b060;
+  --cream:#f5e6cc;--cream2:#fdf4e3;
+  --warm:#d4956a;--text:#c4956a;--textdark:#8a5a35;
+  --white:#fff8f0;--card:rgba(42,21,9,.85);--border:rgba(201,144,58,.2);
+}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden}
-nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:22px 60px;background:rgba(8,4,2,.8);backdrop-filter:blur(20px);border-bottom:1px solid rgba(201,168,76,.1)}
-.nav-brand{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;font-style:italic;color:var(--gold);text-decoration:none}
-.nav-links{display:flex;gap:40px}
-.nav-link{font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:rgba(201,168,76,.4);text-decoration:none;transition:color .3s}
-.nav-link:hover{color:var(--gold)}
-.nav-back{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--gray);text-decoration:none;transition:color .3s;border-left:1px solid rgba(201,168,76,.12);padding-left:24px}
-.nav-back:hover{color:var(--gold)}
-.hero{position:relative;height:100vh;overflow:hidden;display:flex;align-items:center}
+body{background:var(--bg);color:var(--cream);font-family:'DM Sans',sans-serif;font-weight:400;overflow-x:hidden}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:20px 56px;background:rgba(26,13,6,.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-brand{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;font-style:italic;color:var(--gold2);text-decoration:none;letter-spacing:.04em}
+.nav-links{display:flex;gap:36px}
+.nav-link{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--textdark);text-decoration:none;transition:color .3s}
+.nav-link:hover{color:var(--gold2)}
+.nav-back{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--textdark);text-decoration:none;transition:color .3s;padding-left:20px;border-left:1px solid var(--border)}
+.nav-back:hover{color:var(--gold2)}
+.hero{position:relative;height:100vh;overflow:hidden;display:flex;align-items:center;background:linear-gradient(135deg,#1a0d06 0%,#2e1508 45%,#1f0e07 100%)}
 #cacaoCanvas{position:absolute;inset:0;z-index:1;cursor:grab}
 #cacaoCanvas:active{cursor:grabbing}
-.hero-content{position:relative;z-index:10;padding:0 0 0 80px;max-width:440px;pointer-events:none}
-.hero-eye{font-weight:200;font-size:10px;letter-spacing:.55em;text-transform:uppercase;color:var(--gold);margin-bottom:24px;display:block;opacity:0;animation:fu .8s ease forwards .3s}
-.hero-h1{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(3rem,5.5vw,5.5rem);line-height:1.06;margin-bottom:20px;opacity:0;animation:fu 1.2s ease forwards .5s}
-.hero-h1 em{font-style:italic;color:var(--gold)}
-.hero-sub{font-size:.95rem;color:var(--gray);line-height:1.9;margin-bottom:40px;font-weight:200;opacity:0;animation:fu 1s ease forwards .8s}
-.hero-ctas{display:flex;gap:14px;opacity:0;animation:fu .9s ease forwards 1s;pointer-events:all}
-.btn-gold{padding:12px 32px;background:transparent;border:1px solid var(--gold);color:var(--gold);font-size:11px;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;transition:background .3s,color .3s,box-shadow .3s,transform .2s;display:inline-flex;align-items:center;gap:9px;position:relative;overflow:hidden}
-.btn-gold::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,#7a5c20,var(--gold));transform:translateX(-100%);transition:transform .3s;z-index:-1}
-.btn-gold:hover{color:#080402;box-shadow:0 0 28px rgba(201,168,76,.3);transform:translateY(-2px)}
-.btn-gold:hover::before{transform:translateX(0)}
-.drag-hint{position:absolute;bottom:38px;left:50%;transform:translateX(-50%);z-index:10;font-weight:200;font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:rgba(201,168,76,.35);opacity:0;animation:fu .8s ease forwards 1.5s}
-.flavour-picker{position:absolute;right:80px;top:50%;transform:translateY(-50%);z-index:10;display:flex;flex-direction:column;gap:8px;opacity:0;animation:fu .9s ease forwards 1.3s}
-.fp-label{font-weight:200;font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:rgba(201,168,76,.4);margin-bottom:6px;text-align:right}
-.fl-row{display:flex;flex-direction:column;align-items:center;gap:4px}
-.fl-btn{width:48px;height:48px;border-radius:4px;border:2px solid transparent;cursor:pointer;transition:transform .2s,border-color .3s,box-shadow .3s}
-.fl-btn.active{border-color:var(--gold);box-shadow:0 0 16px rgba(201,168,76,.3);transform:scale(1.1)}
-.fl-btn:hover:not(.active){transform:scale(1.06)}
-.fl-btn[data-fl="dark"]{background:linear-gradient(135deg,#1a0a04,#3a1a08)}
-.fl-btn[data-fl="milk"]{background:linear-gradient(135deg,#6a3a18,#c07840)}
-.fl-btn[data-fl="white"]{background:linear-gradient(135deg,#f0e0c0,#d4b880)}
-.fl-btn[data-fl="ruby"]{background:linear-gradient(135deg,#6a1a20,#c04050)}
-.fl-name{font-weight:200;font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:rgba(201,168,76,.45)}
-.collection{padding:120px 80px;max-width:1400px;margin:0 auto}
-.coll-h{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2rem,4vw,3.5rem);margin-bottom:72px;letter-spacing:.02em;opacity:0;transform:translateY(20px);transition:opacity .8s,transform .8s;text-align:center;color:var(--cream)}
-.coll-h.on{opacity:1;transform:translateY(0)}
-.bars{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;background:rgba(201,168,76,.05)}
-.bar{background:rgba(14,8,4,.9);opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease,background .3s;cursor:pointer}
+.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:180px;z-index:2;background:linear-gradient(to top,var(--bg),transparent);pointer-events:none}
+.hero-content{position:relative;z-index:10;padding:0 0 0 72px;max-width:460px;pointer-events:none}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;padding:5px 16px;background:rgba(201,144,58,.12);border:1px solid rgba(201,144,58,.3);color:var(--gold2);font-size:10px;font-weight:500;letter-spacing:.28em;text-transform:uppercase;margin-bottom:28px;opacity:0;animation:fu .8s ease forwards .3s}
+.hero-h1{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(3rem,5.5vw,5.5rem);line-height:1.05;margin-bottom:20px;color:var(--cream2);opacity:0;animation:fu 1.2s ease forwards .5s}
+.hero-h1 em{font-style:italic;color:var(--gold2)}
+.hero-sub{font-size:.95rem;color:var(--warm);line-height:1.9;margin-bottom:36px;font-weight:300;opacity:0;animation:fu 1s ease forwards .8s;max-width:360px}
+.hero-btn{display:inline-flex;align-items:center;gap:10px;padding:13px 36px;background:linear-gradient(135deg,var(--brown),var(--mid));color:var(--cream2);font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;border:1px solid var(--gold);transition:all .3s;opacity:0;animation:fu .9s ease forwards 1s;pointer-events:all;box-shadow:0 4px 20px rgba(107,58,31,.4)}
+.hero-btn:hover{background:linear-gradient(135deg,var(--mid),var(--gold));transform:translateY(-3px);box-shadow:0 8px 32px rgba(201,144,58,.35)}
+.arr{transition:transform .3s}.hero-btn:hover .arr{transform:translateX(5px)}
+.variety-picker{position:absolute;right:72px;top:50%;transform:translateY(-50%);z-index:10;opacity:0;animation:fu .9s ease forwards 1.2s}
+.vp-label{font-size:9px;font-weight:500;letter-spacing:.4em;text-transform:uppercase;color:var(--textdark);margin-bottom:12px;text-align:center}
+.vp-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.vp-btn{width:72px;height:72px;border:2px solid transparent;cursor:pointer;transition:all .25s;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:6px;overflow:hidden;position:relative;background:none}
+.vp-btn.active{border-color:var(--gold2);box-shadow:0 0 20px rgba(232,176,96,.4);transform:scale(1.08)}
+.vp-btn:hover:not(.active){transform:scale(1.05);border-color:rgba(201,144,58,.5)}
+.vp-btn img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.vp-btn:hover img{transform:scale(1.1)}
+.vp-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(26,13,6,.9) 0%,transparent 55%)}
+.vp-name{font-size:8px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--cream2);position:relative;z-index:1;line-height:1}
+.bar-display{position:absolute;bottom:80px;left:72px;z-index:10;opacity:0;animation:fu .9s ease forwards 1.4s}
+.bd-variety{font-size:10px;font-weight:500;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.bd-name{font-family:'Playfair Display',serif;font-style:italic;font-size:1.4rem;color:var(--cream2)}
+.drag-hint{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);z-index:10;font-size:9px;font-weight:400;letter-spacing:.35em;text-transform:uppercase;color:rgba(201,144,58,.4);opacity:0;animation:fu .8s ease forwards 1.6s}
+.collection{padding:100px 72px;background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%)}
+.sec-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:52px;flex-wrap:wrap;gap:20px}
+.sec-eyebrow{font-size:10px;font-weight:500;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.sec-title{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(1.8rem,3.5vw,3rem);color:var(--cream2);line-height:1.15}
+.sec-title em{font-style:italic;color:var(--gold2)}
+.sec-desc{font-size:.9rem;color:var(--text);line-height:1.8;max-width:300px;font-weight:300}
+.bars{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.bar{background:var(--card);border:1px solid var(--border);overflow:hidden;cursor:pointer;opacity:0;transform:translateY(28px);transition:opacity .6s,transform .6s,border-color .3s,box-shadow .3s}
 .bar.on{opacity:1;transform:translateY(0)}
-.bar:hover{background:rgba(26,12,6,.95)}
-.bar-img{aspect-ratio:1;overflow:hidden;position:relative}
-.bar-img img{width:100%;height:100%;object-fit:cover;filter:brightness(.65) saturate(.9);transition:transform .7s,filter .4s}
-.bar:hover .bar-img img{transform:scale(1.06);filter:brightness(.8) saturate(1.1)}
-.bar-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(8,4,2,.98) 0%,transparent 60%)}
-.bar-body{padding:20px 22px 28px}
-.bar-pct{font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;font-weight:200}
-.bar-name{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;color:var(--cream);margin-bottom:6px;transition:color .3s}
-.bar:hover .bar-name{color:var(--gold)}
-.bar-origin{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.9rem;color:var(--gray);margin-bottom:16px}
-.bar-foot{display:flex;justify-content:space-between;align-items:center;padding-top:12px;border-top:1px solid rgba(201,168,76,.08)}
-.bar-price{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--warm)}
-.bar-add{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);text-decoration:none;transition:letter-spacing .3s}
-.bar:hover .bar-add{letter-spacing:.3em}
-.prov{padding:100px 80px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1300px;margin:0 auto;opacity:0;transform:translateY(40px);transition:opacity .9s,transform .9s}
-.prov.on{opacity:1;transform:translateY(0)}
-.prov-img img{width:100%;height:520px;object-fit:cover;filter:brightness(.7) saturate(.9)}
-.prov-text .eye{font-size:9px;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:22px;font-weight:200}
-.prov-text h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(1.8rem,3vw,3rem);line-height:1.2;color:var(--cream);margin-bottom:22px}
-.prov-text p{font-size:.9rem;color:var(--gray);line-height:2;margin-bottom:14px;font-weight:200}
-.prov-text blockquote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:rgba(201,168,76,.6);border-left:1px solid rgba(201,168,76,.25);padding-left:20px;margin:24px 0;line-height:1.75}
-footer{border-top:1px solid rgba(201,168,76,.07);padding:52px 80px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
-.ft-brand{font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;color:var(--gold)}
-.ft-copy{font-size:12px;letter-spacing:.1em;color:var(--gray)}
-.ft-back{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gray);text-decoration:none;transition:color .3s}
-.ft-back:hover{color:var(--gold)}
+.bar:hover{border-color:rgba(201,144,58,.5);box-shadow:0 8px 40px rgba(107,58,31,.45)}
+.bar-img{aspect-ratio:3/4;overflow:hidden;position:relative}
+.bar-img img{width:100%;height:100%;object-fit:cover;filter:brightness(.78) saturate(.9);transition:transform .8s,filter .4s}
+.bar:hover .bar-img img{transform:scale(1.08);filter:brightness(.92) saturate(1.1)}
+.bar-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(26,13,6,1) 0%,rgba(26,13,6,.15) 55%,transparent 100%)}
+.bar-pct{position:absolute;top:14px;left:14px;z-index:2;font-size:9px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;padding:4px 11px;background:rgba(26,13,6,.75);border:1px solid var(--border);color:var(--gold2);backdrop-filter:blur(6px)}
+.bar-body{padding:18px 20px 24px}
+.bar-name{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:400;color:var(--cream2);margin-bottom:4px}
+.bar-origin{font-family:'Playfair Display',serif;font-style:italic;font-size:.85rem;color:var(--text);margin-bottom:12px}
+.bar-notes{font-size:.8rem;color:var(--textdark);margin-bottom:14px;line-height:1.65;font-weight:300}
+.bar-foot{display:flex;justify-content:space-between;align-items:center;padding-top:12px;border-top:1px solid rgba(201,144,58,.1)}
+.bar-price{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--gold2)}
+.bar-cta{font-size:9px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);transition:color .3s,letter-spacing .3s;text-decoration:none}
+.bar:hover .bar-cta{color:var(--gold2);letter-spacing:.3em}
+.story{padding:100px 72px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1300px;margin:0 auto;opacity:0;transform:translateY(40px);transition:opacity .9s,transform .9s}
+.story.on{opacity:1;transform:translateY(0)}
+.story-imgs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.story-imgs img{width:100%;object-fit:cover;display:block}
+.story-eyebrow{font-size:10px;font-weight:500;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:block}
+.story h2{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(1.8rem,3vw,2.8rem);color:var(--cream2);line-height:1.2;margin-bottom:20px}
+.story p{font-size:.92rem;color:var(--text);line-height:2;margin-bottom:16px;font-weight:300}
+.story blockquote{font-family:'Playfair Display',serif;font-style:italic;font-size:1.1rem;color:var(--gold2);border-left:2px solid var(--gold);padding-left:20px;margin:28px 0;line-height:1.7;opacity:.85}
+.origin-stats{display:flex;gap:32px;margin-top:32px;padding-top:28px;border-top:1px solid var(--border)}
+.os-n{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--gold2);line-height:1}
+.os-l{font-size:9px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--textdark);margin-top:5px}
+.tasting{padding:80px 72px;background:rgba(42,21,9,.5);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.tasting-inner{max-width:1100px;margin:0 auto;text-align:center}
+.tasting-title{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(1.6rem,3vw,2.5rem);color:var(--cream2);margin-bottom:48px}
+.tasting-title em{font-style:italic;color:var(--gold2)}
+.notes-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.note-card{padding:28px 22px;background:rgba(26,13,6,.75);border:1px solid var(--border);text-align:center;opacity:0;transform:translateY(20px);transition:opacity .6s,transform .6s,border-color .3s}
+.note-card.on{opacity:1;transform:translateY(0)}
+.note-card:hover{border-color:rgba(201,144,58,.45)}
+.note-icon{font-size:1.8rem;margin-bottom:12px;display:block}
+.note-name{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--cream2);margin-bottom:8px}
+.note-desc{font-size:.83rem;color:var(--text);line-height:1.7;font-weight:300}
+footer{border-top:1px solid var(--border);padding:48px 72px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;background:rgba(14,7,3,.8)}
+.ft-brand{font-family:'Playfair Display',serif;font-size:20px;font-style:italic;color:var(--gold2);letter-spacing:.04em}
+.ft-copy{font-size:12px;letter-spacing:.1em;color:var(--textdark)}
+.ft-back{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--textdark);text-decoration:none;transition:color .3s}
+.ft-back:hover{color:var(--gold2)}
 @keyframes fu{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 .sp{position:fixed;pointer-events:none;z-index:9999;border-radius:50%;animation:spa .65s ease forwards}
 @keyframes spa{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(0)}}
-@media(max-width:960px){nav{padding:20px 24px}.nav-links{display:none}.nav-back{border:none;padding:0}.hero-content{padding:0 0 0 28px}.flavour-picker{right:20px}.collection{padding:80px 24px}.bars{grid-template-columns:repeat(2,1fr)}.prov{grid-template-columns:1fr;padding:80px 28px;gap:40px}.prov-img img{height:300px}footer{flex-direction:column;text-align:center;padding:40px 24px}}
+@media(max-width:960px){
+  nav{padding:18px 24px}.nav-links{display:none}.nav-back{border:none;padding:0}
+  .hero-content{padding:0 0 0 24px;max-width:260px}
+  .hero-h1{font-size:2.5rem}
+  .variety-picker{right:14px}.vp-btn{width:54px;height:54px}
+  .collection{padding:72px 24px}.bars{grid-template-columns:repeat(2,1fr)}
+  .story{grid-template-columns:1fr;padding:72px 24px;gap:40px}
+  .notes-grid{grid-template-columns:repeat(2,1fr)}
+  .tasting{padding:60px 24px}
+  footer{flex-direction:column;text-align:center;padding:40px 24px}
+  .bar-display{left:24px}.origin-stats{gap:20px}
+}
 </style>
 </head>
 <body>
 <nav>
   <a href="../index.html" class="nav-brand">Cacao</a>
-  <div class="nav-links"><a href="#collection" class="nav-link">Collection</a><a href="#provenance" class="nav-link">Provenance</a></div>
+  <div class="nav-links">
+    <a href="#collection" class="nav-link">Collection</a>
+    <a href="#story" class="nav-link">Our Story</a>
+    <a href="#tasting" class="nav-link">Tasting Notes</a>
+  </div>
   <a href="../index.html" class="nav-back">← Portfolio</a>
 </nav>
+
 <section class="hero">
   <canvas id="cacaoCanvas"></canvas>
   <div class="hero-content">
-    <span class="hero-eye">Bean to Bar · Single Origin</span>
+    <div class="hero-tag">✦ Bean to Bar · Single Origin</div>
     <h1 class="hero-h1">Dark.<br><em>Complex.</em><br>Irreplaceable.</h1>
     <p class="hero-sub">Premium single-origin chocolate crafted from ethically sourced cacao. Every bar tells the story of its terroir.</p>
-    <div class="hero-ctas"><a href="#collection" class="btn-gold">Shop Collection →</a></div>
+    <a href="#collection" class="hero-btn">Shop Collection <span class="arr">→</span></a>
   </div>
-  <div class="flavour-picker">
-    <div class="fp-label">Variety</div>
-    <div class="fl-row"><div class="fl-btn active" data-fl="dark"></div><div class="fl-name">Dark 85%</div></div>
-    <div class="fl-row"><div class="fl-btn" data-fl="milk"></div><div class="fl-name">Milk 45%</div></div>
-    <div class="fl-row"><div class="fl-btn" data-fl="white"></div><div class="fl-name">White</div></div>
-    <div class="fl-row"><div class="fl-btn" data-fl="ruby"></div><div class="fl-name">Ruby</div></div>
+  <div class="variety-picker">
+    <div class="vp-label">Choose Variety</div>
+    <div class="vp-grid">
+      <div class="vp-btn active" data-fl="dark"><img src="https://images.unsplash.com/photo-1606312619070-d48b4c652a52?w=200&q=80" alt="Dark"><span class="vp-name">Dark</span></div>
+      <div class="vp-btn" data-fl="milk"><img src="https://images.unsplash.com/photo-1481391319762-47dff72954d9?w=200&q=80" alt="Milk"><span class="vp-name">Milk</span></div>
+      <div class="vp-btn" data-fl="white"><img src="https://images.unsplash.com/photo-1548907040-4baa42d10919?w=200&q=80" alt="White"><span class="vp-name">White</span></div>
+      <div class="vp-btn" data-fl="ruby"><img src="https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=200&q=80" alt="Ruby"><span class="vp-name">Ruby</span></div>
+    </div>
+  </div>
+  <div class="bar-display">
+    <div class="bd-variety" id="bdVariety">Dark 85% Cacao</div>
+    <div class="bd-name" id="bdName">Ecuador Noir</div>
   </div>
   <div class="drag-hint">✦ drag to rotate ✦</div>
 </section>
+
 <section class="collection" id="collection">
-  <h2 class="coll-h">Single Origin Bars</h2>
+  <div class="sec-header">
+    <div>
+      <div class="sec-eyebrow">Single Origin Collection</div>
+      <h2 class="sec-title">Bars that tell a <em>story</em></h2>
+    </div>
+    <p class="sec-desc">Each bar is traceable to a single farm, a single harvest, a single story of craft.</p>
+  </div>
   <div class="bars">
-    <div class="bar" data-d="0"><div class="bar-img"><img src="https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=500&q=80" alt="Chocolate"></div><div class="bar-body"><div class="bar-pct">85% Cacao</div><div class="bar-name">Ecuador Noir</div><div class="bar-origin">Arriba Nacional, Guayas Valley</div><div class="bar-foot"><span class="bar-price">€18</span><a href="#" class="bar-add">Add →</a></div></div></div>
-    <div class="bar" data-d="80"><div class="bar-img"><img src="https://images.unsplash.com/photo-1511381939415-e44015466834?w=500&q=80" alt="Chocolate"></div><div class="bar-body"><div class="bar-pct">72% Cacao</div><div class="bar-name">Madagascar Rouge</div><div class="bar-origin">Criollo, Sambirano Valley</div><div class="bar-foot"><span class="bar-price">€22</span><a href="#" class="bar-add">Add →</a></div></div></div>
-    <div class="bar" data-d="160"><div class="bar-img"><img src="https://images.unsplash.com/photo-1606312619070-d48b4c652a52?w=500&q=80" alt="Chocolate"></div><div class="bar-body"><div class="bar-pct">68% Cacao</div><div class="bar-name">Peru Floral</div><div class="bar-origin">Porcelana, Piura Alto</div><div class="bar-foot"><span class="bar-price">€26</span><a href="#" class="bar-add">Add →</a></div></div></div>
-    <div class="bar" data-d="240"><div class="bar-img"><img src="https://images.unsplash.com/photo-1481391319762-47dff72954d9?w=500&q=80" alt="Chocolate"></div><div class="bar-body"><div class="bar-pct">Ruby Cacao</div><div class="bar-name">Ruby Ceylon</div><div class="bar-origin">Ruby RB1, Sri Lanka</div><div class="bar-foot"><span class="bar-price">€32</span><a href="#" class="bar-add">Add →</a></div></div></div>
+    <div class="bar" data-d="0"><div class="bar-img"><span class="bar-pct">85% Cacao</span><img src="https://images.unsplash.com/photo-1606312619070-d48b4c652a52?w=500&q=85" alt="Ecuador Noir"></div><div class="bar-body"><div class="bar-name">Ecuador Noir</div><div class="bar-origin">Arriba Nacional, Guayas Valley</div><div class="bar-notes">Intense dark fruit, tobacco, leather finish</div><div class="bar-foot"><span class="bar-price">$18</span><a href="#" class="bar-cta">Discover →</a></div></div></div>
+    <div class="bar" data-d="80"><div class="bar-img"><span class="bar-pct">72% Cacao</span><img src="https://images.unsplash.com/photo-1511381939415-e44015466834?w=500&q=85" alt="Madagascar Rouge"></div><div class="bar-body"><div class="bar-name">Madagascar Rouge</div><div class="bar-origin">Criollo, Sambirano Valley</div><div class="bar-notes">Red berry, citrus zest, bright clean finish</div><div class="bar-foot"><span class="bar-price">$22</span><a href="#" class="bar-cta">Discover →</a></div></div></div>
+    <div class="bar" data-d="160"><div class="bar-img"><span class="bar-pct">68% Cacao</span><img src="https://images.unsplash.com/photo-1481391319762-47dff72954d9?w=500&q=85" alt="Peru Floral"></div><div class="bar-body"><div class="bar-name">Peru Floral</div><div class="bar-origin">Porcelana, Piura Alto</div><div class="bar-notes">Jasmine, honey, delicate woody warmth</div><div class="bar-foot"><span class="bar-price">$26</span><a href="#" class="bar-cta">Discover →</a></div></div></div>
+    <div class="bar" data-d="240"><div class="bar-img"><span class="bar-pct">Ruby RB1</span><img src="https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=500&q=85" alt="Ruby Ceylon"></div><div class="bar-body"><div class="bar-name">Ruby Ceylon</div><div class="bar-origin">Ruby RB1, Sri Lanka</div><div class="bar-notes">Raspberry, sour cherry, naturally pink</div><div class="bar-foot"><span class="bar-price">$32</span><a href="#" class="bar-cta">Discover →</a></div></div></div>
   </div>
 </section>
-<section class="prov" id="provenance">
-  <div class="prov-img"><img src="https://images.unsplash.com/photo-1606312619070-d48b4c652a52?w=800&q=85" alt="Farm"></div>
-  <div class="prov-text">
-    <span class="eye">Direct Trade</span>
+
+<section class="story" id="story">
+  <div class="story-imgs">
+    <img src="https://images.unsplash.com/photo-1599599810769-bcde5a160d32?w=800&q=85" alt="Cacao Farm" style="height:280px;grid-column:span 2">
+    <img src="https://images.unsplash.com/photo-1548907040-4baa42d10919?w=400&q=85" alt="Chocolate" style="height:160px">
+    <img src="https://images.unsplash.com/photo-1621939514649-280e2ee25f60?w=400&q=85" alt="Detail" style="height:160px">
+  </div>
+  <div>
+    <span class="story-eyebrow">Direct Trade</span>
     <h2>Where chocolate begins — the farm.</h2>
-    <p>We work directly with seven farming cooperatives paying three times the commodity price for beans selected by hand.</p>
+    <p>We work directly with seven farming cooperatives, paying three times the commodity price for beans selected by hand at peak fermentation.</p>
     <blockquote>"The finest chocolate is not made in a factory. It begins with a farmer who cares."</blockquote>
     <p>Each bar carries a batch number traceable to the farm, harvest month, and fermentation protocol used.</p>
+    <div class="origin-stats">
+      <div><div class="os-n">7</div><div class="os-l">Farms</div></div>
+      <div><div class="os-n">4</div><div class="os-l">Origins</div></div>
+      <div><div class="os-n">100%</div><div class="os-l">Traceable</div></div>
+    </div>
   </div>
 </section>
+
+<section class="tasting" id="tasting">
+  <div class="tasting-inner">
+    <h2 class="tasting-title">Understanding the <em>flavour</em></h2>
+    <div class="notes-grid">
+      <div class="note-card" data-d="0"><span class="note-icon">🌑</span><div class="note-name">Dark 85%</div><p class="note-desc">Bittersweet intensity. Dark fruit, espresso, and a long smoky finish. For the serious connoisseur.</p></div>
+      <div class="note-card" data-d="100"><span class="note-icon">🤎</span><div class="note-name">Milk 45%</div><p class="note-desc">Silky and rounded. Caramel warmth, toasted hazelnut, and the gentlest cacao bloom.</p></div>
+      <div class="note-card" data-d="200"><span class="note-icon">🤍</span><div class="note-name">White</div><p class="note-desc">Pure cocoa butter, vanilla, and cream. Deceptively complex in its softness and sweetness.</p></div>
+      <div class="note-card" data-d="300"><span class="note-icon">🩷</span><div class="note-name">Ruby RB1</div><p class="note-desc">Naturally pink, naturally fruity. Raspberry and sour cherry — not a drop of added flavouring.</p></div>
+    </div>
+  </div>
+</section>
+
 <footer>
   <div class="ft-brand">Cacao</div>
-  <div class="ft-copy">Demo by Studio 3D · © 2025</div>
+  <div class="ft-copy">Demo by 3DJESTER · © 2026</div>
   <a href="../index.html" class="ft-back">← Back to Portfolio</a>
 </footer>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-const FLAVOURS={dark:{mid:0x2a1208,top:0x1a0a04,bot:0x3a1a0c,emissive:0x0a0402,rough:.45,metal:.1},milk:{mid:0xaa6030,top:0x7a4020,bot:0xc07840,emissive:0x2a1008,rough:.5,metal:.05},white:{mid:0xe0c898,top:0xf0e0c0,bot:0xd4b880,emissive:0x3a2808,rough:.55,metal:.02},ruby:{mid:0x8a2830,top:0x5a1018,bot:0xb04050,emissive:0x200408,rough:.4,metal:.08}};
+const FLAVOURS={
+  dark:{name:'Ecuador Noir',variety:'Dark 85% Cacao',base:0x3d1a08,top:0x5a2810,bot:0x2a1006,groove:0x1e0d04,emissive:0x1a0804,ei:.4,rough:.38,metal:.05},
+  milk:{name:'Madagascar Rouge',variety:'Milk 45% Cacao',base:0xa05828,top:0xc07838,bot:0x7a3e18,groove:0x5a2c10,emissive:0x3a1808,ei:.35,rough:.42,metal:.04},
+  white:{name:'Peru Floral',variety:'White Chocolate',base:0xe8d8a0,top:0xf5e8c0,bot:0xd4c080,groove:0xb8a060,emissive:0x4a3818,ei:.25,rough:.5,metal:.02},
+  ruby:{name:'Ruby Ceylon',variety:'Ruby RB1 Cacao',base:0x8a2838,top:0xb03850,bot:0x6a1828,groove:0x4a1020,emissive:0x280810,ei:.4,rough:.38,metal:.06}
+};
+
+let barGroup,fillLight,rimLight,scene_ref;
+
 (function(){
   const canvas=document.getElementById('cacaoCanvas');
-  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false});
-  renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.setClearColor(0x080402,1);renderer.shadowMap.enabled=true;
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.setSize(innerWidth,innerHeight);
+  renderer.setClearColor(0x1a0d06,1);
+  renderer.shadowMap.enabled=true;
+  renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  renderer.toneMapping=THREE.ReinhardToneMapping;
+  renderer.toneMappingExposure=1.7;
+
   const scene=new THREE.Scene();
-  const camera=new THREE.PerspectiveCamera(42,innerWidth/innerHeight,0.1,100);camera.position.set(0,.5,6.5);camera.lookAt(0,0,0);
-  const barGroup=new THREE.Group();scene.add(barGroup);
+  scene.fog=new THREE.Fog(0x1a0d06,9,18);
+  scene_ref=scene;
+
+  const camera=new THREE.PerspectiveCamera(40,innerWidth/innerHeight,0.1,100);
+  camera.position.set(0,1.2,7.5);
+  camera.lookAt(0,0,0);
+
+  barGroup=new THREE.Group();
+  scene.add(barGroup);
 
   function buildBar(fl){
-    while(barGroup.children.length)barGroup.remove(barGroup.children[0]);
+    // Remove old bar children but keep ground
+    const toRemove=[];
+    barGroup.children.forEach(c=>{if(!c.userData.isGround)toRemove.push(c);});
+    toRemove.forEach(c=>barGroup.remove(c));
+    // Also remove floating chunks from scene
+    const chunks=[];
+    scene.children.forEach(c=>{if(c.userData.isChunk||c.userData.isMini)chunks.push(c);});
+    chunks.forEach(c=>scene.remove(c));
+
     const f=FLAVOURS[fl];
-    const mat=new THREE.MeshStandardMaterial({color:f.mid,emissive:f.emissive,emissiveIntensity:.3,roughness:f.rough,metalness:f.metal});
-    const topMat=new THREE.MeshStandardMaterial({color:f.top,emissive:f.emissive,emissiveIntensity:.2,roughness:f.rough+.1,metalness:f.metal});
-    const botMat=new THREE.MeshStandardMaterial({color:f.bot,emissive:f.emissive,emissiveIntensity:.15,roughness:f.rough+.05,metalness:f.metal});
-    const main=new THREE.Mesh(new THREE.BoxGeometry(2.8,1.8,.28),[mat,mat,topMat,botMat,mat,mat]);main.castShadow=true;barGroup.add(main);
+    const mainMat=new THREE.MeshStandardMaterial({color:f.base,emissive:f.emissive,emissiveIntensity:f.ei,roughness:f.rough,metalness:f.metal});
+    const topMat=new THREE.MeshStandardMaterial({color:f.top,emissive:f.emissive,emissiveIntensity:f.ei*.85,roughness:f.rough-.05,metalness:f.metal});
+    const sideMat=new THREE.MeshStandardMaterial({color:f.bot,emissive:f.emissive,emissiveIntensity:f.ei*.6,roughness:f.rough+.08,metalness:f.metal});
+    const grooveMat=new THREE.MeshStandardMaterial({color:f.groove,roughness:.65,metalness:0});
+    const segMat=new THREE.MeshStandardMaterial({color:f.top,emissive:f.emissive,emissiveIntensity:f.ei,roughness:f.rough-.08,metalness:f.metal+.02});
+
+    // Main slab
+    const slab=new THREE.Mesh(new THREE.BoxGeometry(3.2,2.0,.32),[sideMat,sideMat,topMat,sideMat,mainMat,mainMat]);
+    slab.castShadow=true;slab.receiveShadow=true;barGroup.add(slab);
+
+    // Raised segments 3x4
     for(let r=0;r<3;r++)for(let c=0;c<4;c++){
-      const m=new THREE.Mesh(new THREE.BoxGeometry(.6,.44,.06),topMat);m.position.set(-1.05+c*.7,.55-r*.55,.18);m.castShadow=true;barGroup.add(m);
+      const seg=new THREE.Mesh(new THREE.BoxGeometry(.68,.52,.07),segMat);
+      seg.position.set(-1.2+c*.8,.64-r*.64,.19);
+      seg.castShadow=true;barGroup.add(seg);
     }
-    const stripe=new THREE.Mesh(new THREE.BoxGeometry(2.6,.018,.3),new THREE.MeshStandardMaterial({color:f.bot,emissive:f.bot,emissiveIntensity:.15,roughness:.3,metalness:.2}));stripe.position.y=.65;barGroup.add(stripe);
-    stripe.clone().position.y=0;barGroup.add(stripe.clone());
+    // Horizontal grooves
+    for(let i=0;i<2;i++){
+      const g=new THREE.Mesh(new THREE.BoxGeometry(3.2,.04,.34),grooveMat);
+      g.position.y=.32-i*.64;barGroup.add(g);
+    }
+    // Vertical grooves
+    for(let i=0;i<3;i++){
+      const g=new THREE.Mesh(new THREE.BoxGeometry(.04,2.0,.34),grooveMat);
+      g.position.x=-.8+i*.8;barGroup.add(g);
+    }
+
+    // Floating chunk
+    const chunkMat=new THREE.MeshStandardMaterial({color:f.base,emissive:f.emissive,emissiveIntensity:f.ei*.9,roughness:f.rough+.05,metalness:f.metal});
+    const chunk=new THREE.Mesh(new THREE.BoxGeometry(.72,.64,.32),chunkMat);
+    chunk.position.set(2.6,.5,.3);chunk.rotation.set(.3,-.5,.25);
+    chunk.castShadow=true;chunk.userData.isChunk=true;scene.add(chunk);
+
+    const mini=new THREE.Mesh(new THREE.BoxGeometry(.36,.28,.28),chunkMat);
+    mini.position.set(2.2,-.3,.5);mini.rotation.set(.6,.4,-.3);
+    mini.castShadow=true;mini.userData.isMini=true;scene.add(mini);
+
+    // Update fill light tint
+    if(fillLight){
+      const tints={dark:0xc87a30,milk:0xe8a050,white:0xffe8b0,ruby:0xff6080};
+      fillLight.color.setHex(tints[fl]);
+    }
   }
+
+  // Ground
+  const ground=new THREE.Mesh(new THREE.PlaneGeometry(20,20),new THREE.MeshStandardMaterial({color:0x120804,roughness:.04,metalness:.45}));
+  ground.rotation.x=-Math.PI/2;ground.position.y=-1.3;ground.receiveShadow=true;ground.userData.isGround=true;
+  barGroup.add(ground);
+
+  // Lights
+  scene.add(new THREE.AmbientLight(0x5a2c10,2.0));
+  const key=new THREE.SpotLight(0xffe0a0,9,22,Math.PI/4,.35);
+  key.position.set(4,7,6);key.castShadow=true;key.shadow.mapSize.set(2048,2048);
+  scene.add(key,key.target);
+  fillLight=new THREE.PointLight(0xc07830,3.5,12);fillLight.position.set(-4,2,3);scene.add(fillLight);
+  rimLight=new THREE.PointLight(0xff9050,2.2,10);rimLight.position.set(2,1,-4);scene.add(rimLight);
+  scene.add(Object.assign(new THREE.PointLight(0x6a2808,1.5,8),{position:{x:0,y:-1,z:2}}));
+
   buildBar('dark');
 
-  const chip=new THREE.Mesh(new THREE.BoxGeometry(.58,.52,.26),new THREE.MeshStandardMaterial({color:0x1a0a04,emissive:0x0a0402,emissiveIntensity:.2,roughness:.45,metalness:.1}));chip.position.set(2.2,.6,.2);chip.rotation.set(.3,-.4,.2);chip.castShadow=true;scene.add(chip);
+  // Dust
+  const DC=180;const dp=new Float32Array(DC*3);const dv=new Float32Array(DC*3);
+  for(let i=0;i<DC;i++){dp[i*3]=(Math.random()-.5)*9;dp[i*3+1]=(Math.random()-.5)*7;dp[i*3+2]=(Math.random()-.5)*5;dv[i*3]=(Math.random()-.5)*.003;dv[i*3+1]=(Math.random()-.5)*.002;dv[i*3+2]=(Math.random()-.5)*.002;}
+  const dGeo=new THREE.BufferGeometry();dGeo.setAttribute('position',new THREE.BufferAttribute(dp,3));
+  const dust=new THREE.Points(dGeo,new THREE.PointsMaterial({color:0xc07840,size:.016,transparent:true,opacity:.4,blending:THREE.AdditiveBlending,depthWrite:false,sizeAttenuation:true}));
+  scene.add(dust);
 
-  const dc=300;const dp=new Float32Array(dc*3);const dv=new Float32Array(dc*3);
-  for(let i=0;i<dc;i++){dp[i*3]=(Math.random()-.5)*8;dp[i*3+1]=(Math.random()-.5)*6;dp[i*3+2]=(Math.random()-.5)*4;dv[i*3]=(Math.random()-.5)*.004;dv[i*3+1]=(Math.random()-.5)*.003;dv[i*3+2]=(Math.random()-.5)*.003;}
-  const dustGeo=new THREE.BufferGeometry();dustGeo.setAttribute('position',new THREE.BufferAttribute(dp,3));
-  const dust=new THREE.Points(dustGeo,new THREE.PointsMaterial({color:0x6a3a18,size:.025,transparent:true,opacity:.6,blending:THREE.AdditiveBlending,depthWrite:false,sizeAttenuation:true}));scene.add(dust);
-
-  const base=new THREE.Mesh(new THREE.PlaneGeometry(14,14),new THREE.MeshStandardMaterial({color:0x0e0804,roughness:.05,metalness:.3}));base.rotation.x=-Math.PI/2;base.position.y=-1.3;base.receiveShadow=true;scene.add(base);
-
-  scene.add(new THREE.AmbientLight(0x1a0a04,2));
-  const key=new THREE.SpotLight(0xfff4d0,5,20,Math.PI/4,.3);key.position.set(3,6,5);key.target.position.set(0,0,0);key.castShadow=true;scene.add(key,key.target);
-  const fill=new THREE.PointLight(0xc07840,2,10);fill.position.set(-4,2,2);scene.add(fill);
-  scene.add(Object.assign(new THREE.PointLight(0xffa020,1.2,8),{position:{x:3,y:1,z:-3}}));
-
-  let isDragging=false,prevX=0,prevY=0,velX=0,velY=0,userCtrl=false,uTo;
-  canvas.addEventListener('mousedown',e=>{isDragging=true;prevX=e.clientX;prevY=e.clientY;userCtrl=true;clearTimeout(uTo)});
-  window.addEventListener('mouseup',()=>{isDragging=false;uTo=setTimeout(()=>{userCtrl=false},4000)});
-  window.addEventListener('mousemove',e=>{if(!isDragging)return;const dx=e.clientX-prevX,dy=e.clientY-prevY;velX=dx*.006;velY=dy*.004;barGroup.rotation.y+=dx*.006;barGroup.rotation.x=Math.max(-.6,Math.min(.6,barGroup.rotation.x+dy*.004));prevX=e.clientX;prevY=e.clientY;});
-
-  document.querySelectorAll('.fl-btn').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.fl-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');buildBar(btn.dataset.fl);const r=btn.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;const cols=['#c9a84c','#f0c060','#fff'];for(let i=0;i<12;i++){const s=document.createElement('div');s.className='sp';const a=(i/12)*Math.PI*2,d=24+Math.random()*44,sz=2+Math.random()*4;s.style.cssText=`left:${cx-sz/2}px;top:${cy-sz/2}px;width:${sz}px;height:${sz}px;background:${cols[i%cols.length]};--tx:${Math.cos(a)*d}px;--ty:${Math.sin(a)*d}px;box-shadow:0 0 5px ${cols[0]}`;document.body.appendChild(s);setTimeout(()=>s.remove(),700);}});});
-
+  // Drag
+  let isDrag=false,px=0,py=0,vx=0,vy=0,uCtrl=false,uTo;
+  canvas.addEventListener('mousedown',e=>{isDrag=true;px=e.clientX;py=e.clientY;uCtrl=true;clearTimeout(uTo)});
+  window.addEventListener('mouseup',()=>{isDrag=false;uTo=setTimeout(()=>{uCtrl=false},4000)});
+  window.addEventListener('mousemove',e=>{if(!isDrag)return;const dx=e.clientX-px,dy=e.clientY-py;vx=dx*.006;vy=dy*.004;barGroup.rotation.y+=dx*.006;barGroup.rotation.x=Math.max(-.5,Math.min(.5,barGroup.rotation.x+dy*.004));px=e.clientX;py=e.clientY;});
+  canvas.addEventListener('touchstart',e=>{isDrag=true;px=e.touches[0].clientX;py=e.touches[0].clientY;uCtrl=true;clearTimeout(uTo)},{passive:true});
+  window.addEventListener('touchend',()=>{isDrag=false;uTo=setTimeout(()=>{uCtrl=false},4000)});
+  window.addEventListener('touchmove',e=>{if(!isDrag)return;const dx=e.touches[0].clientX-px,dy=e.touches[0].clientY-py;vx=dx*.006;vy=dy*.004;barGroup.rotation.y+=dx*.006;barGroup.rotation.x=Math.max(-.5,Math.min(.5,barGroup.rotation.x+dy*.004));px=e.touches[0].clientX;py=e.touches[0].clientY;},{passive:true});
   window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
 
+  // Expose buildBar globally
+  window._buildBar=buildBar;
+
   let t=0;
-  function animate(){
-    requestAnimationFrame(animate);t+=.009;
-    if(!userCtrl){barGroup.rotation.y+=.005;barGroup.rotation.x=Math.sin(t*.3)*.08;}
-    else if(!isDragging){velX*=.91;velY*=.91;barGroup.rotation.y+=velX;barGroup.rotation.x+=velY;}
-    chip.rotation.y+=.003;chip.position.y=.6+Math.sin(t*.7)*.08;
-    const dpa=dust.geometry.attributes.position;
-    for(let i=0;i<dc;i++){dpa.setXYZ(i,dpa.getX(i)+dv[i*3],dpa.getY(i)+dv[i*3+1],dpa.getZ(i)+dv[i*3+2]);if(Math.abs(dpa.getX(i))>5||Math.abs(dpa.getY(i))>4)dpa.setXYZ(i,(Math.random()-.5)*8,(Math.random()-.5)*6,(Math.random()-.5)*4);}
-    dpa.needsUpdate=true;dust.rotation.y=t*.02;fill.intensity=2+Math.sin(t*.9)*.5;
+  (function animate(){
+    requestAnimationFrame(animate);t+=.007;
+    if(!uCtrl){barGroup.rotation.y+=.004;barGroup.rotation.x=Math.sin(t*.25)*.06;}
+    else if(!isDrag){vx*=.92;vy*=.92;barGroup.rotation.y+=vx;barGroup.rotation.x+=vy;}
+    scene.children.forEach(c=>{
+      if(c.userData.isChunk){c.rotation.y+=.003;c.position.y=.5+Math.sin(t*.8)*.1;}
+      if(c.userData.isMini){c.rotation.z+=.005;c.position.y=-.3+Math.sin(t*1.1+1)*.07;}
+    });
+    const dpa=dGeo.attributes.position;
+    for(let i=0;i<DC;i++){dpa.setXYZ(i,dpa.getX(i)+dv[i*3],dpa.getY(i)+dv[i*3+1],dpa.getZ(i)+dv[i*3+2]);if(Math.abs(dpa.getX(i))>5||Math.abs(dpa.getY(i))>4)dpa.setXYZ(i,(Math.random()-.5)*9,(Math.random()-.5)*7,(Math.random()-.5)*5);}
+    dpa.needsUpdate=true;
+    fillLight.intensity=3.5+Math.sin(t*.9)*.6;
+    rimLight.intensity=2.2+Math.sin(t*.7+1)*.5;
     renderer.render(scene,camera);
-  }
-  animate();
+  })();
 })();
-const io=new IntersectionObserver(ee=>{ee.forEach(e=>{if(e.isIntersecting){const d=parseInt(e.target.dataset.d||0);setTimeout(()=>e.target.classList.add('on'),d);io.unobserve(e.target)}})},{threshold:.1});
-document.querySelectorAll('.coll-h,.bar,.prov').forEach(el=>io.observe(el));
+
+// Variety switcher
+document.querySelectorAll('.vp-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.vp-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const fl=btn.dataset.fl;
+    if(window._buildBar) window._buildBar(fl);
+    document.getElementById('bdVariety').textContent=FLAVOURS[fl].variety;
+    document.getElementById('bdName').textContent=FLAVOURS[fl].name;
+    const r=btn.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+    const cols=['#c9903a','#e8b060','#fff8f0'];
+    for(let i=0;i<12;i++){const s=document.createElement('div');s.className='sp';const a=(i/12)*Math.PI*2,d=20+Math.random()*40,sz=2+Math.random()*4;s.style.cssText=`left:${cx-sz/2}px;top:${cy-sz/2}px;width:${sz}px;height:${sz}px;background:${cols[i%cols.length]};--tx:${Math.cos(a)*d}px;--ty:${Math.sin(a)*d}px;box-shadow:0 0 5px ${cols[0]}`;document.body.appendChild(s);setTimeout(()=>s.remove(),700);}
+  });
+});
+
+// Scroll reveal
+const io=new IntersectionObserver(ee=>{ee.forEach(e=>{if(e.isIntersecting){const d=parseInt(e.target.dataset.d||0);setTimeout(()=>e.target.classList.add('on'),d);io.unobserve(e.target)}})},{threshold:.08});
+document.querySelectorAll('.bar,.note-card,.story').forEach(el=>io.observe(el));
 </script>
 </body>
 </html>
