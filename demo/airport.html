@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skyport — Terminal Navigator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080e1a;--bg2:#0d1525;
+  --blue:#0ea5e9;--bluel:#38bdf8;--bluedark:#0369a1;
+  --green:#10b981;--greenl:#34d399;
+  --amber:#f59e0b;--amberl:#fbbf24;
+  --red:#ef4444;
+  --slate:#1e293b;--slatel:#334155;
+  --text:#94a3b8;--textl:#cbd5e1;
+  --white:#f0f9ff;
+  --border:rgba(14,165,233,.2);
+  --glow:rgba(14,165,233,.15);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--white);font-family:'Space Grotesk',sans-serif;font-weight:400;display:flex;flex-direction:column}
+
+/* HEADER */
+header{height:56px;background:rgba(8,14,26,.95);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:20px;flex-shrink:0;backdrop-filter:blur(20px);z-index:100;position:relative}
+.h-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.h-logo{width:32px;height:32px;background:linear-gradient(135deg,var(--blue),var(--bluedark));display:flex;align-items:center;justify-content:center;font-weight:600;font-size:.75rem;letter-spacing:.04em;color:var(--white)}
+.h-name{font-size:.9rem;font-weight:600;color:var(--white);letter-spacing:.04em}
+.h-name span{color:var(--blue)}
+.h-divider{width:1px;height:24px;background:var(--border)}
+.h-flight{display:flex;align-items:center;gap:8px;padding:0 14px}
+.hf-label{font-size:.7rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text)}
+.hf-val{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--bluel);font-weight:400}
+.hf-status{display:flex;align-items:center;gap:5px;font-size:.72rem;font-weight:500;color:var(--greenl)}
+.hf-dot{width:6px;height:6px;border-radius:50%;background:var(--greenl);animation:pulse-g 2s ease-in-out infinite}
+@keyframes pulse-g{0%,100%{opacity:1}50%{opacity:.3}}
+.h-time{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--text);margin-left:auto}
+.h-search{display:flex;align-items:center;gap:8px;padding:7px 14px;background:rgba(14,165,233,.06);border:1px solid var(--border);cursor:pointer;transition:all .2s;margin-left:8px}
+.h-search:hover{background:rgba(14,165,233,.12);border-color:var(--blue)}
+.h-search input{background:none;border:none;outline:none;font-family:'Space Grotesk',sans-serif;font-size:.82rem;color:var(--white);width:160px}
+.h-search input::placeholder{color:var(--text)}
+.h-search-icon{color:var(--text);font-size:.85rem}
+
+/* MAIN LAYOUT */
+.main{flex:1;display:flex;overflow:hidden;position:relative}
+
+/* LEFT PANEL */
+.left-panel{width:300px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;z-index:10}
+.panel-tabs{display:flex;border-bottom:1px solid var(--border)}
+.ptab{flex:1;padding:12px 0;text-align:center;font-size:.7rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--text);cursor:pointer;transition:all .2s;border-bottom:2px solid transparent}
+.ptab.active{color:var(--blue);border-bottom-color:var(--blue);background:rgba(14,165,233,.04)}
+.panel-content{flex:1;overflow-y:auto;padding:14px}
+.panel-content::-webkit-scrollbar{width:3px}
+.panel-content::-webkit-scrollbar-track{background:transparent}
+.panel-content::-webkit-scrollbar-thumb{background:var(--border)}
+
+/* FLIGHT BOARD */
+.flight-row{display:grid;grid-template-columns:auto 1fr auto;gap:8px;padding:10px 12px;border:1px solid var(--border);margin-bottom:6px;cursor:pointer;transition:all .2s;background:rgba(14,165,233,.02)}
+.flight-row:hover{background:rgba(14,165,233,.07);border-color:var(--blue)}
+.flight-row.active{background:rgba(14,165,233,.1);border-color:var(--blue)}
+.fr-num{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--bluel);font-weight:400;white-space:nowrap}
+.fr-dest{font-size:.8rem;color:var(--textl);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fr-gate{font-family:'JetBrains Mono',monospace;font-size:.72rem;font-weight:400}
+.fr-time{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--text)}
+.fr-status{font-size:.66rem;font-weight:500;padding:2px 7px;display:inline-block;margin-top:2px}
+.st-ontime{background:rgba(16,185,129,.15);color:var(--greenl)}
+.st-boarding{background:rgba(245,158,11,.15);color:var(--amberl);animation:pulse-b .8s ease-in-out infinite}
+@keyframes pulse-b{0%,100%{opacity:1}50%{opacity:.6}}
+.st-delayed{background:rgba(239,68,68,.12);color:#fca5a5}
+.st-departed{background:rgba(100,116,139,.15);color:#94a3b8}
+
+/* FACILITIES LIST */
+.fac-group{margin-bottom:14px}
+.fg-label{font-size:.65rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--text);margin-bottom:8px;display:block}
+.fac-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid transparent;cursor:pointer;transition:all .2s;margin-bottom:4px;border-radius:2px}
+.fac-item:hover{background:rgba(14,165,233,.07);border-color:var(--border)}
+.fac-item.active{background:rgba(14,165,233,.1);border-color:var(--blue)}
+.fi-icon{width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:1rem;background:rgba(14,165,233,.08);border:1px solid var(--border);flex-shrink:0}
+.fi-name{font-size:.8rem;color:var(--textl);font-weight:400}
+.fi-sub{font-size:.68rem;color:var(--text)}
+
+/* MY FLIGHT CARD */
+.my-flight{background:linear-gradient(135deg,rgba(14,165,233,.12),rgba(3,105,161,.08));border:1px solid var(--border);padding:14px;margin-bottom:14px}
+.mf-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.mf-airline{font-size:.68rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--text)}
+.mf-num{font-family:'JetBrains Mono',monospace;font-size:.95rem;color:var(--bluel);font-weight:400}
+.mf-route{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.mf-city{font-size:1.4rem;font-weight:600;color:var(--white);letter-spacing:.02em}
+.mf-arrow{color:var(--text);font-size:.9rem}
+.mf-row{display:flex;gap:16px;margin-top:8px}
+.mf-item{display:flex;flex-direction:column;gap:2px}
+.mf-item-label{font-size:.65rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--text)}
+.mf-item-val{font-family:'JetBrains Mono',monospace;font-size:.88rem;color:var(--white)}
+.mf-gate-big{font-size:1.6rem;font-weight:600;color:var(--blue);font-family:'JetBrains Mono',monospace}
+.mf-countdown{display:flex;align-items:center;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.mfc-label{font-size:.68rem;color:var(--text)}
+.mfc-time{font-family:'JetBrains Mono',monospace;font-size:.9rem;color:var(--amberl);font-weight:400}
+.btn-navigate{width:100%;margin-top:10px;padding:8px;background:linear-gradient(135deg,var(--blue),var(--bluedark));color:var(--white);font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;transition:all .2s}
+.btn-navigate:hover{opacity:.85}
+
+/* CANVAS AREA */
+.map-area{flex:1;position:relative;overflow:hidden}
+canvas#terminalCanvas{position:absolute;inset:0;width:100%;height:100%}
+
+/* FLOOR SELECTOR */
+.floor-selector{position:absolute;right:16px;top:50%;transform:translateY(-50%);z-index:20;display:flex;flex-direction:column;gap:4px}
+.floor-btn{width:40px;height:40px;background:rgba(13,21,37,.9);border:1px solid var(--border);color:var(--text);font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:'JetBrains Mono',monospace;display:flex;align-items:center;justify-content:center}
+.floor-btn.active{background:rgba(14,165,233,.15);border-color:var(--blue);color:var(--bluel)}
+.floor-btn:hover:not(.active){border-color:var(--blue);color:var(--textl)}
+
+/* MAP CONTROLS */
+.map-controls{position:absolute;right:16px;bottom:16px;z-index:20;display:flex;flex-direction:column;gap:4px}
+.mc-btn{width:36px;height:36px;background:rgba(13,21,37,.9);border:1px solid var(--border);color:var(--text);font-size:1rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center}
+.mc-btn:hover{border-color:var(--blue);color:var(--bluel)}
+
+/* INFO TOOLTIP */
+.map-tooltip{position:absolute;z-index:30;background:rgba(13,21,37,.97);border:1px solid var(--border);padding:12px 16px;min-width:180px;pointer-events:none;display:none;backdrop-filter:blur(16px)}
+.mt-name{font-size:.88rem;font-weight:600;color:var(--white);margin-bottom:4px}
+.mt-type{font-size:.7rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:8px}
+.mt-info{font-size:.75rem;color:var(--text);line-height:1.6}
+.mt-tag{display:inline-block;padding:2px 8px;font-size:.66rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-top:6px}
+.tag-open{background:rgba(16,185,129,.15);color:var(--greenl)}
+.tag-boarding{background:rgba(245,158,11,.15);color:var(--amberl)}
+.tag-closed{background:rgba(239,68,68,.12);color:#fca5a5}
+
+/* RIGHT PANEL */
+.right-panel{width:260px;flex-shrink:0;background:var(--bg2);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.rp-header{padding:14px 16px;border-bottom:1px solid var(--border)}
+.rp-title{font-size:.72rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--text);margin-bottom:6px}
+.rp-selected{font-size:.95rem;font-weight:600;color:var(--white)}
+.rp-content{flex:1;overflow-y:auto;padding:14px}
+
+/* WAYFINDING PATH */
+.path-info{background:rgba(14,165,233,.06);border:1px solid var(--border);padding:12px;margin-bottom:12px}
+.pi-from,.pi-to{display:flex;align-items:center;gap:8px;padding:6px 0}
+.pi-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.pd-you{background:var(--blue)}
+.pd-dest{background:var(--greenl)}
+.pi-line{width:1px;height:14px;background:var(--border);margin-left:3.5px}
+.pi-label{font-size:.75rem;color:var(--text);flex:1}
+.pi-name{font-size:.78rem;font-weight:500;color:var(--textl)}
+.pi-steps{margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.ps-item{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.ps-num{width:18px;height:18px;background:rgba(14,165,233,.15);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:600;color:var(--blue);flex-shrink:0}
+.ps-text{font-size:.75rem;color:var(--text);line-height:1.5}
+.ps-dist{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--text);margin-top:2px}
+
+/* LEGEND */
+.legend{padding:14px 16px;border-top:1px solid var(--border)}
+.leg-title{font-size:.65rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--text);margin-bottom:10px}
+.leg-item{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.leg-dot{width:10px;height:10px;flex-shrink:0}
+.leg-label{font-size:.72rem;color:var(--text)}
+
+/* BOTTOM STATUS BAR */
+.status-bar{height:28px;background:rgba(8,14,26,.95);border-top:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:20px;flex-shrink:0}
+.sb-item{display:flex;align-items:center;gap:6px;font-size:.66rem;color:var(--text)}
+.sb-dot{width:5px;height:5px;border-radius:50%}
+
+/* MODAL OVERLAY for boarding alert */
+.alert{position:fixed;top:72px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(245,158,11,.95);color:#000;padding:10px 20px;font-size:.8rem;font-weight:600;display:none;align-items:center;gap:10px;animation:slide-d .4s ease}
+.alert.show{display:flex}
+@keyframes slide-d{from{transform:translateX(-50%) translateY(-20px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
+
+@media(max-width:900px){
+  .left-panel{width:220px}
+  .right-panel{display:none}
+}
+@media(max-width:600px){
+  .left-panel{display:none}
+  header{padding:0 12px;gap:10px}
+}
+</style>
+</head>
+<body>
+
+<div class="alert" id="boardingAlert">
+  ⚠️ BOARDING NOW — Flight BA447 at Gate B12. You have 12 minutes.
+</div>
+
+<!-- HEADER -->
+<header>
+  <a href="../index.html" class="h-brand">
+    <div class="h-logo">SKY</div>
+    <div class="h-name">SKY<span>PORT</span></div>
+  </a>
+  <div class="h-divider"></div>
+  <div class="h-flight">
+    <span class="hf-label">Terminal</span>
+    <span class="hf-val">T2 · International</span>
+  </div>
+  <div class="h-divider"></div>
+  <div class="h-flight">
+    <span class="hf-label">Your Flight</span>
+    <span class="hf-val">BA447</span>
+  </div>
+  <div class="h-flight">
+    <span class="hf-status"><span class="hf-dot"></span>Boarding Soon</span>
+  </div>
+  <div class="h-search">
+    <span class="h-search-icon">⌕</span>
+    <input type="text" placeholder="Search gates, shops, facilities..." id="searchInput">
+  </div>
+  <div class="h-time" id="clockDisplay">--:--</div>
+</header>
+
+<div class="main">
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div class="panel-tabs">
+      <div class="ptab active" data-tab="flights">Flights</div>
+      <div class="ptab" data-tab="facilities">Facilities</div>
+      <div class="ptab" data-tab="myflight">My Trip</div>
+    </div>
+
+    <!-- FLIGHTS TAB -->
+    <div class="panel-content" id="tab-flights">
+      <div style="font-size:.65rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--text);margin-bottom:10px">Departures — Live</div>
+
+      <div class="flight-row" data-gate="B12" data-status="boarding">
+        <div><div class="fr-num">BA447</div><div class="fr-time">14:35</div></div>
+        <div><div class="fr-dest">London Heathrow</div><span class="fr-status st-boarding">BOARDING</span></div>
+        <div><div class="fr-gate" style="color:var(--amberl)">B12</div></div>
+      </div>
+      <div class="flight-row" data-gate="A04" data-status="ontime">
+        <div><div class="fr-num">EK202</div><div class="fr-time">14:55</div></div>
+        <div><div class="fr-dest">Dubai International</div><span class="fr-status st-ontime">ON TIME</span></div>
+        <div><div class="fr-gate" style="color:var(--text)">A04</div></div>
+      </div>
+      <div class="flight-row" data-gate="C22" data-status="ontime">
+        <div><div class="fr-num">AA101</div><div class="fr-time">15:10</div></div>
+        <div><div class="fr-dest">New York JFK</div><span class="fr-status st-ontime">ON TIME</span></div>
+        <div><div class="fr-gate" style="color:var(--text)">C22</div></div>
+      </div>
+      <div class="flight-row" data-gate="A08" data-status="delayed">
+        <div><div class="fr-num">LH456</div><div class="fr-time">15:20</div></div>
+        <div><div class="fr-dest">Frankfurt Main</div><span class="fr-status st-delayed">DELAYED</span></div>
+        <div><div class="fr-gate" style="color:var(--text)">A08</div></div>
+      </div>
+      <div class="flight-row" data-gate="B18" data-status="ontime">
+        <div><div class="fr-num">SQ317</div><div class="fr-time">15:45</div></div>
+        <div><div class="fr-dest">Singapore Changi</div><span class="fr-status st-ontime">ON TIME</span></div>
+        <div><div class="fr-gate" style="color:var(--text)">B18</div></div>
+      </div>
+      <div class="flight-row" data-gate="C08" data-status="ontime">
+        <div><div class="fr-num">AF116</div><div class="fr-time">16:00</div></div>
+        <div><div class="fr-dest">Paris Charles de Gaulle</div><span class="fr-status st-ontime">ON TIME</span></div>
+        <div><div class="fr-gate" style="color:var(--text)">C08</div></div>
+      </div>
+      <div class="flight-row" data-gate="A12" data-status="departed">
+        <div><div class="fr-num">QF001</div><div class="fr-time">13:50</div></div>
+        <div><div class="fr-dest">Sydney Kingsford</div><span class="fr-status st-departed">DEPARTED</span></div>
+        <div><div class="fr-gate" style="color:var(--text)">A12</div></div>
+      </div>
+    </div>
+
+    <!-- FACILITIES TAB -->
+    <div class="panel-content" id="tab-facilities" style="display:none">
+      <div class="fac-group">
+        <span class="fg-label">Food & Beverage</span>
+        <div class="fac-item" data-fac="cafe" data-zone="food"><div class="fi-icon">☕</div><div><div class="fi-name">Terminal Café</div><div class="fi-sub">Level 1 · Near Gate A</div></div></div>
+        <div class="fac-item" data-fac="restaurant" data-zone="food"><div class="fi-icon">🍽</div><div><div class="fi-name">Sky Brasserie</div><div class="fi-sub">Level 2 · Central Hub</div></div></div>
+        <div class="fac-item" data-fac="bar" data-zone="food"><div class="fi-icon">🍸</div><div><div class="fi-name">Altitude Bar</div><div class="fi-sub">Level 2 · Gate B Area</div></div></div>
+        <div class="fac-item" data-fac="grab" data-zone="food"><div class="fi-icon">🛒</div><div><div class="fi-name">Grab & Go Market</div><div class="fi-sub">Level 1 · All Wings</div></div></div>
+      </div>
+      <div class="fac-group">
+        <span class="fg-label">Shops</span>
+        <div class="fac-item" data-fac="duty" data-zone="shop"><div class="fi-icon">🛍</div><div><div class="fi-name">Duty Free</div><div class="fi-sub">Level 1 · Main Hall</div></div></div>
+        <div class="fac-item" data-fac="fashion" data-zone="shop"><div class="fi-icon">👗</div><div><div class="fi-name">Fashion Boutique</div><div class="fi-sub">Level 2 · Wing C</div></div></div>
+        <div class="fac-item" data-fac="books" data-zone="shop"><div class="fi-icon">📚</div><div><div class="fi-name">Books & News</div><div class="fi-sub">Level 1 · Gate B Area</div></div></div>
+        <div class="fac-item" data-fac="pharmacy" data-zone="shop"><div class="fi-icon">💊</div><div><div class="fi-name">Pharmacy</div><div class="fi-sub">Level 1 · Central</div></div></div>
+      </div>
+      <div class="fac-group">
+        <span class="fg-label">Services</span>
+        <div class="fac-item" data-fac="lounge" data-zone="service"><div class="fi-icon">💺</div><div><div class="fi-name">Business Lounge</div><div class="fi-sub">Level 2 · Gate B</div></div></div>
+        <div class="fac-item" data-fac="wifi" data-zone="service"><div class="fi-icon">📶</div><div><div class="fi-name">Wi-Fi Hub</div><div class="fi-sub">Throughout Terminal</div></div></div>
+        <div class="fac-item" data-fac="toilet" data-zone="service"><div class="fi-icon">🚻</div><div><div class="fi-name">Restrooms</div><div class="fi-sub">All Levels · All Wings</div></div></div>
+        <div class="fac-item" data-fac="charging" data-zone="service"><div class="fi-icon">🔋</div><div><div class="fi-name">Charging Stations</div><div class="fi-sub">Level 1 · Gate Areas</div></div></div>
+        <div class="fac-item" data-fac="info" data-zone="service"><div class="fi-icon">ℹ️</div><div><div class="fi-name">Information Desk</div><div class="fi-sub">Level 1 · Main Entrance</div></div></div>
+        <div class="fac-item" data-fac="medical" data-zone="service"><div class="fi-icon">🏥</div><div><div class="fi-name">Medical Centre</div><div class="fi-sub">Level 1 · Wing A</div></div></div>
+      </div>
+    </div>
+
+    <!-- MY FLIGHT TAB -->
+    <div class="panel-content" id="tab-myflight" style="display:none">
+      <div class="my-flight">
+        <div class="mf-top">
+          <div><div class="mf-airline">British Airways</div><div class="mf-num">BA 447</div></div>
+          <div class="mf-gate-big">B12</div>
+        </div>
+        <div class="mf-route">
+          <span class="mf-city">SYD</span>
+          <span class="mf-arrow">✈</span>
+          <span class="mf-city">LHR</span>
+        </div>
+        <div class="mf-row">
+          <div class="mf-item"><span class="mf-item-label">Departs</span><span class="mf-item-val">14:35</span></div>
+          <div class="mf-item"><span class="mf-item-label">Boarding</span><span class="mf-item-val">14:05</span></div>
+          <div class="mf-item"><span class="mf-item-label">Terminal</span><span class="mf-item-val">T2</span></div>
+        </div>
+        <div class="mf-row" style="margin-top:6px">
+          <div class="mf-item"><span class="mf-item-label">Seat</span><span class="mf-item-val">23A</span></div>
+          <div class="mf-item"><span class="mf-item-label">Class</span><span class="mf-item-val">Economy</span></div>
+          <div class="mf-item"><span class="mf-item-label">Bags</span><span class="mf-item-val">1 × 23kg</span></div>
+        </div>
+        <div class="mf-countdown">
+          <span class="mfc-label">Boarding closes in</span>
+          <span class="mfc-time" id="countdown">27:00</span>
+        </div>
+        <button class="btn-navigate" onclick="navigateToGate('B12')">Navigate to Gate B12 →</button>
+      </div>
+
+      <div style="font-size:.65rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--text);margin-bottom:10px">You Are Here</div>
+      <div style="padding:10px;background:rgba(14,165,233,.06);border:1px solid var(--border);margin-bottom:12px;font-size:.78rem;color:var(--text)">
+        Near Security Exit · Level 1 · Zone B
+      </div>
+
+      <div style="font-size:.65rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--text);margin-bottom:10px">Nearby</div>
+      <div class="fac-item" style="margin-bottom:4px"><div class="fi-icon">☕</div><div><div class="fi-name">Terminal Café</div><div class="fi-sub">2 min walk · Level 1</div></div></div>
+      <div class="fac-item" style="margin-bottom:4px"><div class="fi-icon">🚻</div><div><div class="fi-name">Restrooms</div><div class="fi-sub">1 min walk · Level 1</div></div></div>
+      <div class="fac-item"><div class="fi-icon">🔋</div><div><div class="fi-name">Charging Station</div><div class="fi-sub">3 min walk · Gate B10</div></div></div>
+    </div>
+  </div>
+
+  <!-- 3D MAP CANVAS -->
+  <div class="map-area">
+    <canvas id="terminalCanvas"></canvas>
+
+    <!-- Floor Selector -->
+    <div class="floor-selector">
+      <div class="floor-btn" data-floor="2">L2</div>
+      <div class="floor-btn active" data-floor="1">L1</div>
+    </div>
+
+    <!-- Map Controls -->
+    <div class="map-controls">
+      <button class="mc-btn" id="zoomIn" title="Zoom In">+</button>
+      <button class="mc-btn" id="zoomOut" title="Zoom Out">−</button>
+      <button class="mc-btn" id="resetView" title="Reset View">⊙</button>
+    </div>
+
+    <!-- Tooltip -->
+    <div class="map-tooltip" id="mapTooltip">
+      <div class="mt-name" id="tt-name">Gate B12</div>
+      <div class="mt-type" id="tt-type">Departure Gate</div>
+      <div class="mt-info" id="tt-info">BA447 · London Heathrow<br>Boarding: 14:05 · Departs: 14:35</div>
+      <div class="mt-tag tag-boarding" id="tt-tag">BOARDING SOON</div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <div class="rp-header">
+      <div class="rp-title">Wayfinding</div>
+      <div class="rp-selected" id="rpSelected">Gate B12</div>
+    </div>
+    <div class="rp-content">
+      <div class="path-info">
+        <div class="pi-from"><div class="pi-dot pd-you"></div><div><div class="pi-label">You are here</div><div class="pi-name">Security Exit · Zone B</div></div></div>
+        <div class="pi-line" style="margin-left:3.5px;width:1px;height:12px;background:var(--border)"></div>
+        <div class="pi-to"><div class="pi-dot pd-dest"></div><div><div class="pi-label">Destination</div><div class="pi-name" id="destName">Gate B12</div></div></div>
+        <div class="pi-steps">
+          <div id="stepsList">
+            <div class="ps-item"><div class="ps-num">1</div><div><div class="ps-text">Head straight through Zone B corridor</div><div class="ps-dist">~80m · 1 min</div></div></div>
+            <div class="ps-item"><div class="ps-num">2</div><div><div class="ps-text">Pass the Altitude Bar on your left</div><div class="ps-dist">~30m</div></div></div>
+            <div class="ps-item"><div class="ps-num">3</div><div><div class="ps-text">Take the escalator to Level 2</div><div class="ps-dist">Level 1 → Level 2</div></div></div>
+            <div class="ps-item"><div class="ps-num">4</div><div><div class="ps-text">Gate B12 is on your right</div><div class="ps-dist">~20m · Arrived ✓</div></div></div>
+          </div>
+          <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;justify-content:space-between">
+            <span style="font-size:.72rem;color:var(--text)">Total distance</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--bluel)" id="totalDist">~130m · 2 min</span>
+          </div>
+        </div>
+      </div>
+      <div style="font-size:.65rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--text);margin-bottom:8px">On Your Route</div>
+      <div class="fac-item" style="margin-bottom:4px"><div class="fi-icon">🍸</div><div><div class="fi-name">Altitude Bar</div><div class="fi-sub">On route · 2 min</div></div></div>
+      <div class="fac-item" style="margin-bottom:4px"><div class="fi-icon">🚻</div><div><div class="fi-name">Restrooms</div><div class="fi-sub">On route · Level 2</div></div></div>
+    </div>
+    <div class="legend">
+      <div class="leg-title">Map Legend</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#f59e0b"></div><div class="leg-label">Your Location</div></div>
+      <div class="leg-item"><div class="leg-dot" style="background:#10b981"></div><div class="leg-label">Destination</div></div>
+      <div class="leg-item"><div class="leg-dot" style="background:#0ea5e9"></div><div class="leg-label">Gates</div></div>
+      <div class="leg-item"><div class="leg-dot" style="background:#8b5cf6"></div><div class="leg-label">Facilities</div></div>
+      <div class="leg-item"><div class="leg-dot" style="background:#ef4444"></div><div class="leg-label">Security / Customs</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- STATUS BAR -->
+<div class="status-bar">
+  <div class="sb-item"><div class="sb-dot" style="background:var(--greenl)"></div>All systems operational</div>
+  <div class="sb-item"><div class="sb-dot" style="background:var(--blue)"></div>T2 · International · Level 1</div>
+  <div class="sb-item"><div class="sb-dot" style="background:var(--amberl)"></div>Security wait: ~8 min</div>
+  <div class="sb-item"><div class="sb-dot" style="background:var(--blue)"></div>Wi-Fi: SkyPort_T2_Free</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ══════════════════════════════════════════
+// TERMINAL 3D MAP
+// ══════════════════════════════════════════
+const canvas = document.getElementById('terminalCanvas');
+const mapArea = document.querySelector('.map-area');
+const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setClearColor(0x080e1a, 1);
+renderer.shadowMap.enabled = true;
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.Fog(0x080e1a, 30, 70);
+
+const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 200);
+camera.position.set(0, 28, 20);
+camera.lookAt(0, 0, 0);
+
+function resize(){
+  const w = mapArea.clientWidth, h = mapArea.clientHeight;
+  renderer.setSize(w, h);
+  camera.aspect = w/h;
+  camera.updateProjectionMatrix();
+}
+resize();
+window.addEventListener('resize', resize);
+
+// ─── MATERIALS ───
+const MAT = {
+  floor:    new THREE.MeshStandardMaterial({color:0x0d1a2e, roughness:.9, metalness:0}),
+  wall:     new THREE.MeshStandardMaterial({color:0x0f2040, roughness:.8, metalness:.05}),
+  corridor: new THREE.MeshStandardMaterial({color:0x0a1628, roughness:.85, metalness:0}),
+  gate:     new THREE.MeshStandardMaterial({color:0x0e3a6e, roughness:.5, metalness:.1, emissive:0x0a2040, emissiveIntensity:.3}),
+  gateActive: new THREE.MeshStandardMaterial({color:0x1e5a9e, roughness:.4, metalness:.15, emissive:0x0d3060, emissiveIntensity:.5}),
+  shop:     new THREE.MeshStandardMaterial({color:0x1a1040, roughness:.7, metalness:0}),
+  food:     new THREE.MeshStandardMaterial({color:0x2a1a08, roughness:.7, metalness:0}),
+  service:  new THREE.MeshStandardMaterial({color:0x0a2a1a, roughness:.7, metalness:0}),
+  security: new THREE.MeshStandardMaterial({color:0x3a0808, roughness:.6, metalness:.1, emissive:0x200404, emissiveIntensity:.3}),
+  playerPos:new THREE.MeshStandardMaterial({color:0xf59e0b, emissive:0xf59e0b, emissiveIntensity:.8, roughness:.2, metalness:.2}),
+  destMark: new THREE.MeshStandardMaterial({color:0x10b981, emissive:0x10b981, emissiveIntensity:.9, roughness:.2, metalness:.1}),
+  path:     new THREE.MeshBasicMaterial({color:0x0ea5e9, transparent:true, opacity:.5}),
+  glass:    new THREE.MeshStandardMaterial({color:0x4488aa, transparent:true, opacity:.15, roughness:.05, metalness:.8}),
+};
+
+// ─── BUILD TERMINAL ───
+const terminalGroup = new THREE.Group();
+scene.add(terminalGroup);
+
+function box(w, h, d, mat, x=0, y=0, z=0){
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w,h,d), mat);
+  m.position.set(x,y,z);
+  m.castShadow = true;
+  m.receiveShadow = true;
+  return m;
+}
+
+// MAIN FLOOR — terminal footprint
+terminalGroup.add(box(38, .2, 22, MAT.floor, 0, 0, 0));
+
+// CORRIDOR STRIPS (lighter floor marking)
+terminalGroup.add(box(36, .21, 2.5, MAT.corridor, 0, 0, 0));  // main corridor
+terminalGroup.add(box(2, .21, 20, MAT.corridor, -14, 0, 0));  // Wing A corridor
+terminalGroup.add(box(2, .21, 20, MAT.corridor, 0, 0, 0));    // Wing B corridor
+terminalGroup.add(box(2, .21, 20, MAT.corridor, 14, 0, 0));   // Wing C corridor
+
+// OUTER WALLS
+[[-19,.6,0,1.2,22],[ 19,.6,0,1.2,22]].forEach(([x,y,z,w,d])=>{
+  const wall = box(w, 3, d, MAT.wall, x, 1.7, z);
+  terminalGroup.add(wall);
+});
+terminalGroup.add(box(38, 3, 1.2, MAT.wall, 0, 1.7, -11.4)); // back
+terminalGroup.add(box(38, 3, 1.2, MAT.wall, 0, 1.7, 11.4));  // front
+
+// GLASS WALLS (facades)
+terminalGroup.add(box(36, 2.5, .1, MAT.glass, 0, 1.5, 11.3));
+
+// ─── GATES ───
+const gates = [];
+const GATE_DATA = [
+  // Wing A (left) — x around -14
+  {id:'A04', x:-16, z:-7, label:'A04', mat:MAT.gate},
+  {id:'A06', x:-16, z:-3, label:'A06', mat:MAT.gate},
+  {id:'A08', x:-16, z:1,  label:'A08', mat:MAT.gate},
+  {id:'A10', x:-16, z:5,  label:'A10', mat:MAT.gate},
+  {id:'A12', x:-16, z:9,  label:'A12', mat:MAT.gate},
+  // Wing B (centre) — x around 0
+  {id:'B10', x:-2,  z:-8, label:'B10', mat:MAT.gate},
+  {id:'B12', x:2,   z:-8, label:'B12', mat:MAT.gateActive},  // OUR GATE
+  {id:'B14', x:6,   z:-8, label:'B14', mat:MAT.gate},
+  {id:'B16', x:-2,  z:8,  label:'B16', mat:MAT.gate},
+  {id:'B18', x:2,   z:8,  label:'B18', mat:MAT.gate},
+  // Wing C (right) — x around 14
+  {id:'C06', x:14,  z:-7, label:'C06', mat:MAT.gate},
+  {id:'C08', x:14,  z:-3, label:'C08', mat:MAT.gate},
+  {id:'C22', x:16,  z:1,  label:'C22', mat:MAT.gate},
+  {id:'C24', x:16,  z:5,  label:'C24', mat:MAT.gate},
+];
+
+GATE_DATA.forEach(g=>{
+  const gGroup = new THREE.Group();
+  // Gate pod
+  const pod = box(2.5, 1, 2, g.mat, 0, .6, 0);
+  pod.userData = {type:'gate', id:g.id, label:g.label};
+  gGroup.add(pod);
+  // Jetway stub
+  const jetway = box(.4, .4, 1.5, MAT.wall, 0, .5, -1.2);
+  gGroup.add(jetway);
+  // Seating area suggestion
+  const seats = box(2, .1, 1.5, MAT.corridor, 0, .16, 1.2);
+  gGroup.add(seats);
+  gGroup.position.set(g.x, 0, g.z);
+  gGroup.userData = {type:'gate', id:g.id};
+  terminalGroup.add(gGroup);
+  gates.push({group:gGroup, pod, ...g});
+});
+
+// ─── FACILITIES ───
+const FACILITY_DATA = [
+  // Food
+  {type:'cafe',       icon:'☕', x:-8,  z:3,   color:0x2a1a08, label:'Terminal Café'},
+  {type:'restaurant', icon:'🍽', x:0,   z:4,   color:0x2a1a08, label:'Sky Brasserie'},
+  {type:'bar',        icon:'🍸', x:2,   z:-2,  color:0x1a0e30, label:'Altitude Bar'},
+  // Shops
+  {type:'duty',       icon:'🛍', x:-5,  z:-2,  color:0x1a1040, label:'Duty Free'},
+  {type:'fashion',    icon:'👗', x:8,   z:3,   color:0x1a1040, label:'Fashion'},
+  {type:'pharmacy',   icon:'💊', x:-8,  z:-3,  color:0x0a2040, label:'Pharmacy'},
+  // Services
+  {type:'toilet',     icon:'🚻', x:-12, z:1,   color:0x0a2a3a, label:'Restrooms'},
+  {type:'toilet',     icon:'🚻', x:12,  z:1,   color:0x0a2a3a, label:'Restrooms'},
+  {type:'lounge',     icon:'💺', x:4,   z:-5,  color:0x1a1a0a, label:'Business Lounge'},
+  {type:'charging',   icon:'🔋', x:-4,  z:5,   color:0x0a1a2a, label:'Charging'},
+  {type:'info',       icon:'ℹ',  x:0,   z:8,   color:0x0a2a1a, label:'Info Desk'},
+  {type:'medical',    icon:'🏥', x:-16, z:2,   color:0x0a2a1a, label:'Medical'},
+  // Security
+  {type:'security',   icon:'🔒', x:0,   z:10,  color:0x3a0808, label:'Security'},
+];
+
+const facilities = [];
+FACILITY_DATA.forEach(f=>{
+  const fGroup = new THREE.Group();
+  const facMat = new THREE.MeshStandardMaterial({
+    color:f.color, roughness:.7, metalness:.05,
+    emissive:new THREE.Color(f.color), emissiveIntensity:.2
+  });
+  const fBox = box(1.8, .7, 1.8, facMat, 0, .45, 0);
+  fBox.userData = {...f};
+  fGroup.add(fBox);
+  fGroup.position.set(f.x, 0, f.z);
+  terminalGroup.add(fGroup);
+  facilities.push({group:fGroup, ...f});
+});
+
+// ─── PLAYER POSITION (YOU ARE HERE) ───
+const playerGroup = new THREE.Group();
+const playerBase = box(1, .15, 1, MAT.playerPos, 0, .12, 0);
+const playerPillar = box(.2, .8, .2, MAT.playerPos, 0, .55, 0);
+// Pulsing ring
+const ringGeo = new THREE.RingGeometry(.6, .8, 24);
+const ringMat = new THREE.MeshBasicMaterial({color:0xf59e0b, transparent:true, opacity:.6, side:THREE.DoubleSide});
+const ring = new THREE.Mesh(ringGeo, ringMat);
+ring.rotation.x = -Math.PI/2;
+ring.position.y = .05;
+playerGroup.add(playerBase, playerPillar, ring);
+playerGroup.position.set(-2, 0, 9.5); // Near security
+scene.add(playerGroup);
+
+// ─── DESTINATION MARKER ───
+const destGroup = new THREE.Group();
+const destBase = box(1, .15, 1, MAT.destMark, 0, .12, 0);
+const destPillar = box(.2, 1.2, .2, MAT.destMark, 0, .75, 0);
+const destRing = new THREE.Mesh(new THREE.RingGeometry(.6, .8, 24), new THREE.MeshBasicMaterial({color:0x10b981, transparent:true, opacity:.6, side:THREE.DoubleSide}));
+destRing.rotation.x = -Math.PI/2;
+destRing.position.y = .05;
+destGroup.add(destBase, destPillar, destRing);
+destGroup.position.set(2, 0, -8); // Gate B12
+destGroup.visible = true;
+scene.add(destGroup);
+
+// ─── PATH LINE ───
+function drawPath(from, to){
+  // Remove old path
+  const old = scene.getObjectByName('navPath');
+  if(old) scene.remove(old);
+  const pts = [
+    new THREE.Vector3(from.x, 0.3, from.z),
+    new THREE.Vector3(from.x, 0.3, 0),       // main corridor
+    new THREE.Vector3(to.x, 0.3, 0),
+    new THREE.Vector3(to.x, 0.3, to.z),
+  ];
+  const geo = new THREE.BufferGeometry().setFromPoints(pts);
+  const line = new THREE.Line(geo, new THREE.LineBasicMaterial({color:0x0ea5e9, transparent:true, opacity:.7}));
+  line.name = 'navPath';
+  scene.add(line);
+}
+drawPath({x:-2, z:9.5}, {x:2, z:-8});
+
+// ─── LABELS (floating text via DOM) ───
+// We overlay labels as HTML on top of canvas
+const labelContainer = document.createElement('div');
+labelContainer.style.cssText='position:absolute;inset:0;pointer-events:none;overflow:hidden';
+mapArea.appendChild(labelContainer);
+
+function addLabel(text, x, z, color='#38bdf8', small=false){
+  const el = document.createElement('div');
+  el.style.cssText=`position:absolute;font-family:'JetBrains Mono',monospace;font-size:${small?'.58rem':'.65rem'};font-weight:600;color:${color};white-space:nowrap;transform:translate(-50%,-50%);pointer-events:none;text-shadow:0 0 8px ${color}44;letter-spacing:.06em`;
+  el.textContent = text;
+  el.dataset.wx = x;
+  el.dataset.wz = z;
+  labelContainer.appendChild(el);
+  return el;
+}
+
+const labels = [];
+GATE_DATA.forEach(g=>{
+  labels.push({el:addLabel(g.id, g.x, g.z, g.id==='B12'?'#fbbf24':'#38bdf8'), wx:g.x, wz:g.z, wy:1.5});
+});
+
+// ─── LIGHTS ───
+scene.add(new THREE.AmbientLight(0x1a2a3a, 3));
+
+// Main overhead lights
+[-14, -7, 0, 7, 14].forEach(x=>{
+  [-8,-2,4].forEach(z=>{
+    const pt = new THREE.PointLight(0x4488cc, 0.8, 10);
+    pt.position.set(x, 4, z);
+    scene.add(pt);
+  });
+});
+
+// Gate B12 spotlight (our gate)
+const spotlight = new THREE.SpotLight(0xfbbf24, 3, 12, Math.PI/5, .4);
+spotlight.position.set(2, 5, -8);
+spotlight.target.position.set(2, 0, -8);
+scene.add(spotlight, spotlight.target);
+
+// Warm ceiling strips
+const strip1 = new THREE.PointLight(0x2255aa, 1.5, 18);
+strip1.position.set(0, 5, 0);
+scene.add(strip1);
+
+// ─── ORBIT CONTROLS (manual) ───
+let isDragging=false, prevMX=0, prevMY=0;
+let rotY=0, rotX=0.5, zoom=1;
+const TARGET = new THREE.Vector3(0,0,0);
+
+mapArea.addEventListener('mousedown', e=>{isDragging=true;prevMX=e.clientX;prevMY=e.clientY});
+window.addEventListener('mouseup', ()=>{isDragging=false});
+window.addEventListener('mousemove', e=>{
+  if(!isDragging)return;
+  const dx=e.clientX-prevMX, dy=e.clientY-prevMY;
+  rotY-=dx*.008;
+  rotX=Math.max(.15,Math.min(1.1,rotX+dy*.005));
+  prevMX=e.clientX;prevMY=e.clientY;
+  updateCamera();
+});
+mapArea.addEventListener('wheel', e=>{
+  zoom = Math.max(.5, Math.min(2.5, zoom+e.deltaY*.001));
+  updateCamera();
+  e.preventDefault();
+},{passive:false});
+// Touch
+let prevTX=0,prevTY=0,prevDist=0;
+mapArea.addEventListener('touchstart',e=>{prevTX=e.touches[0].clientX;prevTY=e.touches[0].clientY;if(e.touches.length===2){prevDist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);}},{passive:true});
+mapArea.addEventListener('touchmove',e=>{
+  if(e.touches.length===1){const dx=e.touches[0].clientX-prevTX,dy=e.touches[0].clientY-prevTY;rotY-=dx*.008;rotX=Math.max(.15,Math.min(1.1,rotX+dy*.005));prevTX=e.touches[0].clientX;prevTY=e.touches[0].clientY;updateCamera();}
+  if(e.touches.length===2){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);zoom=Math.max(.5,Math.min(2.5,zoom-(d-prevDist)*.01));prevDist=d;updateCamera();}
+},{passive:true});
+
+function updateCamera(){
+  const r=28*zoom;
+  camera.position.x=Math.sin(rotY)*Math.cos(rotX)*r;
+  camera.position.y=Math.sin(rotX)*r+2;
+  camera.position.z=Math.cos(rotY)*Math.cos(rotX)*r;
+  camera.lookAt(TARGET);
+}
+updateCamera();
+
+// Zoom buttons
+document.getElementById('zoomIn').onclick=()=>{zoom=Math.max(.5,zoom-.2);updateCamera()};
+document.getElementById('zoomOut').onclick=()=>{zoom=Math.min(2.5,zoom+.2);updateCamera()};
+document.getElementById('resetView').onclick=()=>{rotY=0;rotX=.5;zoom=1;updateCamera()};
+
+// ─── RAYCASTING (click/hover on gates) ───
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+const tooltip = document.getElementById('mapTooltip');
+let hoveredObj = null;
+
+function getMouseNDC(e){
+  const rect = mapArea.getBoundingClientRect();
+  mouse.x = ((e.clientX-rect.left)/rect.width)*2-1;
+  mouse.y = -((e.clientY-rect.top)/rect.height)*2+1;
+}
+
+const FLIGHT_INFO = {
+  'B12': {flight:'BA447', dest:'London Heathrow', time:'14:35', boarding:'14:05', status:'BOARDING SOON', tag:'tag-boarding'},
+  'A04': {flight:'EK202', dest:'Dubai', time:'14:55', boarding:'14:25', status:'ON TIME', tag:'tag-open'},
+  'C22': {flight:'AA101', dest:'New York JFK', time:'15:10', boarding:'14:40', status:'ON TIME', tag:'tag-open'},
+  'A08': {flight:'LH456', dest:'Frankfurt', time:'15:20', boarding:'14:50', status:'DELAYED', tag:'tag-closed'},
+  'B18': {flight:'SQ317', dest:'Singapore', time:'15:45', boarding:'15:15', status:'ON TIME', tag:'tag-open'},
+  'C08': {flight:'AF116', dest:'Paris CDG', time:'16:00', boarding:'15:30', status:'ON TIME', tag:'tag-open'},
+};
+const FAC_INFO = {
+  'cafe':       {label:'Terminal Café', type:'Food & Beverage', info:'Open 06:00–23:00\nCoffee, pastries, light meals', status:'OPEN', tag:'tag-open'},
+  'restaurant': {label:'Sky Brasserie', type:'Restaurant', info:'Open 07:00–22:00\nFull service dining, bar available', status:'OPEN', tag:'tag-open'},
+  'bar':        {label:'Altitude Bar', type:'Bar & Drinks', info:'Open 09:00–Last Flight\nCocktails, wines, spirits', status:'OPEN', tag:'tag-open'},
+  'duty':       {label:'Duty Free', type:'Shopping', info:'Open 05:00–23:30\nPerfume, spirits, luxury goods', status:'OPEN', tag:'tag-open'},
+  'lounge':     {label:'Business Lounge', type:'Premium Lounge', info:'Open 05:00–23:00\nBusiness class & card holders only', status:'OPEN', tag:'tag-open'},
+  'toilet':     {label:'Restrooms', type:'Facilities', info:'24 hours · Accessible facilities\nShower rooms available (fee)', status:'OPEN', tag:'tag-open'},
+  'security':   {label:'Security', type:'Security Checkpoint', info:'Open 04:00–Last Flight\nCurrent wait: ~8 minutes', status:'OPEN', tag:'tag-open'},
+  'medical':    {label:'Medical Centre', type:'Healthcare', info:'Open 06:00–22:00\nFirst aid, pharmacy, nurse on duty', status:'OPEN', tag:'tag-open'},
+};
+
+mapArea.addEventListener('mousemove', e=>{
+  getMouseNDC(e);
+  raycaster.setFromCamera(mouse, camera);
+  const objs = [];
+  terminalGroup.traverse(c=>{if(c.isMesh && c.userData.type)objs.push(c);});
+  const hits = raycaster.intersectObjects(objs);
+  if(hits.length>0){
+    const hit = hits[0].object;
+    const data = hit.userData;
+    let name='', type='', info='', tagClass='', tagText='';
+    if(data.type==='gate'){
+      const fi = FLIGHT_INFO[data.id];
+      if(fi){name=`Gate ${data.id}`;type='Departure Gate';info=`${fi.flight} · ${fi.dest}\nBoarding: ${fi.boarding} · Departs: ${fi.time}`;tagText=fi.status;tagClass=fi.tag;}
+      else{name=`Gate ${data.id}`;type='Departure Gate';info='No flight assigned';tagText='AVAILABLE';tagClass='tag-open';}
+    }else if(data.type){
+      const fi=FAC_INFO[data.type];
+      if(fi){name=fi.label;type=fi.type;info=fi.info;tagText=fi.status;tagClass=fi.tag;}
+    }
+    if(name){
+      document.getElementById('tt-name').textContent=name;
+      document.getElementById('tt-type').textContent=type;
+      document.getElementById('tt-info').innerHTML=info.replace('\n','<br>');
+      document.getElementById('tt-tag').textContent=tagText;
+      document.getElementById('tt-tag').className='mt-tag '+tagClass;
+      const rect=mapArea.getBoundingClientRect();
+      let tx=e.clientX-rect.left+14, ty=e.clientY-rect.top-30;
+      if(tx+200>rect.width)tx=e.clientX-rect.left-210;
+      tooltip.style.left=tx+'px';tooltip.style.top=ty+'px';
+      tooltip.style.display='block';
+      canvas.style.cursor='pointer';
+    }
+  }else{
+    tooltip.style.display='none';
+    canvas.style.cursor='grab';
+  }
+});
+
+mapArea.addEventListener('click', e=>{
+  getMouseNDC(e);
+  raycaster.setFromCamera(mouse, camera);
+  const objs=[];
+  terminalGroup.traverse(c=>{if(c.isMesh && c.userData.type)objs.push(c);});
+  const hits=raycaster.intersectObjects(objs);
+  if(hits.length>0){
+    const data=hits[0].object.userData;
+    if(data.type==='gate' && data.id){
+      navigateToGate(data.id);
+    }
+  }
+});
+
+function navigateToGate(gateId){
+  const gd = GATE_DATA.find(g=>g.id===gateId);
+  if(!gd)return;
+  destGroup.position.set(gd.x, 0, gd.z);
+  destGroup.visible=true;
+  drawPath({x:-2,z:9.5},{x:gd.x,z:gd.z});
+  document.getElementById('rpSelected').textContent='Gate '+gateId;
+  document.getElementById('destName').textContent='Gate '+gateId;
+  const fi = FLIGHT_INFO[gateId];
+  if(fi){
+    document.getElementById('stepsList').innerHTML=`
+      <div class="ps-item"><div class="ps-num">1</div><div><div class="ps-text">Head toward the ${gateId.charAt(0)} Wing corridor</div><div class="ps-dist">~60m · 1 min</div></div></div>
+      <div class="ps-item"><div class="ps-num">2</div><div><div class="ps-text">Follow signs for Gates ${gateId.charAt(0)}01–${gateId.charAt(0)}20</div><div class="ps-dist">~40m</div></div></div>
+      <div class="ps-item"><div class="ps-num">3</div><div><div class="ps-text">Gate ${gateId} will be on ${Math.random()>.5?'your right':'your left'}</div><div class="ps-dist">~20m · Arrived ✓</div></div></div>
+    `;
+    document.getElementById('totalDist').textContent=`~${Math.round(80+Math.random()*80)}m · ${Math.ceil(1+Math.random()*3)} min`;
+  }
+  // Highlight gate
+  gates.forEach(g=>{
+    if(g.id===gateId){
+      g.pod.material = MAT.gateActive;
+    }else{
+      g.pod.material = MAT.gate;
+    }
+  });
+}
+
+// ─── PANEL TABS ───
+document.querySelectorAll('.ptab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    ['flights','facilities','myflight'].forEach(id=>{
+      document.getElementById('tab-'+id).style.display='none';
+    });
+    document.getElementById('tab-'+tab.dataset.tab).style.display='block';
+  });
+});
+
+// ─── FLIGHT ROW CLICKS ───
+document.querySelectorAll('.flight-row').forEach(row=>{
+  row.addEventListener('click',()=>{
+    document.querySelectorAll('.flight-row').forEach(r=>r.classList.remove('active'));
+    row.classList.add('active');
+    navigateToGate(row.dataset.gate);
+  });
+});
+
+// ─── SEARCH ───
+document.getElementById('searchInput').addEventListener('input', e=>{
+  const q=e.target.value.toLowerCase();
+  if(!q)return;
+  const gateMatch=GATE_DATA.find(g=>g.id.toLowerCase()===q||('gate '+g.id.toLowerCase())===q);
+  if(gateMatch){navigateToGate(gateMatch.id);e.target.value='';}
+});
+
+// ─── CLOCK ───
+function updateClock(){
+  const now=new Date();
+  document.getElementById('clockDisplay').textContent=
+    now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+}
+updateClock();
+setInterval(updateClock,1000);
+
+// ─── COUNTDOWN ───
+let secs = 27*60;
+setInterval(()=>{
+  secs--;
+  if(secs<0){clearInterval();return;}
+  const m=Math.floor(secs/60), s=secs%60;
+  document.getElementById('countdown').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  if(secs===15*60){
+    document.getElementById('boardingAlert').classList.add('show');
+    setTimeout(()=>document.getElementById('boardingAlert').classList.remove('show'),8000);
+  }
+},1000);
+
+// ─── FLOOR SELECTOR ───
+document.querySelectorAll('.floor-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.floor-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+// ─── LABEL PROJECT POSITIONS ───
+const v3 = new THREE.Vector3();
+function projectLabel(worldX, worldY, worldZ){
+  v3.set(worldX, worldY, worldZ);
+  v3.project(camera);
+  const rect = mapArea.getBoundingClientRect();
+  const x = (v3.x*.5+.5)*rect.width;
+  const y = (-v3.y*.5+.5)*rect.height;
+  return {x, y, visible: v3.z < 1};
+}
+
+// ─── ANIMATE ───
+let t = 0;
+(function animate(){
+  requestAnimationFrame(animate);
+  t += .016;
+
+  // Pulse player ring
+  ring.material.opacity = .4+.3*Math.sin(t*3);
+  ring.scale.setScalar(1+.15*Math.sin(t*3));
+
+  // Pulse dest ring
+  destRing.material.opacity = .4+.3*Math.sin(t*3+Math.PI);
+  destRing.scale.setScalar(1+.15*Math.sin(t*3+Math.PI));
+
+  // Bobbing markers
+  playerGroup.position.y = Math.sin(t*2)*.05;
+  destGroup.position.y = Math.sin(t*2+1)*.05;
+
+  // Gate B12 spotlight pulse
+  spotlight.intensity = 2.5+.5*Math.sin(t*1.5);
+
+  // Update label positions
+  labels.forEach(lbl=>{
+    const p = projectLabel(lbl.wx, lbl.wy||1.5, lbl.wz);
+    lbl.el.style.left = p.x+'px';
+    lbl.el.style.top = p.y+'px';
+    lbl.el.style.opacity = p.visible ? '1' : '0';
+  });
+
+  renderer.render(scene, camera);
+})();
+</script>
+</body>
+</html>
