@@ -3,469 +3,419 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Obscura — Gothic Perfume House</title>
+<title>Sillage — Perfume Atelier</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Crimson+Text:ital,wght@0,400;1,400;1,600&family=DM+Sans:wght@200;300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:wght@200;300;400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#02010a;--purple:#4a0e6b;--gold:#c9a84c;--gold-bright:#f0c060;--gold-dim:#7a5c20;--cream:#f5ead8;--gray:#5a4a6a;--white:#faf4ff}
+:root{--bg:#0c0a0f;--bg2:#130f1a;--gold:#c9a55a;--gold2:#e8c880;--golddark:#7a5a20;--cream:#f5ede0;--cream2:#faf6f0;--text:#8a7a7a;--textl:#c4b8b0;--border:rgba(201,165,90,.15);--white:#fff8f0}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden}
-
-/* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:300;display:flex;justify-content:space-between;align-items:center;padding:24px 56px;background:linear-gradient(to bottom,rgba(2,1,10,.9),transparent)}
-.nav-brand{font-family:'Cinzel',serif;font-size:16px;font-weight:700;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);text-decoration:none;transition:color .4s}
-.nav-brand:hover{color:var(--gold-bright)}
-.nav-links{display:flex;gap:40px}
-.nav-link{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:rgba(201,168,76,.4);text-decoration:none;transition:color .3s}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--cream);font-family:'DM Sans',sans-serif;font-weight:300;display:flex;flex-direction:column}
+nav{height:60px;display:flex;align-items:center;padding:0 48px;justify-content:space-between;border-bottom:1px solid var(--border);flex-shrink:0;z-index:20;background:rgba(12,10,15,.9);backdrop-filter:blur(20px)}
+.nav-brand{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;letter-spacing:.18em;color:var(--white);text-decoration:none}
+.nav-brand span{color:var(--gold)}
+.nav-links{display:flex;gap:36px}
+.nav-link{font-size:10px;font-weight:400;letter-spacing:.28em;text-transform:uppercase;color:var(--text);text-decoration:none;transition:color .3s}
 .nav-link:hover{color:var(--gold)}
-.nav-back{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--gray);text-decoration:none;transition:color .3s;border-left:1px solid rgba(201,168,76,.12);padding-left:24px}
+.nav-back{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--text);text-decoration:none;transition:color .3s;padding-left:18px;border-left:1px solid var(--border)}
 .nav-back:hover{color:var(--gold)}
-
-/* HERO — full viewport Three.js */
-.hero{position:relative;height:100vh;min-height:700px;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
-#perfumeCanvas{position:absolute;inset:0;z-index:1}
-
-.hero-inner{position:relative;z-index:10;display:flex;flex-direction:column;align-items:center;pointer-events:none}
-.hero-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.55em;text-transform:uppercase;color:var(--gold);margin-bottom:260px;opacity:0;animation:fi 1.2s ease forwards .5s}
-.hero-bottom{margin-top:20px}
-.hero-title{font-family:'Cinzel',serif;font-weight:700;font-size:clamp(3rem,8vw,7rem);letter-spacing:.08em;text-transform:uppercase;line-height:.95;color:var(--cream);opacity:0;animation:fi 1.2s ease forwards 1.2s}
-.hero-title em{font-style:italic;color:var(--gold);font-weight:400}
-.hero-tag{font-family:'Crimson Text',serif;font-style:italic;font-size:clamp(1rem,2vw,1.3rem);color:rgba(245,234,216,.45);margin:16px 0 48px;opacity:0;animation:fi 1s ease forwards 1.5s;line-height:1.7}
-.hero-ctas{display:flex;gap:20px;flex-wrap:wrap;justify-content:center;opacity:0;animation:fi .9s ease forwards 1.8s;pointer-events:all}
-.btn-gold{padding:14px 40px;background:transparent;border:1px solid var(--gold);color:var(--gold);font-family:'Cinzel',serif;font-size:10px;font-weight:500;letter-spacing:.3em;text-transform:uppercase;text-decoration:none;transition:background .4s,box-shadow .4s,color .4s,transform .2s;position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:12px}
-.btn-gold::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--gold-dim),var(--gold));transform:translateX(-100%);transition:transform .4s;z-index:-1}
-.btn-gold:hover{color:#0a0610;box-shadow:0 0 40px rgba(201,168,76,.4);transform:translateY(-2px)}
-.btn-gold:hover::before{transform:translateX(0)}
-.btn-ghost-g{padding:13px 36px;background:transparent;border:1px solid rgba(201,168,76,.2);color:rgba(201,168,76,.55);font-family:'Cinzel',serif;font-size:10px;letter-spacing:.3em;text-transform:uppercase;text-decoration:none;transition:border-color .4s,color .4s,transform .2s}
-.btn-ghost-g:hover{border-color:rgba(201,168,76,.6);color:var(--gold);transform:translateY(-2px)}
-
-.scroll-hint{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);z-index:10;display:flex;flex-direction:column;align-items:center;gap:10px;opacity:0;animation:fi .8s ease forwards 2.2s}
-.sh-bar{width:1px;height:48px;background:linear-gradient(to bottom,transparent,var(--gold));animation:shp 2.5s ease-in-out infinite;opacity:.5}
-@keyframes shp{0%,100%{opacity:.3}50%{opacity:.8}}
-.sh-txt{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold-dim)}
-
-/* NOTES */
-.notes{position:relative;z-index:2;padding:120px 80px;max-width:1300px;margin:0 auto}
-.sec-ey{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:16px;text-align:center;opacity:0;transform:translateY(16px);transition:opacity .8s,transform .8s}
-.sec-ey.on{opacity:1;transform:translateY(0)}
-.sec-h{font-family:'Cinzel',serif;font-weight:700;font-size:clamp(2rem,4vw,3.8rem);color:var(--cream);letter-spacing:.05em;text-align:center;margin-bottom:64px;opacity:0;transform:translateY(16px);transition:opacity .8s .1s,transform .8s .1s}
-.sec-h.on{opacity:1;transform:translateY(0)}
-
-.pyramid{display:flex;flex-direction:column;align-items:center;gap:2px;max-width:900px;margin:0 auto}
-.pt{display:grid;gap:2px;width:100%}
-.pt:nth-child(1){grid-template-columns:1fr 1fr 1fr}
-.pt:nth-child(2){grid-template-columns:1fr 1fr}
-.pt:nth-child(3){grid-template-columns:1fr}
-.pt-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.45em;text-transform:uppercase;color:rgba(201,168,76,.3);text-align:center;padding:10px;width:100%;border:1px solid rgba(201,168,76,.07)}
-.nc{background:rgba(6,3,15,.9);backdrop-filter:blur(10px);padding:32px 28px;border:1px solid rgba(201,168,76,.07);opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease,background .3s}
-.nc.on{opacity:1;transform:translateY(0)}
-.nc:hover{background:rgba(74,14,107,.2)}
-.nc-t{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.45em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:12px}
-.nc-n{font-family:'Cinzel',serif;font-size:1.1rem;font-weight:600;color:var(--cream);margin-bottom:8px;letter-spacing:.06em;transition:color .3s}
-.nc:hover .nc-n{color:var(--gold)}
-.nc-d{font-family:'Crimson Text',serif;font-style:italic;font-size:.9rem;color:var(--gray);line-height:1.75}
-
-/* COLLECTION */
-.scents{position:relative;z-index:2;padding:60px 80px 120px;max-width:1300px;margin:0 auto}
-.sc-h{font-family:'Cinzel',serif;font-weight:700;font-size:clamp(2rem,4vw,3.5rem);color:var(--cream);letter-spacing:.06em;margin-bottom:56px;opacity:0;transform:translateY(20px);transition:opacity .8s,transform .8s}
-.sc-h.on{opacity:1;transform:translateY(0)}
-.sc-h span{color:var(--gold)}
-.sg{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:rgba(201,168,76,.04)}
-.sc{background:rgba(6,3,15,.95);opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
-.sc.on{opacity:1;transform:translateY(0)}
-.sc-img{position:relative;overflow:hidden;height:300px}
-.sc-img img{width:100%;height:100%;object-fit:cover;filter:brightness(.5) saturate(.35) sepia(.2);transition:transform .9s,filter .6s}
-.sc:hover .sc-img img{transform:scale(1.07);filter:brightness(.65) saturate(.5)}
-.sc-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(6,3,15,.98) 0%,transparent 50%)}
-.sc-body{padding:24px 28px 32px}
-.sc-num{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.4em;color:var(--gold-dim);margin-bottom:10px}
-.sc-name{font-family:'Cinzel',serif;font-weight:700;font-size:1.25rem;letter-spacing:.08em;color:var(--cream);margin-bottom:8px;transition:color .3s}
-.sc:hover .sc-name{color:var(--gold)}
-.sc-desc{font-family:'Crimson Text',serif;font-style:italic;font-size:.9rem;color:var(--gray);line-height:1.8;margin-bottom:18px}
-.sc-foot{display:flex;justify-content:space-between;align-items:center;padding-top:14px;border-top:1px solid rgba(201,168,76,.07)}
-.sc-price{font-family:'Cinzel',serif;font-size:.95rem;color:var(--cream);letter-spacing:.05em}
-.sc-add{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);text-decoration:none;transition:letter-spacing .3s}
-.sc-add:hover{letter-spacing:.32em}
-
-/* STORY */
-.story{position:relative;z-index:2;background:rgba(74,14,107,.08);border-top:1px solid rgba(201,168,76,.08);border-bottom:1px solid rgba(201,168,76,.08);padding:120px 80px}
-.story-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:center}
-.s-img{position:relative;opacity:0;transform:translateX(-28px);transition:opacity .9s,transform .9s}
-.s-img.on{opacity:1;transform:translateX(0)}
-.s-img img{width:100%;height:500px;object-fit:cover;filter:brightness(.5) saturate(.4) sepia(.2)}
-.s-img::before,.s-img::after{content:'';position:absolute;width:22px;height:22px;border-color:var(--gold);border-style:solid;opacity:.45}
-.s-img::before{top:-1px;left:-1px;border-width:1px 0 0 1px}
-.s-img::after{bottom:-1px;right:-1px;border-width:0 1px 1px 0}
-.s-txt{opacity:0;transform:translateX(28px);transition:opacity .9s .2s,transform .9s .2s}
-.s-txt.on{opacity:1;transform:translateX(0)}
-.s-ey{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:22px}
-.s-h{font-family:'Cinzel',serif;font-weight:700;font-size:clamp(1.8rem,3vw,3rem);color:var(--cream);letter-spacing:.05em;line-height:1.2;margin-bottom:22px;transition:color .3s}
-.s-h:hover{color:var(--gold)}
-.s-p{font-family:'Crimson Text',serif;font-size:1rem;color:var(--gray);line-height:1.9;margin-bottom:14px;transition:color .3s}
-.s-p:hover{color:rgba(245,234,216,.6)}
-.s-q{font-family:'Crimson Text',serif;font-style:italic;font-size:1.1rem;color:rgba(201,168,76,.65);border-left:1px solid rgba(201,168,76,.25);padding-left:20px;margin:24px 0;line-height:1.7}
-.s-sig{font-family:'Cinzel',serif;font-size:.85rem;color:var(--gold-dim);letter-spacing:.12em;margin-top:28px}
-
-/* FOOTER */
-footer{position:relative;z-index:2;background:rgba(2,1,10,.98);border-top:1px solid rgba(201,168,76,.07);padding:52px 80px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
-.ft-brand{font-family:'Cinzel',serif;font-weight:700;font-size:20px;letter-spacing:.25em;color:var(--gold)}
-.ft-copy{font-size:12px;letter-spacing:.1em;color:var(--gray)}
-.ft-back{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--gray);text-decoration:none;transition:color .3s}
-.ft-back:hover{color:var(--gold)}
-
-@keyframes fi{from{opacity:0}to{opacity:1}}
+.main{flex:1;display:flex;overflow:hidden}
+.picker-panel{width:190px;flex-shrink:0;border-right:1px solid var(--border);background:var(--bg2);overflow-y:auto;padding:18px 12px}
+.picker-panel::-webkit-scrollbar{width:3px}
+.picker-panel::-webkit-scrollbar-thumb{background:var(--border)}
+.picker-label{font-size:8px;font-weight:500;letter-spacing:.35em;text-transform:uppercase;color:var(--text);margin-bottom:14px;display:block}
+.bottle-thumb{width:100%;padding:12px 8px;border:1px solid transparent;cursor:pointer;transition:all .3s;margin-bottom:6px;display:flex;flex-direction:column;align-items:center;gap:7px;background:transparent;font-family:'DM Sans',sans-serif}
+.bottle-thumb.active{border-color:var(--gold);background:rgba(201,165,90,.06)}
+.bottle-thumb:hover:not(.active){border-color:rgba(201,165,90,.25);background:rgba(201,165,90,.03)}
+.bt-canvas{width:72px;height:72px;display:block}
+.bt-name{font-family:'Cormorant Garamond',serif;font-size:.78rem;color:var(--textl);text-align:center}
+.bt-price{font-size:.68rem;color:var(--gold)}
+.bt-shape{font-size:.58rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--text)}
+.showcase{flex:1;position:relative;overflow:hidden;display:flex;flex-direction:column}
+.showcase-canvas-wrap{flex:1;position:relative}
+canvas#perfumeCanvas{position:absolute;inset:0;width:100%;height:100%;cursor:grab}
+canvas#perfumeCanvas:active{cursor:grabbing}
+.showcase-brand{position:absolute;top:28px;left:50%;transform:translateX(-50%);z-index:10;text-align:center;pointer-events:none}
+.sb-eyebrow{font-size:8px;font-weight:500;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.sb-name{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:300;color:var(--white);line-height:1}
+.sb-name em{font-style:italic;color:var(--gold)}
+.drag-hint{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);font-size:8px;font-weight:400;letter-spacing:.35em;text-transform:uppercase;color:rgba(201,165,90,.4);pointer-events:none;z-index:10}
+.info-panel{width:300px;flex-shrink:0;border-left:1px solid var(--border);background:var(--bg2);overflow-y:auto;padding:28px 24px;display:flex;flex-direction:column}
+.info-panel::-webkit-scrollbar{width:3px}
+.info-panel::-webkit-scrollbar-thumb{background:var(--border)}
+.ip-eyebrow{font-size:8px;font-weight:500;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.ip-name{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:var(--white);line-height:1.05;margin-bottom:5px}
+.ip-name em{font-style:italic;color:var(--gold2)}
+.ip-house{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.9rem;color:var(--text);margin-bottom:18px}
+.ip-price{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--gold);margin-bottom:4px}
+.ip-size{font-size:.75rem;color:var(--text);margin-bottom:20px}
+.ip-divider{height:1px;background:var(--border);margin:16px 0}
+.scent-header{font-size:8px;font-weight:500;letter-spacing:.35em;text-transform:uppercase;color:var(--text);margin-bottom:12px}
+.scent-pyramid{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.sp-row{display:flex;align-items:flex-start;gap:10px}
+.sp-label{font-size:.62rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--golddark);width:38px;flex-shrink:0;padding-top:3px}
+.sp-notes{display:flex;gap:4px;flex-wrap:wrap}
+.sp-note{font-size:.68rem;color:var(--textl);padding:2px 8px;border:1px solid rgba(201,165,90,.18);background:rgba(201,165,90,.04);font-weight:300}
+.str-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.str-label{font-size:.68rem;color:var(--text);width:56px}
+.str-bar{flex:1;height:2px;background:rgba(255,255,255,.06)}
+.str-fill{height:100%;background:linear-gradient(to right,var(--golddark),var(--gold));transition:width 1s ease}
+.str-val{font-size:.65rem;font-family:'Cormorant Garamond',serif;color:var(--gold);width:26px;text-align:right}
+.ip-desc{font-size:.8rem;color:var(--text);line-height:1.85;margin-bottom:16px;font-weight:300}
+.ip-occasion{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:16px}
+.oc-tag{font-size:.62rem;padding:3px 10px;border:1px solid var(--border);color:var(--text)}
+.bottle-detail{display:flex;gap:10px;margin-bottom:16px}
+.bd-item{flex:1;padding:8px 10px;background:rgba(201,165,90,.04);border:1px solid var(--border);text-align:center}
+.bd-val{font-family:'Cormorant Garamond',serif;font-size:.9rem;color:var(--white);display:block;margin-bottom:2px}
+.bd-label{font-size:.58rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--text)}
+.btn-bag{width:100%;padding:12px;background:linear-gradient(135deg,var(--golddark),var(--gold));color:var(--white);font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;border:none;cursor:pointer;transition:all .3s;margin-bottom:8px}
+.btn-bag:hover{opacity:.85;transform:translateY(-1px)}
+.btn-wish{width:100%;padding:11px;background:transparent;border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:.75rem;letter-spacing:.22em;text-transform:uppercase;cursor:pointer;transition:all .3s}
+.btn-wish:hover{border-color:var(--gold);color:var(--gold)}
 .sp{position:fixed;pointer-events:none;z-index:9999;border-radius:50%;animation:spa .65s ease forwards}
 @keyframes spa{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(0)}}
-
-@media(max-width:960px){
-  nav{padding:20px 24px}
-  .nav-links{display:none}
-  .nav-back{border:none;padding:0}
-  .hero-eyebrow{margin-bottom:200px}
-  .notes{padding:80px 24px}
-  .pt:nth-child(1){grid-template-columns:1fr}
-  .pt:nth-child(2){grid-template-columns:1fr}
-  .scents{padding:60px 24px 100px}
-  .sg{grid-template-columns:1fr}
-  .story{padding:80px 28px}
-  .story-inner{grid-template-columns:1fr;gap:40px}
-  .s-img img{height:280px}
-  footer{padding:40px 24px;flex-direction:column;text-align:center}
-}
+@media(max-width:900px){.picker-panel{width:150px}.info-panel{width:250px}}
+@media(max-width:680px){.info-panel{display:none}.picker-panel{width:120px}}
 </style>
 </head>
 <body>
-
 <nav>
-  <a href="../index.html" class="nav-brand">Obscura</a>
-  <div class="nav-links">
-    <a href="#notes" class="nav-link">Scent Notes</a>
-    <a href="#collection" class="nav-link">Collection</a>
-    <a href="#maison" class="nav-link">Maison</a>
-  </div>
+  <a href="../index.html" class="nav-brand">SIL<span>LAGE</span></a>
+  <div class="nav-links"><a href="#" class="nav-link">Collection</a><a href="#" class="nav-link">Ateliers</a><a href="#" class="nav-link">About</a></div>
   <a href="../index.html" class="nav-back">← Portfolio</a>
 </nav>
-
-<section class="hero">
-  <canvas id="perfumeCanvas"></canvas>
-  <div class="hero-inner">
-    <span class="hero-eyebrow">Haute Parfumerie · Est. Paris 1924</span>
-    <div class="hero-bottom">
-      <h1 class="hero-title">Ob<em>sc</em>ura</h1>
-      <p class="hero-tag">Where darkness becomes fragrance.<br>Oud, black rose, and vetiver — bottled obsession.</p>
-      <div class="hero-ctas">
-        <a href="#collection" class="btn-gold">Discover the Collection ✦</a>
-        <a href="#notes" class="btn-ghost-g">Scent Pyramid</a>
+<div class="main">
+  <div class="picker-panel">
+    <span class="picker-label">Collection</span>
+    <div id="bottleList"></div>
+  </div>
+  <div class="showcase">
+    <div class="showcase-canvas-wrap">
+      <canvas id="perfumeCanvas"></canvas>
+      <div class="showcase-brand">
+        <div class="sb-eyebrow" id="sbEyebrow">Eau de Parfum</div>
+        <div class="sb-name" id="sbName">Noir <em>Absolu</em></div>
       </div>
+      <div class="drag-hint">✦ drag to rotate ✦</div>
     </div>
   </div>
-  <div class="scroll-hint"><div class="sh-bar"></div><span class="sh-txt">Descend</span></div>
-</section>
-
-<!-- NOTES PYRAMID -->
-<section class="notes" id="notes">
-  <span class="sec-ey">The Olfactory Pyramid</span>
-  <h2 class="sec-h">Layers of Obsession</h2>
-  <div class="pyramid">
-    <div class="pt-label">Top Notes — First Impression</div>
-    <div class="pt">
-      <div class="nc" data-d="0"><div class="nc-t">Top</div><div class="nc-n">Bergamot Noir</div><p class="nc-d">Cold citrus that cuts through darkness like candlelight through velvet.</p></div>
-      <div class="nc" data-d="60"><div class="nc-t">Top</div><div class="nc-n">Black Pepper</div><p class="nc-d">Sharp volatile spice that arrests attention before melting into deeper accords.</p></div>
-      <div class="nc" data-d="120"><div class="nc-t">Top</div><div class="nc-n">Violet Leaf</div><p class="nc-d">Green, powdery, slightly metallic — the whisper before the storm.</p></div>
+  <div class="info-panel">
+    <div class="ip-eyebrow" id="ipEyebrow">Eau de Parfum</div>
+    <div class="ip-name" id="ipName">Noir <em>Absolu</em></div>
+    <div class="ip-house" id="ipHouse">Sillage Atelier · Paris</div>
+    <div class="ip-price" id="ipPrice">€285</div>
+    <div class="ip-size" id="ipSize">50ml · 100ml</div>
+    <div class="ip-divider"></div>
+    <div class="scent-header">Scent Pyramid</div>
+    <div class="scent-pyramid">
+      <div class="sp-row"><span class="sp-label">Top</span><div class="sp-notes" id="noteTop"></div></div>
+      <div class="sp-row"><span class="sp-label">Heart</span><div class="sp-notes" id="noteHeart"></div></div>
+      <div class="sp-row"><span class="sp-label">Base</span><div class="sp-notes" id="noteBase"></div></div>
     </div>
-    <div class="pt-label">Heart Notes — The Character</div>
-    <div class="pt">
-      <div class="nc" data-d="180"><div class="nc-t">Heart</div><div class="nc-n">Black Rose Absolute</div><p class="nc-d">Rich velvety rose stripped of sweetness, given shadow.</p></div>
-      <div class="nc" data-d="240"><div class="nc-t">Heart</div><div class="nc-n">Dark Oud Resin</div><p class="nc-d">Indonesian agarwood aged twelve years. Smoky, sacred, irreplaceable.</p></div>
+    <div class="ip-divider"></div>
+    <div class="scent-header">Fragrance Profile</div>
+    <div class="str-row"><span class="str-label">Sillage</span><div class="str-bar"><div class="str-fill" id="strSillage" style="width:0%"></div></div><span class="str-val" id="strSillageV"></span></div>
+    <div class="str-row"><span class="str-label">Longevity</span><div class="str-bar"><div class="str-fill" id="strLong" style="width:0%"></div></div><span class="str-val" id="strLongV"></span></div>
+    <div class="str-row"><span class="str-label">Intensity</span><div class="str-bar"><div class="str-fill" id="strInt" style="width:0%"></div></div><span class="str-val" id="strIntV"></span></div>
+    <div class="ip-divider"></div>
+    <p class="ip-desc" id="ipDesc"></p>
+    <div class="scent-header">Occasions</div>
+    <div class="ip-occasion" id="ipOccasion"></div>
+    <div class="ip-divider"></div>
+    <div class="scent-header">Bottle Details</div>
+    <div class="bottle-detail">
+      <div class="bd-item"><span class="bd-val" id="bdShape">—</span><span class="bd-label">Shape</span></div>
+      <div class="bd-item"><span class="bd-val" id="bdGlass">—</span><span class="bd-label">Glass</span></div>
+      <div class="bd-item"><span class="bd-val" id="bdCap">—</span><span class="bd-label">Cap</span></div>
     </div>
-    <div class="pt-label">Base Notes — The Memory</div>
-    <div class="pt">
-      <div class="nc" data-d="320"><div class="nc-t">Base</div><div class="nc-n">Vetiver · Ambergris · Black Musk</div><p class="nc-d">The foundation lingering on skin for hours — earthy, oceanic, magnetic.</p></div>
-    </div>
+    <button class="btn-bag" id="bagBtn">Add to Collection →</button>
+    <button class="btn-wish">Save to Wishlist</button>
   </div>
-</section>
-
-<!-- COLLECTION -->
-<section class="scents" id="collection">
-  <h2 class="sc-h">The <span>Collection</span></h2>
-  <div class="sg">
-    <div class="sc" data-d="0">
-      <div class="sc-img"><img src="https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=600&q=80" alt="Nuit"></div>
-      <div class="sc-body"><div class="sc-num">No. 01</div><div class="sc-name">Nuit Éternelle</div><p class="sc-desc">Black rose, oud, and ambergris — the night made wearable.</p><div class="sc-foot"><span class="sc-price">€380 / 50ml</span><a href="#" class="sc-add">Add to Vanity →</a></div></div>
-    </div>
-    <div class="sc" data-d="120">
-      <div class="sc-img"><img src="https://images.unsplash.com/photo-1567631769492-01f33a11f651?w=600&q=80" alt="Velours"></div>
-      <div class="sc-body"><div class="sc-num">No. 02</div><div class="sc-name">Velours Pourpre</div><p class="sc-desc">Iris, heliotrope, and sandalwood — neither day nor night.</p><div class="sc-foot"><span class="sc-price">€340 / 50ml</span><a href="#" class="sc-add">Add to Vanity →</a></div></div>
-    </div>
-    <div class="sc" data-d="240">
-      <div class="sc-img"><img src="https://images.unsplash.com/photo-1547887537-6158d64c35b3?w=600&q=80" alt="Cendres"></div>
-      <div class="sc-body"><div class="sc-num">No. 03</div><div class="sc-name">Cendres d'Or</div><p class="sc-desc">Frankincense, labdanum, and liquid amber drifting through cathedral stone.</p><div class="sc-foot"><span class="sc-price">€420 / 50ml</span><a href="#" class="sc-add">Add to Vanity →</a></div></div>
-    </div>
-  </div>
-</section>
-
-<!-- STORY -->
-<section class="story" id="maison">
-  <div class="story-inner">
-    <div class="s-img"><img src="https://images.unsplash.com/photo-1615634260167-c8cdede054de?w=800&q=80" alt="Atelier"></div>
-    <div class="s-txt">
-      <span class="s-ey">The Maison</span>
-      <h2 class="s-h">A century of<br>beautiful darkness</h2>
-      <p class="s-p">Founded in a small atelier on Rue du Faubourg Saint-Honoré in 1924, Obscura has always believed the most compelling fragrances live at the edge of comfort.</p>
-      <blockquote class="s-q">"We do not create scents for the day. We create memories for the night that refuses to end."</blockquote>
-      <p class="s-p">Every ingredient sourced with obsessive care. Every formula hand-blended in small batches. Every bottle numbered.</p>
-      <div class="s-sig">— Élise Moreau, Maître Parfumeur</div>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <div class="ft-brand">Obscura</div>
-  <div class="ft-copy">Perfume Demo — © 2025 Studio 3D</div>
-  <a href="../index.html" class="ft-back">← Back to Portfolio</a>
-</footer>
-
+</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-// ── THREE.JS PERFUME BOTTLE + VOLUMETRIC GOLD PARTICLE ORBITS ──
-(function(){
-  const canvas = document.getElementById('perfumeCanvas');
-  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:false});
-  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-  renderer.setSize(innerWidth, innerHeight);
-  renderer.setClearColor(0x02010a, 1);
-  renderer.shadowMap.enabled = true;
+const PERFUMES=[
+  {id:'noir',name:'Noir Absolu',nameHtml:'Noir <em>Absolu</em>',house:'Sillage Atelier · Paris',type:'Eau de Parfum',price:'€285',sizes:'50ml · 100ml · 200ml',top:['Bergamot','Black Pepper','Cardamom'],heart:['Rose Centifolia','Oud','Vetiver'],base:['Ambergris','Sandalwood','Musk'],sillage:88,longevity:92,intensity:85,desc:'An opulent nocturnal composition. Spiced citrus opens onto a rose and oud heart of rare complexity, settling into a warm ambergris and sandalwood base.',occasions:['Evening','Formal','Autumn','Winter'],shape:'Rectangular',glass:'Smoked',cap:'Matte Gold',bottle:{shape:'rect',w:1.0,h:2.2,d:0.5,bodyColor:0x1a1020,bodyOpacity:.85,liquidColor:0x2a0a08,liquidOpacity:.9,capColor:0xc9a55a,capH:.35,capMetal:true,accent:0xc9a55a,labelColor:0xf0e8d0}},
+  {id:'lumiere',name:'Lumière Blanche',nameHtml:'Lumière <em>Blanche</em>',house:'Sillage Atelier · Grasse',type:'Eau de Cologne Intense',price:'€210',sizes:'75ml · 125ml',top:['Neroli','Lemon','White Tea'],heart:['Jasmine Sambac','Iris','Magnolia'],base:['White Musk','Cedar','Benzoin'],sillage:62,longevity:72,intensity:55,desc:'A luminous floral built around fresh neroli and jasmine sambac, as white and radiant as morning light on stone. Iris adds powder, cedar grounds the lightness.',occasions:['Day','Spring','Summer','Casual'],shape:'Round',glass:'Clear',cap:'Brushed Silver',bottle:{shape:'round',r:.55,h:2.0,bodyColor:0xe8f4f8,bodyOpacity:.25,liquidColor:0xf8f0d0,liquidOpacity:.4,capColor:0xa8b8c0,capH:.3,capMetal:true,accent:0xc8d8e0,labelColor:0xffffff}},
+  {id:'amber',name:'Ambre Sacré',nameHtml:'Ambre <em>Sacré</em>',house:'Sillage Atelier · Marrakech',type:'Extrait de Parfum',price:'€380',sizes:'30ml · 50ml',top:['Saffron','Cinnamon','Pink Pepper'],heart:['Amber','Labdanum','Myrrh'],base:['Oud','Patchouli','Vanilla'],sillage:95,longevity:98,intensity:95,desc:'The richest composition in the collection. Saffron and spice give way to a monumental amber heart — ancient, resinous and endlessly warm.',occasions:['Evening','Ceremony','Autumn','Winter'],shape:'Flacon',glass:'Amber',cap:'Hammered Gold',bottle:{shape:'hex',w:.85,h:2.4,d:.6,bodyColor:0x6a2800,bodyOpacity:.88,liquidColor:0x8a3a04,liquidOpacity:.95,capColor:0xd4a030,capH:.4,capMetal:true,accent:0xf0b840,labelColor:0xf0d890}},
+  {id:'verte',name:'Verte Forêt',nameHtml:'Verte <em>Forêt</em>',house:'Sillage Atelier · Kyoto',type:'Eau de Parfum',price:'€240',sizes:'50ml · 100ml',top:['Green Tea','Yuzu','Bamboo'],heart:['Fern','Cypress','Geranium'],base:['Moss','Vetiver','Hinoki'],sillage:58,longevity:80,intensity:50,desc:'A breath of ancient forest. Green tea and yuzu open with piercing clarity before descending into the cool shadow of fern and cypress.',occasions:['Day','Spring','Unisex','Sport'],shape:'Cylinder',glass:'Matte Green',cap:'Wood',bottle:{shape:'round',r:.48,h:2.3,bodyColor:0x1a3020,bodyOpacity:.92,liquidColor:0x2a5028,liquidOpacity:.88,capColor:0x4a3820,capH:.35,capMetal:false,accent:0x60a050,labelColor:0xd0e8c0}},
+  {id:'rose',name:'Rose Éternelle',nameHtml:'Rose <em>Éternelle</em>',house:'Sillage Atelier · Istanbul',type:'Eau de Parfum',price:'€320',sizes:'50ml · 100ml · 200ml',top:['Turkish Rose','Lychee','Raspberry'],heart:['Rose Absolute','Peony','Ylang Ylang'],base:['Orris Root','Sandalwood','Civet'],sillage:80,longevity:88,intensity:78,desc:'An absolute rose of rare purity. Turkish rose absolute forms the spine of this composition — supported by lychee and raspberry brightness.',occasions:['Evening','Romance','Spring','Gift'],shape:'Oval',glass:'Rose',cap:'Rose Gold',bottle:{shape:'oval',rx:.55,ry:.38,h:1.9,bodyColor:0x5a1030,bodyOpacity:.78,liquidColor:0xd04060,liquidOpacity:.65,capColor:0xd08890,capH:.28,capMetal:true,accent:0xf090a0,labelColor:0xffe0e8}},
+];
 
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(45, innerWidth/innerHeight, 0.1, 100);
-  camera.position.set(0, 0, 7);
+const canvas=document.getElementById('perfumeCanvas');
+const wrap=document.querySelector('.showcase-canvas-wrap');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setClearColor(0x0c0a0f,1);
+renderer.shadowMap.enabled=true;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.2;
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(38,1,.1,100);
+camera.position.set(0,1.5,7);camera.lookAt(0,1,0);
 
-  // ── ATMOSPHERE BACKGROUND ──
-  // Deep purple fog spheres
-  function makeGlow(col, x, y, z, s){
-    const g=new THREE.SphereGeometry(2,16,16);
-    const m=new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:.06,blending:THREE.AdditiveBlending,depthWrite:false});
-    const mesh=new THREE.Mesh(g,m);
-    mesh.position.set(x,y,z);mesh.scale.setScalar(s);return mesh;
-  }
-  scene.add(makeGlow(0x4a0e6b,-1,0,-4,2.5));
-  scene.add(makeGlow(0x7b2fa0,2,1,-5,1.8));
-  scene.add(makeGlow(0x2a0540,-2,-1,-3,2));
+function resize(){const w=wrap.clientWidth,h=wrap.clientHeight;renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();}
+resize();window.addEventListener('resize',resize);
 
-  // ── PERFUME BOTTLE (parametric) ──
-  const bottleGroup = new THREE.Group();
-  scene.add(bottleGroup);
+// Lights
+scene.add(new THREE.AmbientLight(0x1a1020,2.5));
+const keyLight=new THREE.SpotLight(0xffe8d0,8,20,Math.PI/5,.4);keyLight.position.set(3,8,5);keyLight.castShadow=true;scene.add(keyLight,keyLight.target);
+const fillLight=new THREE.PointLight(0xc9a55a,2.5,12);fillLight.position.set(-4,3,3);scene.add(fillLight);
+const rimLight=new THREE.PointLight(0xffffff,1.5,10);rimLight.position.set(2,5,-4);scene.add(rimLight);
+const backLight=new THREE.PointLight(0x4428aa,1.2,8);backLight.position.set(0,2,-5);scene.add(backLight);
 
-  // Bottle base — tall rounded box shape via lathe
-  const points = [];
-  // Build bottle profile: base, body, shoulder, neck, cap
-  const profile = [
-    [0.0, -2.2],[0.6,-2.2],[0.65,-2.0],[0.68,-1.5],[0.68,-0.5],
-    [0.65,0.2],[0.5,0.6],[0.3,0.75],[0.28,1.0],[0.3,1.05],
-    [0.3,1.6],[0.32,1.7],[0.32,2.0],[0.28,2.05],[0.0,2.05]
-  ];
-  profile.forEach(p=>points.push(new THREE.Vector2(p[0],p[1])));
-  const bottleGeo = new THREE.LatheGeometry(points, 64);
+// Ground & pedestal
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(20,20),new THREE.MeshStandardMaterial({color:0x0e0a14,roughness:.05,metalness:.7}));
+ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;scene.add(ground);
+const ped=new THREE.Mesh(new THREE.CylinderGeometry(1.2,1.4,.1,32),new THREE.MeshStandardMaterial({color:0x1a1428,roughness:.15,metalness:.3}));
+ped.position.y=.05;ped.receiveShadow=true;scene.add(ped);
+const ringMesh=new THREE.Mesh(new THREE.RingGeometry(1.18,1.22,48),new THREE.MeshBasicMaterial({color:0xc9a55a,side:THREE.DoubleSide,transparent:true,opacity:.6}));
+ringMesh.rotation.x=-Math.PI/2;ringMesh.position.y=.11;scene.add(ringMesh);
 
-  // Glass material — deep purple-tinted glass with high metalness
-  const bottleMat = new THREE.MeshPhysicalMaterial({
-    color: 0x0a0018,
-    transparent: true,
-    opacity: 0.85,
-    roughness: 0.0,
-    metalness: 0.05,
-    reflectivity: 1,
-    transmission: 0.6,
-    thickness: 0.8,
-    ior: 1.5,
-    side: THREE.DoubleSide,
-    envMapIntensity: 2,
+// ── BUILD BOTTLE ──
+let bottleGroup=null;
+
+function buildBottle(p){
+  const b=p.bottle;
+  const g=new THREE.Group();
+
+  const glassMat=new THREE.MeshPhysicalMaterial({
+    color:b.bodyColor,transparent:true,opacity:b.bodyOpacity,
+    roughness:.05,metalness:0,reflectivity:.95,
+    transmission:b.bodyOpacity<.4?.7:.2,thickness:.5,
+    side:THREE.DoubleSide,envMapIntensity:1.5,
   });
+  const liquidMat=new THREE.MeshStandardMaterial({color:b.liquidColor,transparent:true,opacity:b.liquidOpacity,roughness:.12});
+  const capMat=new THREE.MeshStandardMaterial({color:b.capColor,roughness:b.capMetal?.12:.6,metalness:b.capMetal?.9:.1});
+  const accentMat=new THREE.MeshStandardMaterial({color:b.accent,roughness:.2,metalness:.85});
 
-  const bottle = new THREE.Mesh(bottleGeo, bottleMat);
-  bottle.castShadow = true;
-  bottleGroup.add(bottle);
+  const shape=b.shape;
 
-  // Gold rim / cap
-  const capGeo = new THREE.CylinderGeometry(0.35, 0.35, 0.5, 32);
-  const goldMat = new THREE.MeshStandardMaterial({color:0xc9a84c,metalness:1,roughness:0.05,envMapIntensity:2});
-  const cap = new THREE.Mesh(capGeo, goldMat);
-  cap.position.y = 2.3;
-  bottleGroup.add(cap);
-
-  // Gold band
-  const bandGeo = new THREE.CylinderGeometry(0.34, 0.34, 0.04, 32);
-  const band = new THREE.Mesh(bandGeo, goldMat);
-  band.position.y = 0.65;
-  bottleGroup.add(band);
-
-  // Label plane (slightly inset)
-  const labelGeo = new THREE.PlaneGeometry(1.0, 1.4);
-  const labelMat = new THREE.MeshBasicMaterial({color:0x0d0014,transparent:true,opacity:0.7,side:THREE.DoubleSide});
-  const label = new THREE.Mesh(labelGeo, labelMat);
-  label.position.set(0, -0.5, 0.69);
-  bottleGroup.add(label);
-
-  // ── VOLUMETRIC GOLD PARTICLE ORBITS ──
-  // 3 orbital planes at different angles with different sizes
-  const orbitalSystems = [];
-
-  function makeOrbit(count, radiusMin, radiusMax, color, size, tiltX, tiltZ, speed){
-    const geo = new THREE.BufferGeometry();
-    const pos = new Float32Array(count*3);
-    const angles = new Float32Array(count);
-    const radii = new Float32Array(count);
-    const verticals = new Float32Array(count);
-
-    for(let i=0;i<count;i++){
-      angles[i] = Math.random()*Math.PI*2;
-      radii[i] = radiusMin + Math.random()*(radiusMax-radiusMin);
-      verticals[i] = (Math.random()-.5)*0.8;
-      pos[i*3]   = Math.cos(angles[i])*radii[i];
-      pos[i*3+1] = verticals[i];
-      pos[i*3+2] = Math.sin(angles[i])*radii[i];
-    }
-    geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
-
-    const mat = new THREE.PointsMaterial({
-      color, size, transparent:true, opacity:.85,
-      blending:THREE.AdditiveBlending, depthWrite:false, sizeAttenuation:true
+  if(shape==='rect'){
+    // Body - use BoxGeometry with slight chamfer effect via layering
+    const body=new THREE.Mesh(new THREE.BoxGeometry(b.w,b.h,b.d,1,16,1),glassMat);
+    body.position.y=b.h/2;body.castShadow=true;g.add(body);
+    // Inner liquid fill
+    const liq=new THREE.Mesh(new THREE.BoxGeometry(b.w*.8,b.h*.68,b.d*.8),liquidMat);
+    liq.position.y=b.h*.38;g.add(liq);
+    // Neck
+    const neck=new THREE.Mesh(new THREE.CylinderGeometry(.14,b.w*.3,.3,16),glassMat);
+    neck.position.y=b.h+.15;g.add(neck);
+    // Cap
+    const cap=new THREE.Mesh(new THREE.BoxGeometry(b.w*.6,b.capH,b.d*.6),capMat);
+    cap.position.y=b.h+.3+b.capH/2;g.add(cap);
+    // Gold accent lines on body
+    [.25,.75].forEach(t=>{
+      const line=new THREE.Mesh(new THREE.BoxGeometry(b.w+.01,.018,b.d+.01),accentMat);
+      line.position.y=b.h*t;g.add(line);
     });
-    const pts = new THREE.Points(geo,mat);
-    pts.rotation.x = tiltX;
-    pts.rotation.z = tiltZ;
+    // Label panel (slightly raised)
+    const lbl=new THREE.Mesh(new THREE.BoxGeometry(b.w*.75,.015,b.d/2+.01),new THREE.MeshStandardMaterial({color:b.labelColor,roughness:.3,metalness:.05,transparent:true,opacity:.9}));
+    lbl.position.set(0,b.h*.52,b.d/2+.005);g.add(lbl);
 
-    return {pts, angles, radii, verticals, count, speed, pos, geo};
-  }
+  } else if(shape==='round'){
+    // Lathe bottle — elegant curved profile
+    const pts=[];
+    for(let i=0;i<=20;i++){
+      const t=i/20;
+      const r=b.r*(1-t*.25+Math.sin(t*Math.PI)*.1);
+      pts.push(new THREE.Vector2(r,t*b.h));
+    }
+    const body=new THREE.Mesh(new THREE.LatheGeometry(pts,48),glassMat);
+    body.castShadow=true;g.add(body);
+    // Liquid
+    const lPts=pts.slice(1,15).map(p2=>new THREE.Vector2(p2.x*.82,p2.y));
+    const liq=new THREE.Mesh(new THREE.LatheGeometry(lPts,32),liquidMat);
+    g.add(liq);
+    // Neck
+    const neck=new THREE.Mesh(new THREE.CylinderGeometry(.1,pts[pts.length-2].x*.8,.25,16),glassMat);
+    neck.position.y=b.h+.125;g.add(neck);
+    // Cap (disc)
+    const cap=new THREE.Mesh(new THREE.CylinderGeometry(pts[18].x*.75,pts[18].x*.8,b.capH,32),capMat);
+    cap.position.y=b.h+.25+b.capH/2;g.add(cap);
+    // Torus ring at equator
+    const tor=new THREE.Mesh(new THREE.TorusGeometry(b.r*.85,.016,8,48),accentMat);
+    tor.rotation.x=Math.PI/2;tor.position.y=b.h*.42;g.add(tor);
 
-  const o1 = makeOrbit(280, 1.4, 2.6, 0xc9a84c, 0.022, Math.PI*0.1, Math.PI*0.05, 0.004);
-  const o2 = makeOrbit(180, 1.8, 3.2, 0xf0c060, 0.016, -Math.PI*0.3, Math.PI*0.15, -0.003);
-  const o3 = makeOrbit(120, 0.9, 1.8, 0xa855f7, 0.020, Math.PI*0.4, -Math.PI*0.1, 0.006);
-  const o4 = makeOrbit(80,  2.8, 4.0, 0xffd070, 0.012, -Math.PI*0.15,Math.PI*0.25, -0.002);
-
-  [o1,o2,o3,o4].forEach(o=>{scene.add(o.pts);orbitalSystems.push(o)});
-
-  // Glitter sparks — random bright flashes
-  const glitterGeo = new THREE.BufferGeometry();
-  const glitterCount = 60;
-  const glitterPos = new Float32Array(glitterCount*3);
-  const glitterPhase = new Float32Array(glitterCount);
-  for(let i=0;i<glitterCount;i++){
-    const theta=Math.random()*Math.PI*2, phi=Math.acos(2*Math.random()-1);
-    const r=1.5+Math.random()*2.5;
-    glitterPos[i*3]   = r*Math.sin(phi)*Math.cos(theta);
-    glitterPos[i*3+1] = r*Math.sin(phi)*Math.sin(theta)-0.5;
-    glitterPos[i*3+2] = r*Math.cos(phi);
-    glitterPhase[i]   = Math.random()*Math.PI*2;
-  }
-  glitterGeo.setAttribute('position', new THREE.BufferAttribute(glitterPos,3));
-  const glitterMat = new THREE.PointsMaterial({color:0xfff0a0,size:0.04,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false,sizeAttenuation:true});
-  const glitter = new THREE.Points(glitterGeo, glitterMat);
-  scene.add(glitter);
-
-  // ── LIGHTS ──
-  scene.add(new THREE.AmbientLight(0x1a0a2e, 1.5));
-
-  // Key light — warm gold from front-right
-  const keyLight = new THREE.SpotLight(0xffd4a0, 3.5, 20, Math.PI/5, 0.3);
-  keyLight.position.set(4, 3, 4);
-  keyLight.target.position.set(0,0,0);
-  scene.add(keyLight, keyLight.target);
-
-  // Purple rim light
-  const rimLight = new THREE.PointLight(0x7b2fa0, 2.5, 10);
-  rimLight.position.set(-3, 0, -2);
-  scene.add(rimLight);
-
-  // Gold accent point
-  const goldLight = new THREE.PointLight(0xc9a84c, 2, 8);
-  goldLight.position.set(0, 4, 2);
-  scene.add(goldLight);
-
-  // Beneath glow
-  const underLight = new THREE.PointLight(0x4a0e6b, 1.5, 5);
-  underLight.position.set(0, -3, 1);
-  scene.add(underLight);
-
-  // Mouse parallax
-  let mx=0, my=0;
-  document.addEventListener('mousemove', e=>{
-    mx=(e.clientX/innerWidth-.5)*1.2;
-    my=(e.clientY/innerHeight-.5)*0.8;
-  });
-
-  window.addEventListener('resize',()=>{
-    camera.aspect=innerWidth/innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(innerWidth,innerHeight);
-  });
-
-  let t=0;
-  function animate(){
-    requestAnimationFrame(animate);
-    t+=0.008;
-
-    // Auto-rotate bottle slowly
-    bottleGroup.rotation.y += 0.004;
-    bottleGroup.rotation.x = Math.sin(t*0.3)*0.05;
-
-    // Mouse parallax
-    camera.position.x += (mx*0.4 - camera.position.x)*0.025;
-    camera.position.y += (-my*0.3 - camera.position.y)*0.025;
-    camera.lookAt(0, 0, 0);
-
-    // Animate orbital particles
-    orbitalSystems.forEach(o=>{
-      const pos = o.geo.attributes.position;
-      for(let i=0;i<o.count;i++){
-        o.angles[i] += o.speed + Math.random()*0.0001;
-        pos.setX(i, Math.cos(o.angles[i])*o.radii[i]);
-        pos.setZ(i, Math.sin(o.angles[i])*o.radii[i]);
-        // Gentle vertical drift
-        o.verticals[i] += Math.sin(t+i*0.1)*0.0005;
-        pos.setY(i, o.verticals[i]);
-      }
-      pos.needsUpdate=true;
-      // Slowly tilt orbital planes
-      o.pts.rotation.y = t*o.speed*0.3;
+  } else if(shape==='hex'){
+    // Hexagonal prism
+    const body=new THREE.Mesh(new THREE.CylinderGeometry(b.w*.58,b.w*.62,b.h,6),glassMat);
+    body.position.y=b.h/2;body.castShadow=true;g.add(body);
+    const liq=new THREE.Mesh(new THREE.CylinderGeometry(b.w*.45,b.w*.48,b.h*.7,6),liquidMat);
+    liq.position.y=b.h*.38;g.add(liq);
+    // Neck hex
+    const neck=new THREE.Mesh(new THREE.CylinderGeometry(.12,.22,.28,6),glassMat);
+    neck.position.y=b.h+.14;g.add(neck);
+    // Cap
+    const cap=new THREE.Mesh(new THREE.CylinderGeometry(.26,.28,b.capH,6),capMat);
+    cap.position.y=b.h+.28+b.capH/2;g.add(cap);
+    // Gold bands
+    [.18,.5,.82].forEach(t=>{
+      const band=new THREE.Mesh(new THREE.CylinderGeometry(b.w*.61,b.w*.61,.025,6),accentMat);
+      band.position.y=b.h*t;g.add(band);
     });
 
-    // Glitter twinkle — random sparks
-    const gphase = glitter.geometry.attributes.position;
-    for(let i=0;i<glitterCount;i++){
-      glitterPhase[i]+=0.08+Math.random()*0.05;
-    }
-    glitter.material.opacity = Math.max(0, Math.sin(t*3.1)*0.5+0.2);
-    glitter.rotation.y = t*0.04;
-
-    // Pulsing lights
-    goldLight.intensity = 2+Math.sin(t*1.4)*0.5;
-    rimLight.intensity = 2.5+Math.sin(t*0.9)*0.7;
-    keyLight.intensity = 3.5+Math.sin(t*0.5)*0.5;
-
-    renderer.render(scene, camera);
+  } else if(shape==='oval'){
+    // Oval/egg-shaped bottle using sphere scaled
+    const body=new THREE.Mesh(new THREE.SphereGeometry(1,32,24),glassMat);
+    body.scale.set(b.rx,b.h/2,b.ry);body.position.y=b.h/2;body.castShadow=true;g.add(body);
+    // Liquid
+    const liq=new THREE.Mesh(new THREE.SphereGeometry(.9,20,16),liquidMat);
+    liq.scale.set(b.rx*.8,b.h*.34,b.ry*.8);liq.position.y=b.h*.42;g.add(liq);
+    // Neck
+    const neck=new THREE.Mesh(new THREE.CylinderGeometry(.12,b.rx*.5,.22,16),glassMat);
+    neck.position.y=b.h+.11;g.add(neck);
+    // Cap
+    const cap=new THREE.Mesh(new THREE.CylinderGeometry(b.rx*.65,b.rx*.7,b.capH,24),capMat);
+    cap.position.y=b.h+.22+b.capH/2;g.add(cap);
+    // Equator ring
+    const tor=new THREE.Mesh(new THREE.TorusGeometry(b.rx*.92,.014,8,48),accentMat);
+    tor.scale.set(1,.6,b.ry/b.rx);tor.rotation.x=Math.PI/2;tor.position.y=b.h*.5;g.add(tor);
   }
-  animate();
-})();
 
-// SCROLL REVEAL
-const io=new IntersectionObserver(ee=>{ee.forEach(e=>{if(e.isIntersecting){const d=parseInt(e.target.dataset.d||0);setTimeout(()=>e.target.classList.add('on'),d);io.unobserve(e.target)}})},{threshold:.1});
-document.querySelectorAll('.sec-ey,.sec-h,.nc,.sc-h,.sc,.s-img,.s-txt').forEach(el=>io.observe(el));
+  // Ambient shimmer particles
+  const pGeo=new THREE.BufferGeometry();
+  const pCount=50;const pPos=new Float32Array(pCount*3);
+  const pPhases=[];
+  for(let i=0;i<pCount;i++){
+    const theta=Math.random()*Math.PI*2;const r2=.7+Math.random()*.9;
+    pPos[i*3]=Math.cos(theta)*r2;pPos[i*3+1]=Math.random()*b.h*1.3+.1;pPos[i*3+2]=Math.sin(theta)*r2;
+    pPhases.push(Math.random()*Math.PI*2);
+  }
+  pGeo.setAttribute('position',new THREE.BufferAttribute(pPos,3));
+  const particles=new THREE.Points(pGeo,new THREE.PointsMaterial({color:b.accent,size:.022,transparent:true,opacity:.45,blending:THREE.AdditiveBlending,depthWrite:false,sizeAttenuation:true}));
+  g.add(particles);g.userData.particles=particles;g.userData.pPhases=pPhases;
 
-// SPARKLE
-document.querySelectorAll('.btn-gold,.btn-ghost-g,.sc-add').forEach(b=>{
-  b.addEventListener('click',()=>{
-    const r=b.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
-    const cols=['#c9a84c','#f0c060','#e8d0a0','#a855f7','#fff'];
-    for(let i=0;i<16;i++){
-      const s=document.createElement('div');s.className='sp';
-      const a=(i/16)*Math.PI*2+Math.random()*.4,d=35+Math.random()*55,sz=2+Math.random()*5;
-      s.style.cssText=`left:${cx-sz/2}px;top:${cy-sz/2}px;width:${sz}px;height:${sz}px;background:${cols[Math.floor(Math.random()*cols.length)]};--tx:${Math.cos(a)*d}px;--ty:${Math.sin(a)*d}px;box-shadow:0 0 6px ${cols[0]}`;
-      document.body.appendChild(s);setTimeout(()=>s.remove(),700);
-    }
+  g.position.y=.1;
+  return g;
+}
+
+function loadPerfume(idx){
+  const p=PERFUMES[idx];
+  if(bottleGroup){scene.remove(bottleGroup);bottleGroup=null;}
+  bottleGroup=buildBottle(p);scene.add(bottleGroup);
+
+  document.getElementById('sbEyebrow').textContent=p.type;
+  document.getElementById('sbName').innerHTML=p.nameHtml;
+  document.getElementById('ipEyebrow').textContent=p.type;
+  document.getElementById('ipName').innerHTML=p.nameHtml;
+  document.getElementById('ipHouse').textContent=p.house;
+  document.getElementById('ipPrice').textContent=p.price;
+  document.getElementById('ipSize').textContent=p.sizes;
+  document.getElementById('ipDesc').textContent=p.desc;
+  document.getElementById('bdShape').textContent=p.shape;
+  document.getElementById('bdGlass').textContent=p.glass;
+  document.getElementById('bdCap').textContent=p.cap;
+  ['Top','Heart','Base'].forEach(n=>{document.getElementById('note'+n).innerHTML=p[n.toLowerCase()].map(x=>`<span class="sp-note">${x}</span>`).join('');});
+  setTimeout(()=>{
+    document.getElementById('strSillage').style.width=p.sillage+'%';
+    document.getElementById('strSillageV').textContent=p.sillage+'%';
+    document.getElementById('strLong').style.width=p.longevity+'%';
+    document.getElementById('strLongV').textContent=p.longevity+'%';
+    document.getElementById('strInt').style.width=p.intensity+'%';
+    document.getElementById('strIntV').textContent=p.intensity+'%';
+  },80);
+  document.getElementById('ipOccasion').innerHTML=p.occasions.map(o=>`<span class="oc-tag">${o}</span>`).join('');
+  fillLight.color.setHex(p.bottle.accent);
+  document.querySelectorAll('.bottle-thumb').forEach((b2,i)=>b2.classList.toggle('active',i===idx));
+}
+
+// ── THUMBNAIL 2D PREVIEWS ──
+function hexToRgba(hex,a){const r=(hex>>16)&255,g=(hex>>8)&255,b2=hex&255;return `rgba(${r},${g},${b2},${a})`;}
+
+function drawMini(ctx,p,w,h){
+  const b=p.bottle;ctx.clearRect(0,0,w,h);
+  const bg=ctx.createRadialGradient(w/2,h/2,0,w/2,h/2,w/2);
+  bg.addColorStop(0,'rgba(30,20,40,.5)');bg.addColorStop(1,'transparent');
+  ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
+  const cx=w/2,cy=h*0.56;
+  const bc=hexToRgba(b.bodyColor,Math.max(.5,b.bodyOpacity));
+  const lc=hexToRgba(b.liquidColor,Math.min(.95,b.liquidOpacity));
+  const cc=hexToRgba(b.capColor,.95);
+  const ac=hexToRgba(b.accent,.85);
+
+  if(b.shape==='rect'){
+    const bw=b.w*22,bh=b.h*16,by=cy-bh/2+4;
+    ctx.fillStyle=bc;ctx.fillRect(cx-bw/2,by,bw,bh);
+    ctx.fillStyle=lc;ctx.fillRect(cx-bw*.4,by+bh*.12,bw*.8,bh*.68);
+    const s=ctx.createLinearGradient(cx-bw/2,by,cx-bw*.1,by);s.addColorStop(0,'rgba(255,255,255,.1)');s.addColorStop(1,'transparent');
+    ctx.fillStyle=s;ctx.fillRect(cx-bw/2,by,bw*.35,bh);
+    ctx.fillStyle=bc;ctx.fillRect(cx-bw*.22,by-8,bw*.44,10);
+    ctx.fillStyle=cc;ctx.fillRect(cx-bw*.32,by-8-b.capH*20,bw*.64,b.capH*20);
+    ctx.fillStyle=ac;[.25,.75].forEach(t=>{ctx.fillRect(cx-bw/2,by+bh*t,bw,1.5);});
+  } else if(b.shape==='round'){
+    const r2=b.r*22,bh=b.h*15;
+    ctx.beginPath();ctx.ellipse(cx,cy,r2,bh/2,0,0,Math.PI*2);ctx.fillStyle=bc;ctx.fill();
+    ctx.beginPath();ctx.ellipse(cx,cy+bh*.06,r2*.78,bh*.34,0,0,Math.PI*2);ctx.fillStyle=lc;ctx.fill();
+    ctx.beginPath();ctx.ellipse(cx-r2*.22,cy-bh*.12,r2*.16,bh*.28,-.2,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,.1)';ctx.fill();
+    ctx.fillStyle=bc;ctx.fillRect(cx-r2*.3,cy-bh/2-7,r2*.6,9);
+    ctx.fillStyle=cc;ctx.fillRect(cx-r2*.46,cy-bh/2-7-b.capH*15,r2*.92,b.capH*15);
+    ctx.beginPath();ctx.arc(cx,cy+bh*.3,r2*.85,0,Math.PI*2);ctx.strokeStyle=ac;ctx.lineWidth=1.5;ctx.stroke();
+  } else if(b.shape==='hex'){
+    const r2=b.w*18,bh=b.h*15,bx=cx-r2*.87,by=cy-bh/2+2;
+    ctx.fillStyle=bc;ctx.fillRect(bx,by,r2*1.74,bh);
+    ctx.fillStyle=lc;ctx.fillRect(bx+r2*.18,by+bh*.12,r2*1.38,bh*.72);
+    ctx.fillStyle=ac;[.18,.5,.82].forEach(t=>{ctx.fillRect(bx,by+bh*t,r2*1.74,2);});
+    ctx.fillStyle=bc;ctx.fillRect(cx-r2*.3,by-8,r2*.6,10);
+    ctx.fillStyle=cc;ctx.fillRect(cx-r2*.52,by-8-b.capH*20,r2*1.04,b.capH*20);
+  } else if(b.shape==='oval'){
+    const rx=b.rx*28,ry=b.h*8;
+    ctx.beginPath();ctx.ellipse(cx,cy,rx,ry,0,0,Math.PI*2);ctx.fillStyle=bc;ctx.fill();
+    ctx.beginPath();ctx.ellipse(cx,cy+ry*.1,rx*.75,ry*.7,0,0,Math.PI*2);ctx.fillStyle=lc;ctx.fill();
+    ctx.beginPath();ctx.ellipse(cx-rx*.2,cy-ry*.15,rx*.15,ry*.25,-.3,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,.1)';ctx.fill();
+    ctx.fillStyle=bc;ctx.fillRect(cx-rx*.3,cy-ry-6,rx*.6,8);
+    ctx.fillStyle=cc;ctx.fillRect(cx-rx*.45,cy-ry-6-b.capH*15,rx*.9,b.capH*15);
+    ctx.beginPath();ctx.ellipse(cx,cy,rx*.9,.018*60,.0,0,Math.PI*2);ctx.strokeStyle=ac;ctx.lineWidth=1.5;ctx.stroke();
+  }
+}
+
+// Build picker thumbnails
+const pickerList=document.getElementById('bottleList');
+PERFUMES.forEach((p,idx)=>{
+  const btn=document.createElement('button');
+  btn.className='bottle-thumb'+(idx===0?' active':'');
+  btn.onclick=()=>{loadPerfume(idx);sparkle(btn);};
+  const tc=document.createElement('canvas');tc.className='bt-canvas';tc.width=72;tc.height=72;
+  btn.appendChild(tc);
+  ['bt-name','bt-price','bt-shape'].forEach((cls,i)=>{
+    const d=document.createElement('div');d.className=cls;
+    d.textContent=[p.name.split(' ')[0],p.price,p.shape][i];
+    btn.appendChild(d);
   });
+  pickerList.appendChild(btn);
+  drawMini(tc.getContext('2d'),p,72,72);
 });
+
+// Drag rotate
+let isDrag=false,prevX=0,prevY=0,rotY=0,rotX=0,velX=0,autoRot=true,uTo;
+wrap.addEventListener('mousedown',e=>{isDrag=true;prevX=e.clientX;prevY=e.clientY;autoRot=false;clearTimeout(uTo)});
+window.addEventListener('mouseup',()=>{isDrag=false;uTo=setTimeout(()=>{autoRot=true;},3000)});
+window.addEventListener('mousemove',e=>{if(!isDrag)return;const dx=e.clientX-prevX,dy=e.clientY-prevY;velX=dx*.008;rotY+=dx*.008;rotX=Math.max(-.35,Math.min(.35,rotX+dy*.004));prevX=e.clientX;prevY=e.clientY;});
+wrap.addEventListener('touchstart',e=>{isDrag=true;prevX=e.touches[0].clientX;autoRot=false;clearTimeout(uTo)},{passive:true});
+window.addEventListener('touchend',()=>{isDrag=false;uTo=setTimeout(()=>{autoRot=true;},3000)});
+window.addEventListener('touchmove',e=>{if(!isDrag)return;const dx=e.touches[0].clientX-prevX;velX=dx*.008;rotY+=dx*.008;prevX=e.touches[0].clientX;},{passive:true});
+
+function sparkle(el){const r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;['#c9a55a','#e8c880','#fff8f0'].forEach((col,ci)=>{for(let i=ci;i<12;i+=3){const s=document.createElement('div');s.className='sp';const a=(i/12)*Math.PI*2,d=14+Math.random()*30,sz=2+Math.random()*3;s.style.cssText=`left:${cx-sz/2}px;top:${cy-sz/2}px;width:${sz}px;height:${sz}px;background:${col};--tx:${Math.cos(a)*d}px;--ty:${Math.sin(a)*d}px;box-shadow:0 0 4px ${col}`;document.body.appendChild(s);setTimeout(()=>s.remove(),700);}});}
+
+document.getElementById('bagBtn').addEventListener('click',function(){sparkle(this);});
+
+loadPerfume(0);
+
+let tt=0;
+(function animate(){
+  requestAnimationFrame(animate);tt+=.012;
+  if(bottleGroup){
+    if(autoRot)rotY+=.006;
+    if(!isDrag){velX*=.92;rotY+=velX;}
+    bottleGroup.rotation.y=rotY;
+    bottleGroup.rotation.x=rotX*.3;
+    const prt=bottleGroup.userData.particles;const phs=bottleGroup.userData.pPhases;
+    if(prt&&phs){const pos=prt.geometry.attributes.position;for(let i=0;i<phs.length;i++){phs[i]+=.02;pos.setY(i,pos.getY(i)+Math.sin(phs[i])*.003);}pos.needsUpdate=true;prt.material.opacity=.3+Math.sin(tt*.8)*.18;}
+  }
+  fillLight.intensity=2.5+Math.sin(tt*.7)*.5;
+  ringMesh.material.opacity=.4+.2*Math.sin(tt*1.2);
+  renderer.render(scene,camera);
+})();
 </script>
 </body>
 </html>
