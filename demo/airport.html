@@ -65,38 +65,39 @@ header{height:52px;background:var(--navy);display:flex;align-items:center;paddin
 .sdi-tag{font-size:.56rem;font-weight:700;padding:2px 5px;border-radius:3px;background:var(--bbg);color:var(--blue);margin-left:auto;flex-shrink:0}
 
 /* ── SIDEBAR ── */
-.sidebar{width:272px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--bdr);display:flex;flex-direction:column;overflow:hidden;z-index:100;transition:transform .3s ease}
-.tabs{display:flex;background:var(--bg3);border-bottom:1px solid var(--bdr);flex-shrink:0}
-.tab{flex:1;padding:9px 0;text-align:center;font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--tl);cursor:pointer;transition:all .16s;border-bottom:2px solid transparent;margin-bottom:-1px;position:relative}
-.tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+.sidebar{width:272px;flex-shrink:0;background:#1e2d42;border-right:1px solid #162032;display:flex;flex-direction:column;overflow:hidden;z-index:100;transition:transform .3s ease}
+.tabs{display:flex;background:#162032;border-bottom:1px solid #0f1a28;flex-shrink:0}
+.tab{flex:1;padding:10px 0;text-align:center;font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.38);cursor:pointer;transition:all .16s;border-bottom:2px solid transparent;margin-bottom:-1px;position:relative}
+.tab.active{color:#60a5fa;border-bottom-color:#3b82f6;background:rgba(59,130,246,.06)}
+.tab:hover:not(.active){color:rgba(255,255,255,.6);background:rgba(255,255,255,.04)}
 .tbadge{position:absolute;top:4px;right:4px;background:var(--amber);color:#fff;font-size:.48rem;font-weight:800;min-width:12px;height:12px;border-radius:6px;display:flex;align-items:center;justify-content:center;padding:0 2px}
-.pane{display:none;flex:1;overflow-y:auto;flex-direction:column}
+.pane{display:none;flex:1;overflow-y:auto;flex-direction:column;background:#1e2d42}
 .pane.active{display:flex}
 .pane::-webkit-scrollbar{width:3px}
-.pane::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:2px}
+.pane::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px}
 
 /* ── FLIGHT BOARD ── */
-.bhdr{padding:8px 12px;background:var(--bg3);border-bottom:1px solid var(--bdr);display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
-.bht{font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--td)}
-.blive{display:flex;align-items:center;gap:4px;font-size:.6rem;font-weight:600;color:#10b981}
-.bdot{width:5px;height:5px;border-radius:50%;background:#10b981;animation:blink 2s ease-in-out infinite}
-.fc{padding:8px 12px;border-bottom:1px solid var(--bdr);cursor:pointer;transition:background .1s}
-.fc:hover{background:var(--bbg)}
-.fc.sel{background:var(--bbg);border-left:3px solid var(--bl)}
+.bhdr{padding:8px 12px;background:#162032;border-bottom:1px solid #0f1a28;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.bht{font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.7)}
+.blive{display:flex;align-items:center;gap:4px;font-size:.6rem;font-weight:600;color:#34d399}
+.bdot{width:5px;height:5px;border-radius:50%;background:#34d399;animation:blink 2s ease-in-out infinite}
+.fc{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer;transition:background .1s}
+.fc:hover{background:rgba(255,255,255,.06)}
+.fc.sel{background:rgba(59,130,246,.15);border-left:3px solid #3b82f6}
 .fc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
-.fc-num{font-family:"JetBrains Mono",monospace;font-size:.73rem;font-weight:500;color:var(--navy)}
-.fc-time{font-family:"JetBrains Mono",monospace;font-size:.7rem;color:var(--tl)}
-.fc-dest{font-size:.75rem;font-weight:500;color:var(--td);margin-bottom:1px}
-.fc-al{font-size:.63rem;color:var(--tl);margin-bottom:4px}
+.fc-num{font-family:"JetBrains Mono",monospace;font-size:.73rem;font-weight:500;color:#93c5fd}
+.fc-time{font-family:"JetBrains Mono",monospace;font-size:.7rem;color:rgba(255,255,255,.4)}
+.fc-dest{font-size:.75rem;font-weight:500;color:rgba(255,255,255,.85);margin-bottom:1px}
+.fc-al{font-size:.63rem;color:rgba(255,255,255,.38);margin-bottom:4px}
 .fc-btm{display:flex;justify-content:space-between;align-items:center}
-.gc{font-family:"JetBrains Mono",monospace;font-size:.65rem;font-weight:600;padding:2px 6px;border-radius:4px;background:var(--bbg);color:var(--blue)}
-.gc.boarding{background:var(--abg);color:var(--amber)}
-.gc.delayed{background:var(--rbg);color:var(--red)}
+.gc{font-family:"JetBrains Mono",monospace;font-size:.65rem;font-weight:600;padding:2px 6px;border-radius:4px;background:rgba(59,130,246,.2);color:#93c5fd}
+.gc.boarding{background:rgba(217,119,6,.2);color:#fbbf24}
+.gc.delayed{background:rgba(220,38,38,.2);color:#fca5a5}
 .bdg{font-size:.56rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:2px 6px;border-radius:4px}
-.bg{background:var(--gbg);color:var(--green)}
-.ba{background:var(--abg);color:var(--amber);animation:blink .9s ease-in-out infinite}
-.br{background:var(--rbg);color:var(--red)}
-.bx{background:#f1f5f9;color:var(--txl)}
+.bg{background:rgba(5,150,105,.2);color:#34d399}
+.ba{background:rgba(217,119,6,.2);color:#fbbf24;animation:blink .9s ease-in-out infinite}
+.br{background:rgba(220,38,38,.2);color:#fca5a5}
+.bx{background:rgba(255,255,255,.08);color:rgba(255,255,255,.35)}
 
 /* ── MY FLIGHT ── */
 .mfc{margin:9px;border-radius:9px;background:linear-gradient(140deg,#0f2240 0%,#1a3360 100%);padding:13px;color:#fff;position:relative;overflow:hidden;flex-shrink:0}
@@ -119,31 +120,31 @@ header{height:52px;background:var(--navy);display:flex;align-items:center;paddin
 .btn-nav:hover{background:#1d4ed8}
 
 /* ── WAYFINDING ── */
-.wfc{margin:7px 9px;border:1px solid var(--bdr);border-radius:7px;overflow:hidden;flex-shrink:0}
-.wfh{padding:8px 10px;background:var(--bg3);border-bottom:1px solid var(--bdr);display:flex;gap:6px;align-items:center}
-.wfl{font-size:.56rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--tl);display:block;margin-bottom:1px}
-.wfv{font-size:.7rem;font-weight:500;color:var(--td)}
-.wfa{color:var(--txl);font-size:.75rem}
-.wfs{padding:8px 10px}
+.wfc{margin:7px 9px;border:1px solid rgba(255,255,255,.08);border-radius:7px;overflow:hidden;flex-shrink:0}
+.wfh{padding:8px 10px;background:rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.08);display:flex;gap:6px;align-items:center}
+.wfl{font-size:.56rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.35);display:block;margin-bottom:1px}
+.wfv{font-size:.7rem;font-weight:500;color:rgba(255,255,255,.8)}
+.wfa{color:rgba(255,255,255,.25);font-size:.75rem}
+.wfs{padding:8px 10px;background:#1e2d42}
 .step{display:flex;gap:7px;margin-bottom:6px;align-items:flex-start}
-.stn{width:16px;height:16px;border-radius:50%;background:var(--bbg);border:1px solid var(--bbdr);font-size:.58rem;font-weight:700;color:var(--blue);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
-.stt{font-size:.69rem;color:var(--td);line-height:1.4}
-.std{font-size:.61rem;color:var(--tl);margin-top:1px}
-.wft{padding:5px 10px;background:var(--bg3);border-top:1px solid var(--bdr);display:flex;justify-content:space-between}
-.wftl{font-size:.6rem;color:var(--tl)}
-.wftv{font-family:"JetBrains Mono",monospace;font-size:.67rem;font-weight:600;color:var(--blue)}
+.stn{width:16px;height:16px;border-radius:50%;background:rgba(59,130,246,.2);border:1px solid rgba(59,130,246,.4);font-size:.58rem;font-weight:700;color:#93c5fd;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.stt{font-size:.69rem;color:rgba(255,255,255,.8);line-height:1.4}
+.std{font-size:.61rem;color:rgba(255,255,255,.38);margin-top:1px}
+.wft{padding:5px 10px;background:rgba(255,255,255,.04);border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between}
+.wftl{font-size:.6rem;color:rgba(255,255,255,.35)}
+.wftv{font-family:"JetBrains Mono",monospace;font-size:.67rem;font-weight:600;color:#60a5fa}
 
 /* ── FACILITIES ── */
 .fsh{padding:10px 12px 2px;flex-shrink:0}
-.fsht{font-size:.57rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--tl);margin-bottom:5px;padding-top:2px}
+.fsht{font-size:.57rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:5px;padding-top:2px}
 .fi{display:flex;align-items:center;gap:7px;padding:6px 7px;border-radius:5px;cursor:pointer;transition:all .1s;margin-bottom:2px;border:1px solid transparent}
-.fi:hover{background:var(--bg3);border-color:var(--bdr)}
-.fi.hl{background:var(--bbg);border-color:var(--bbdr)}
+.fi:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1)}
+.fi.hl{background:rgba(59,130,246,.15);border-color:rgba(59,130,246,.35)}
 .fii{width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:.78rem;flex-shrink:0}
-.fii.food{background:#fef3c7}.fii.shop{background:#ede9fe}.fii.service{background:#dcfce7}.fii.security{background:#fee2e2}.fii.lounge{background:#e0f2fe}
-.fin{font-size:.7rem;font-weight:500;color:var(--td)}
-.fis{font-size:.6rem;color:var(--tl)}
-.fio{font-size:.55rem;font-weight:600;padding:1px 5px;border-radius:3px;background:var(--gbg);color:var(--green);margin-left:auto;flex-shrink:0}
+.fii.food{background:rgba(251,191,36,.15)}.fii.shop{background:rgba(167,139,250,.15)}.fii.service{background:rgba(52,211,153,.15)}.fii.security{background:rgba(252,165,165,.15)}.fii.lounge{background:rgba(125,211,252,.15)}
+.fin{font-size:.7rem;font-weight:500;color:rgba(255,255,255,.8)}
+.fis{font-size:.6rem;color:rgba(255,255,255,.38)}
+.fio{font-size:.55rem;font-weight:600;padding:1px 5px;border-radius:3px;background:rgba(52,211,153,.15);color:#34d399;margin-left:auto;flex-shrink:0}
 
 /* ── NO FLIGHT ── */
 .nf{padding:16px 13px;text-align:center}
@@ -157,16 +158,16 @@ header{height:52px;background:var(--navy);display:flex;align-items:center;paddin
 
 /* ── MAP AREA ── */
 .maparea{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
-.secbar{background:var(--bg2);border-bottom:1px solid var(--bdr);padding:6px 12px;display:flex;align-items:center;gap:5px;flex-shrink:0;overflow-x:auto}
+.secbar{background:#1e2d42;border-bottom:1px solid #0f1a28;padding:6px 12px;display:flex;align-items:center;gap:5px;flex-shrink:0;overflow-x:auto}
 .secbar::-webkit-scrollbar{height:0}
-.sbl{font-size:.56rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--tl);white-space:nowrap;margin-right:2px;flex-shrink:0}
-.sb{padding:4px 10px;border-radius:20px;border:1px solid var(--bdr);font-size:.64rem;font-weight:500;color:var(--tl);cursor:pointer;background:transparent;font-family:Inter,sans-serif;transition:all .14s;white-space:nowrap;flex-shrink:0}
-.sb.active{background:var(--navy);color:#fff;border-color:var(--navy)}
-.sb:hover:not(.active){background:var(--bg3);color:var(--td)}
+.sbl{font-size:.56rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.3);white-space:nowrap;margin-right:2px;flex-shrink:0}
+.sb{padding:4px 10px;border-radius:20px;border:1px solid rgba(255,255,255,.12);font-size:.64rem;font-weight:500;color:rgba(255,255,255,.45);cursor:pointer;background:transparent;font-family:Inter,sans-serif;transition:all .14s;white-space:nowrap;flex-shrink:0}
+.sb.active{background:#3b82f6;color:#fff;border-color:#3b82f6;box-shadow:0 2px 8px rgba(59,130,246,.35)}
+.sb:hover:not(.active){background:rgba(255,255,255,.08);color:rgba(255,255,255,.75);border-color:rgba(255,255,255,.2)}
 .sbsp{flex:1}
 .flg{display:flex;gap:3px;flex-shrink:0}
-.fb{padding:3px 9px;border-radius:20px;border:1px solid var(--bdr);font-size:.62rem;font-weight:500;color:var(--tl);cursor:pointer;background:transparent;font-family:"JetBrains Mono",monospace;transition:all .14s}
-.fb.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.fb{padding:3px 9px;border-radius:20px;border:1px solid rgba(255,255,255,.12);font-size:.62rem;font-weight:500;color:rgba(255,255,255,.4);cursor:pointer;background:transparent;font-family:"JetBrains Mono",monospace;transition:all .14s}
+.fb.active{background:#3b82f6;color:#fff;border-color:#3b82f6}
 .cwrap{flex:1;position:relative;overflow:hidden}
 canvas#apc{position:absolute;inset:0;width:100%;height:100%;cursor:grab;display:block;touch-action:none}
 canvas#apc:active{cursor:grabbing}
@@ -194,7 +195,52 @@ canvas#apc:active{cursor:grabbing}
 /* ── HINT ── */
 .hint{position:absolute;bottom:11px;left:50%;transform:translateX(-50%);font-size:.58rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:rgba(100,116,139,.7);pointer-events:none;white-space:nowrap;z-index:50;background:rgba(255,255,255,.75);padding:3px 10px;border-radius:20px;backdrop-filter:blur(4px)}
 
-/* ── TOAST ── */
+/* ── WELCOME MODAL ── */
+.modal-bg{position:fixed;inset:0;background:rgba(10,20,40,.72);z-index:900;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);padding:16px}
+.modal{background:#fff;border-radius:16px;width:100%;max-width:480px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.3)}
+.modal-hero{background:linear-gradient(135deg,#0f2240 0%,#1a3a6a 60%,#1d6fd8 100%);padding:28px 28px 20px;position:relative;overflow:hidden}
+.modal-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(59,130,246,.25),transparent 70%);pointer-events:none}
+.modal-hero::after{content:'✈';position:absolute;right:24px;top:50%;transform:translateY(-50%);font-size:4rem;opacity:.12}
+.modal-tag{font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:8px}
+.modal-title{font-size:1.55rem;font-weight:700;color:#fff;margin-bottom:6px;line-height:1.2}
+.modal-sub{font-size:.8rem;color:rgba(255,255,255,.55);line-height:1.5}
+.modal-body{padding:22px 24px}
+.modal-steps{display:flex;flex-direction:column;gap:14px;margin-bottom:22px}
+.mstep{display:flex;align-items:flex-start;gap:13px}
+.mstep-num{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.mstep-num.s1{background:#eff6ff}
+.mstep-num.s2{background:#ecfdf5}
+.mstep-num.s3{background:#fffbeb}
+.mstep-text h4{font-size:.8rem;font-weight:600;color:var(--td);margin-bottom:2px}
+.mstep-text p{font-size:.72rem;color:var(--tl);line-height:1.5}
+.mstep-text code{font-family:"JetBrains Mono",monospace;font-size:.7rem;background:#f1f5f9;padding:1px 5px;border-radius:3px;color:var(--blue)}
+.modal-flights{background:var(--bg3);border:1px solid var(--bdr);border-radius:8px;padding:12px 14px;margin-bottom:16px}
+.mfl-label{font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--tl);margin-bottom:8px}
+.mfl-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.mfl-btn{display:flex;flex-direction:column;align-items:flex-start;padding:8px 10px;background:#fff;border:1px solid var(--bdr);border-radius:6px;cursor:pointer;font-family:Inter,sans-serif;transition:all .14s;text-align:left}
+.mfl-btn:hover{background:var(--bbg);border-color:var(--bbdr)}
+.mfl-num{font-family:"JetBrains Mono",monospace;font-size:.72rem;font-weight:600;color:var(--navy);margin-bottom:1px}
+.mfl-dest{font-size:.64rem;color:var(--tl);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.mfl-status{font-size:.56rem;font-weight:700;padding:1px 5px;border-radius:3px;margin-top:4px;align-self:flex-start}
+.mfl-status.ontime{background:var(--gbg);color:var(--green)}
+.mfl-status.boarding{background:var(--abg);color:var(--amber)}
+.mfl-status.delayed{background:var(--rbg);color:var(--red)}
+.modal-cta{width:100%;padding:11px;background:linear-gradient(135deg,#1d6fd8,#1a3a6a);border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:.82rem;font-weight:700;color:#fff;cursor:pointer;letter-spacing:.04em;transition:opacity .2s}
+.modal-cta:hover{opacity:.9}
+.modal-skip{display:block;text-align:center;margin-top:10px;font-size:.67rem;color:var(--tl);cursor:pointer;background:none;border:none;font-family:Inter,sans-serif;width:100%;padding:4px}
+.modal-skip:hover{color:var(--td)}
+
+/* ── ONBOARDING PULSE ── */
+@keyframes inputPulse{0%,100%{box-shadow:0 0 0 0 rgba(59,130,246,.4)}60%{box-shadow:0 0 0 6px rgba(59,130,246,0)}}
+.hflight.pulse{animation:inputPulse 1.8s ease-out 3}
+
+/* ── MAP COACH MARKS ── */
+.coach{position:absolute;z-index:80;background:rgba(15,34,64,.82);color:#fff;border-radius:8px;padding:8px 12px;font-size:.68rem;line-height:1.5;max-width:200px;pointer-events:none;backdrop-filter:blur(4px);transition:opacity .4s}
+.coach::before{content:'';position:absolute;width:8px;height:8px;background:rgba(15,34,64,.82);transform:rotate(45deg)}
+.coach.top-left{top:16px;left:16px}.coach.top-left::before{display:none}
+.coach strong{display:block;font-weight:600;margin-bottom:2px;font-size:.72rem}
+.coach-dismiss{display:inline-block;margin-top:5px;font-size:.6rem;color:rgba(255,255,255,.5);cursor:pointer;pointer-events:all}
+.coach-dismiss:hover{color:#fff}
 .toast{position:fixed;top:60px;left:50%;transform:translateX(-50%) translateY(-8px);z-index:600;background:#fff;border:1px solid var(--bdr);border-radius:8px;padding:9px 15px;box-shadow:var(--shl);display:flex;align-items:center;gap:9px;opacity:0;transition:all .28s;pointer-events:none;min-width:260px;max-width:90vw}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .tico{font-size:1rem}
@@ -207,20 +253,20 @@ canvas#apc:active{cursor:grabbing}
 .sd{width:4px;height:4px;border-radius:50%}
 
 /* ── MOBILE DRAWER ── */
-.mob-tab-bar{display:none;height:54px;background:var(--bg2);border-top:1px solid var(--bdr);flex-shrink:0;align-items:center;z-index:200}
-.mtb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;border:none;background:none;font-family:Inter,sans-serif;padding:6px 0;color:var(--tl);transition:color .14s;position:relative}
-.mtb.active{color:var(--blue)}
+.mob-tab-bar{display:none;height:54px;background:#162032;border-top:1px solid #0f1a28;flex-shrink:0;align-items:center;z-index:200}
+.mtb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;border:none;background:none;font-family:Inter,sans-serif;padding:6px 0;color:rgba(255,255,255,.38);transition:color .14s;position:relative}
+.mtb.active{color:#60a5fa}
 .mtb-ico{font-size:1.1rem;line-height:1}
 .mtb-lbl{font-size:.52rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
 .mtb-badge{position:absolute;top:4px;right:calc(50% - 16px);background:var(--amber);color:#fff;font-size:.45rem;font-weight:800;min-width:11px;height:11px;border-radius:6px;display:none;align-items:center;justify-content:center;padding:0 2px}
-.mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:150;top:52px;bottom:54px}
-.mob-sheet{position:fixed;bottom:54px;left:0;right:0;background:var(--bg2);border-radius:16px 16px 0 0;box-shadow:0 -8px 32px rgba(0,0,0,.15);z-index:160;transform:translateY(100%);transition:transform .3s ease;max-height:70vh;display:flex;flex-direction:column;overflow:hidden}
+.mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:150;top:52px;bottom:54px}
+.mob-sheet{position:fixed;bottom:54px;left:0;right:0;background:#1e2d42;border-radius:16px 16px 0 0;box-shadow:0 -8px 32px rgba(0,0,0,.4);z-index:160;transform:translateY(100%);transition:transform .3s ease;max-height:70vh;display:flex;flex-direction:column;overflow:hidden}
 .mob-sheet.open{transform:translateY(0)}
-.mob-sheet-handle{width:36px;height:4px;background:var(--bdr2);border-radius:2px;margin:10px auto 0;flex-shrink:0}
-.mob-sheet-tabs{display:flex;border-bottom:1px solid var(--bdr);flex-shrink:0}
-.mob-sheet-tab{flex:1;padding:9px 0;text-align:center;font-size:.62rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--tl);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
-.mob-sheet-tab.active{color:var(--blue);border-bottom-color:var(--blue)}
-.mob-sheet-content{flex:1;overflow-y:auto}
+.mob-sheet-handle{width:36px;height:4px;background:rgba(255,255,255,.18);border-radius:2px;margin:10px auto 0;flex-shrink:0}
+.mob-sheet-tabs{display:flex;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0;background:#162032}
+.mob-sheet-tab{flex:1;padding:10px 0;text-align:center;font-size:.62rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.38);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.mob-sheet-tab.active{color:#60a5fa;border-bottom-color:#3b82f6}
+.mob-sheet-content{flex:1;overflow-y:auto;background:#1e2d42}
 
 /* ── RESPONSIVE ── */
 @media(max-width:720px){
@@ -244,6 +290,71 @@ canvas#apc:active{cursor:grabbing}
 </style>
 </head>
 <body>
+
+<!-- ── WELCOME MODAL ── -->
+<div class="modal-bg" id="welcomeModal">
+  <div class="modal">
+    <div class="modal-hero">
+      <div class="modal-tag">Sydney Airport · T2 International</div>
+      <div class="modal-title">Find your gate.<br>Never miss a flight.</div>
+      <div class="modal-sub">Live departures, turn-by-turn directions and a 3D map of every terminal section.</div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-steps">
+        <div class="mstep">
+          <div class="mstep-num s1">✈</div>
+          <div class="mstep-text">
+            <h4>Enter your flight number</h4>
+            <p>Type it in the top bar (e.g. <code>BA447</code>) and tap <strong>Find</strong>. Your gate, boarding time and seat appear instantly.</p>
+          </div>
+        </div>
+        <div class="mstep">
+          <div class="mstep-num s2">🗺</div>
+          <div class="mstep-text">
+            <h4>See your route on the 3D map</h4>
+            <p>A blue path draws from your current position to your gate. Drag to rotate, pinch or scroll to zoom.</p>
+          </div>
+        </div>
+        <div class="mstep">
+          <div class="mstep-num s3">🏬</div>
+          <div class="mstep-text">
+            <h4>Find shops, lounges & services</h4>
+            <p>Use the <strong>Facilities</strong> tab or search bar. Tap any icon on the map to see opening hours and location.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-flights">
+        <div class="mfl-label">Try a demo flight to get started</div>
+        <div class="mfl-grid">
+          <button class="mfl-btn" onclick="modalPickFlight('BA447')">
+            <span class="mfl-num">BA447</span>
+            <span class="mfl-dest">London Heathrow</span>
+            <span class="mfl-status boarding">Boarding</span>
+          </button>
+          <button class="mfl-btn" onclick="modalPickFlight('EK202')">
+            <span class="mfl-num">EK202</span>
+            <span class="mfl-dest">Dubai</span>
+            <span class="mfl-status ontime">On Time</span>
+          </button>
+          <button class="mfl-btn" onclick="modalPickFlight('SQ317')">
+            <span class="mfl-num">SQ317</span>
+            <span class="mfl-dest">Singapore</span>
+            <span class="mfl-status ontime">On Time</span>
+          </button>
+          <button class="mfl-btn" onclick="modalPickFlight('LH456')">
+            <span class="mfl-num">LH456</span>
+            <span class="mfl-dest">Frankfurt</span>
+            <span class="mfl-status delayed">Delayed</span>
+          </button>
+        </div>
+      </div>
+
+      <button class="modal-cta" onclick="closeModal()">Explore the terminal →</button>
+      <button class="modal-skip" onclick="closeModal()">I know my way around, skip</button>
+    </div>
+  </div>
+</div>
 
 <header>
   <a href="../index.html" class="hlogo"><div class="hico">✈</div><div class="hbrand">AERO<span>GUIDE</span></div></a>
@@ -305,6 +416,14 @@ canvas#apc:active{cursor:grabbing}
     </div>
     <div class="cwrap" id="cwrap">
       <canvas id="apc"></canvas>
+      <!-- Map prompt — shown until flight is selected -->
+      <div id="mapPrompt" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:60;pointer-events:none;text-align:center">
+        <div style="background:rgba(15,34,64,.78);backdrop-filter:blur(8px);border-radius:12px;padding:16px 22px;color:#fff;max-width:260px">
+          <div style="font-size:1.4rem;margin-bottom:6px">✈</div>
+          <div style="font-size:.78rem;font-weight:600;margin-bottom:4px">Enter your flight number above</div>
+          <div style="font-size:.65rem;color:rgba(255,255,255,.55);line-height:1.5">Or click any gate on the map<br>to see flight info & get directions</div>
+        </div>
+      </div>
       <!-- Tooltip -->
       <div class="tt" id="ttEl">
         <div class="tttag" id="ttTag"></div>
@@ -314,9 +433,50 @@ canvas#apc:active{cursor:grabbing}
       </div>
       <!-- Controls -->
       <div class="mctrl">
-        <button class="mc" id="zIn">+</button>
-        <button class="mc" id="zOut">−</button>
-        <button class="mc" id="zRst">⊙</button>
+        <button class="mc" id="zIn" title="Zoom in">+</button>
+        <button class="mc" id="zOut" title="Zoom out">−</button>
+        <button class="mc" id="zRst" title="Reset view">⊙</button>
+        <button class="mc" id="helpBtn" title="How to use" onclick="toggleHelp()" style="margin-top:6px;font-size:.75rem;font-weight:700;color:#3b82f6">?</button>
+      </div>
+      <!-- Quick help overlay -->
+      <div id="helpOverlay" style="display:none;position:absolute;inset:0;z-index:110;background:rgba(10,20,40,.7);backdrop-filter:blur(4px);align-items:center;justify-content:center">
+        <div style="background:#1e2d42;border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:24px;max-width:340px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.5)">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+            <div style="font-size:.95rem;font-weight:700;color:#fff">How to use AeroGuide</div>
+            <button onclick="toggleHelp()" style="background:rgba(255,255,255,.08);border:none;border-radius:6px;width:28px;height:28px;cursor:pointer;color:rgba(255,255,255,.6);font-size:1rem;display:flex;align-items:center;justify-content:center">✕</button>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;gap:12px;align-items:flex-start">
+              <div style="width:38px;height:38px;background:rgba(59,130,246,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">✈</div>
+              <div>
+                <div style="font-size:.78rem;font-weight:600;color:rgba(255,255,255,.9);margin-bottom:3px">Find your flight</div>
+                <div style="font-size:.68rem;color:rgba(255,255,255,.45);line-height:1.5">Type your flight code (e.g. <span style="font-family:JetBrains Mono,monospace;color:#93c5fd;background:rgba(59,130,246,.15);padding:1px 5px;border-radius:3px">BA447</span>) in the top bar and tap <b style="color:#fff">Find</b></div>
+              </div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start">
+              <div style="width:38px;height:38px;background:rgba(16,185,129,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">🗺</div>
+              <div>
+                <div style="font-size:.78rem;font-weight:600;color:rgba(255,255,255,.9);margin-bottom:3px">Navigate the 3D map</div>
+                <div style="font-size:.68rem;color:rgba(255,255,255,.45);line-height:1.5"><b style="color:rgba(255,255,255,.7)">Drag</b> to rotate · <b style="color:rgba(255,255,255,.7)">Scroll</b> to zoom<br><b style="color:rgba(255,255,255,.7)">Click any gate or shop</b> on the map for details</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start">
+              <div style="width:38px;height:38px;background:rgba(245,158,11,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">🏬</div>
+              <div>
+                <div style="font-size:.78rem;font-weight:600;color:rgba(255,255,255,.9);margin-bottom:3px">Find shops & services</div>
+                <div style="font-size:.68rem;color:rgba(255,255,255,.45);line-height:1.5">Use the <b style="color:rgba(255,255,255,.7)">Facilities</b> tab or the <b style="color:rgba(255,255,255,.7)">search bar</b> at the top right to locate toilets, cafés, lounges and more</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start">
+              <div style="width:38px;height:38px;background:rgba(167,139,250,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">🏛</div>
+              <div>
+                <div style="font-size:.78rem;font-weight:600;color:rgba(255,255,255,.9);margin-bottom:3px">Switch terminal sections</div>
+                <div style="font-size:.68rem;color:rgba(255,255,255,.45);line-height:1.5">Use the <b style="color:rgba(255,255,255,.7)">Section bar</b> above the map to switch between Check-in, Main Terminal, Wing A, B and C</div>
+              </div>
+            </div>
+          </div>
+          <button onclick="toggleHelp()" style="width:100%;margin-top:20px;padding:10px;background:#2563eb;border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:.75rem;font-weight:700;color:#fff;cursor:pointer;letter-spacing:.04em">Got it, let me explore →</button>
+        </div>
       </div>
       <!-- Legend -->
       <div class="leg">
@@ -445,53 +605,211 @@ function resz(){
 }
 resz();window.addEventListener('resize',resz);
 
-// LIGHTS
-scene.add(new THREE.AmbientLight(0xffffff,0.9));
-const sun=new THREE.DirectionalLight(0xfff8f0,2.0);
-sun.position.set(12,20,10);sun.castShadow=true;
+// LIGHTS — calibrated for textured surfaces
+scene.add(new THREE.AmbientLight(0xfff8f0,0.75));
+const sun=new THREE.DirectionalLight(0xfff4e8,2.4);
+sun.position.set(14,22,12);sun.castShadow=true;
 sun.shadow.mapSize.set(2048,2048);
-sun.shadow.camera.left=-34;sun.shadow.camera.right=34;
-sun.shadow.camera.top=34;sun.shadow.camera.bottom=-34;
+sun.shadow.camera.left=-36;sun.shadow.camera.right=36;
+sun.shadow.camera.top=36;sun.shadow.camera.bottom=-36;
 sun.shadow.camera.far=90;sun.shadow.bias=-.001;
 scene.add(sun);
-const fill=new THREE.DirectionalLight(0xc0d0e8,1.0);fill.position.set(-8,10,-6);scene.add(fill);
-const rim=new THREE.DirectionalLight(0xffe8d0,.5);rim.position.set(0,5,-12);scene.add(rim);
-[-8,0,8].forEach(x=>{const p=new THREE.PointLight(0xfff5e0,.55,20);p.position.set(x,4,0);scene.add(p);});
+const fill=new THREE.DirectionalLight(0xc8d8f0,0.8);fill.position.set(-10,12,-8);scene.add(fill);
+const rim=new THREE.DirectionalLight(0xffe0c0,.4);rim.position.set(2,6,-14);scene.add(rim);
+// Warm interior point lights
+[-9,0,9].forEach(x=>{const p=new THREE.PointLight(0xfff0d8,.7,18);p.position.set(x,3.5,0);scene.add(p);});
 
-// MATERIALS
-function M(col,rough=.55,metal=0,em=0,ei=0){
-  return new THREE.MeshStandardMaterial({color:col,roughness:rough,metalness:metal,
-    emissive:new THREE.Color(em),emissiveIntensity:ei});
+// ── PROCEDURAL TEXTURE FACTORY ───────────────
+function mkCanvas(size=256){
+  const c=document.createElement('canvas');c.width=c.height=size;return c;
 }
-function MT(col,rough,metal,op){
+function canvasTex(c,wrap=true){
+  const t=new THREE.CanvasTexture(c);
+  if(wrap){t.wrapS=t.wrapT=THREE.RepeatWrapping;}
+  return t;
+}
+
+// 1. Marble floor — cream with grey veins
+function makeMarbleTex(){
+  const c=mkCanvas(512),cx=c.getContext('2d');
+  cx.fillStyle='#d6cbb5';cx.fillRect(0,0,512,512);
+  // base noise grain
+  for(let i=0;i<6000;i++){
+    const x=Math.random()*512,y=Math.random()*512,r=Math.random()*2;
+    const v=Math.floor(Math.random()*30);
+    cx.fillStyle=`rgba(${180+v},${168+v},${148+v},0.18)`;
+    cx.beginPath();cx.arc(x,y,r,0,Math.PI*2);cx.fill();
+  }
+  // veins
+  for(let v=0;v<12;v++){
+    cx.beginPath();
+    let x=Math.random()*512,y=Math.random()*512;
+    cx.moveTo(x,y);
+    for(let s=0;s<8;s++){x+=(-30+Math.random()*60);y+=(-20+Math.random()*40);cx.lineTo(x,y);}
+    const op=(0.05+Math.random()*0.12);
+    cx.strokeStyle=`rgba(140,128,110,${op})`;
+    cx.lineWidth=0.5+Math.random()*1.5;cx.stroke();
+  }
+  // tile grid lines
+  cx.strokeStyle='rgba(100,90,75,0.35)';cx.lineWidth=1.5;
+  [128,256,384].forEach(p=>{
+    cx.beginPath();cx.moveTo(p,0);cx.lineTo(p,512);cx.stroke();
+    cx.beginPath();cx.moveTo(0,p);cx.lineTo(512,p);cx.stroke();
+  });
+  return c;
+}
+
+// 2. Concrete wall — grey with subtle texture
+function makeConcreteTex(){
+  const c=mkCanvas(256),cx=c.getContext('2d');
+  cx.fillStyle='#9aa4b0';cx.fillRect(0,0,256,256);
+  for(let i=0;i<3000;i++){
+    const x=Math.random()*256,y=Math.random()*256;
+    const v=Math.floor(-20+Math.random()*40);
+    cx.fillStyle=`rgba(${128+v},${138+v},${148+v},0.12)`;
+    cx.fillRect(x,y,2,2);
+  }
+  // horizontal form lines
+  for(let y=32;y<256;y+=32){
+    cx.strokeStyle='rgba(70,80,90,0.18)';cx.lineWidth=1;
+    cx.beginPath();cx.moveTo(0,y);cx.lineTo(256,y);cx.stroke();
+  }
+  return c;
+}
+
+// 3. Metal brushed — for structure/seats
+function makeMetalTex(){
+  const c=mkCanvas(256),cx=c.getContext('2d');
+  const g=cx.createLinearGradient(0,0,256,0);
+  g.addColorStop(0,'#5a6878');g.addColorStop(.3,'#6a7888');g.addColorStop(.6,'#546070');g.addColorStop(1,'#5a6878');
+  cx.fillStyle=g;cx.fillRect(0,0,256,256);
+  // brushed lines
+  for(let y=0;y<256;y+=2){
+    cx.strokeStyle=`rgba(255,255,255,${0.02+Math.random()*0.04})`;
+    cx.lineWidth=1;cx.beginPath();cx.moveTo(0,y);cx.lineTo(256,y);cx.stroke();
+  }
+  return c;
+}
+
+// 4. Asphalt/tarmac — for ground outside
+function makeTarmacTex(){
+  const c=mkCanvas(256),cx=c.getContext('2d');
+  cx.fillStyle='#5a6070';cx.fillRect(0,0,256,256);
+  for(let i=0;i<4000;i++){
+    const x=Math.random()*256,y=Math.random()*256,r=Math.random()*2.5;
+    const v=Math.floor(-15+Math.random()*30);
+    cx.fillStyle=`rgba(${80+v},${88+v},${96+v},0.3)`;
+    cx.beginPath();cx.arc(x,y,r,0,Math.PI*2);cx.fill();
+  }
+  return c;
+}
+
+// 5. Yellow stripe — bright with worn edges
+function makeYellowTex(){
+  const c=mkCanvas(64),cx=c.getContext('2d');
+  cx.fillStyle='#f0c010';cx.fillRect(0,0,64,64);
+  for(let i=0;i<300;i++){
+    const x=Math.random()*64,y=Math.random()*64;
+    cx.fillStyle=`rgba(180,140,0,${0.05+Math.random()*0.1})`;
+    cx.fillRect(x,y,2,2);
+  }
+  return c;
+}
+
+// 6. Glass — subtle horizontal reflection bands
+function makeGlassTex(){
+  const c=mkCanvas(128),cx=c.getContext('2d');
+  cx.fillStyle='rgba(120,190,230,0.0)';cx.fillRect(0,0,128,128);
+  for(let y=0;y<128;y+=18){
+    const g=cx.createLinearGradient(0,y,0,y+12);
+    g.addColorStop(0,'rgba(255,255,255,0.08)');
+    g.addColorStop(.5,'rgba(255,255,255,0.02)');
+    g.addColorStop(1,'rgba(255,255,255,0)');
+    cx.fillStyle=g;cx.fillRect(0,y,128,12);
+  }
+  return c;
+}
+
+// 7. Wood — for shop counters
+function makeWoodTex(){
+  const c=mkCanvas(256),cx=c.getContext('2d');
+  cx.fillStyle='#8B6340';cx.fillRect(0,0,256,256);
+  for(let y=0;y<256;y+=3){
+    const v=Math.sin(y*0.2)*8+Math.random()*4;
+    cx.strokeStyle=`rgba(${100+v},${72+v},${40+v},0.3)`;
+    cx.lineWidth=1+Math.random();
+    cx.beginPath();cx.moveTo(0,y+Math.random()*2);cx.lineTo(256,y+Math.random()*2);cx.stroke();
+  }
+  return c;
+}
+
+// 8. Terrazzo — speckled floor for check-in
+function makeTerrazzoTex(){
+  const c=mkCanvas(256),cx=c.getContext('2d');
+  cx.fillStyle='#d0c8bc';cx.fillRect(0,0,256,256);
+  const colors=['#a08878','#c0b0a0','#e8d8c8','#b09888','#808878','#d0c0b0'];
+  for(let i=0;i<800;i++){
+    const x=Math.random()*256,y=Math.random()*256,r=1+Math.random()*4;
+    cx.fillStyle=colors[Math.floor(Math.random()*colors.length)];
+    cx.beginPath();cx.arc(x,y,r,0,Math.PI*2);cx.fill();
+  }
+  return c;
+}
+
+// Build all textures
+const TEX={
+  marble:    canvasTex(makeMarbleTex()),
+  concrete:  canvasTex(makeConcreteTex()),
+  metal:     canvasTex(makeMetalTex()),
+  tarmac:    canvasTex(makeTarmacTex()),
+  yellow:    canvasTex(makeYellowTex()),
+  glass:     canvasTex(makeGlassTex()),
+  wood:      canvasTex(makeWoodTex()),
+  terrazzo:  canvasTex(makeTerrazzoTex()),
+};
+// Set repeat scales
+TEX.marble.repeat.set(4,4);
+TEX.concrete.repeat.set(2,2);
+TEX.metal.repeat.set(2,2);
+TEX.tarmac.repeat.set(6,6);
+TEX.yellow.repeat.set(1,8);
+TEX.glass.repeat.set(1,3);
+TEX.terrazzo.repeat.set(3,3);
+
+// MATERIALS — textured
+function M(col,rough=.55,metal=0,em=0,ei=0,map=null){
   return new THREE.MeshStandardMaterial({color:col,roughness:rough,metalness:metal,
-    transparent:true,opacity:op,side:THREE.DoubleSide});
+    map,emissive:new THREE.Color(em),emissiveIntensity:ei});
+}
+function MT(col,rough,metal,op,map=null){
+  return new THREE.MeshStandardMaterial({color:col,roughness:rough,metalness:metal,
+    map,transparent:true,opacity:op,side:THREE.DoubleSide});
 }
 const MAT={
-  ground: M(0x8898a8,.98),
-  floor:  M(0xd8c8a8,.72),    // warm stone
-  floorL: M(0xb09878,.80),    // darker grid lines
-  wall:   M(0xa8b4c0,.62),    // cool grey walls
-  wallD:  M(0x7888a0,.68),    // darker dividers
-  ceil:   M(0xc8d0d8,.68),    // lighter ceiling
-  struct: M(0x607888,.58,.06),// blue-grey seats/desks
-  glass:  MT(0x78b8e0,.08,.35,.24),
-  glassD: MT(0x4080c0,.12,.45,.42),
-  yellow: M(0xf0c010,.35,.02,0xf0c010,.55),
-  checkin:M(0xe0c860,.65,0,0xd0b020,.14),
-  security:M(0xd07070,.60,0,0xc02828,.20),
-  food:   M(0xd8a050,.62,0,0xc07010,.20),
-  shop:   M(0x9870d0,.60,0,0x7040b8,.20),
-  lounge: M(0x5098c8,.62,0,0x2068a8,.22),
-  service:M(0x60b880,.62,0,0x208840,.20),
-  gate:   M(0x3868b8,.30,.14,0x1848a0,.50),
-  gHL:    M(0x20a858,.22,.14,0x108038,.98),
-  gBd:    M(0xc88010,.22,.08,0xb07000,.90),
-  gDl:    M(0xc02828,.22,.08,0xa01818,.90),
-  jetway: M(0x506070,.68,.12),
-  pillar: M(0x8898a8,.45,.08),
-  you:    M(0xf59e0b,.10,.2,0xf59e0b,2.5),
-  dest:   M(0x10b981,.10,.2,0x10b981,2.5),
+  ground:  M(0x6a7480,.98,0,0,0,TEX.tarmac),
+  floor:   M(0xd0c4aa,.60,0,0,0,TEX.marble),
+  floorL:  M(0x8a7c66,.80),
+  wall:    M(0xa0aaB8,.58,0,0,0,TEX.concrete),
+  wallD:   M(0x6a7888,.65,0,0,0,TEX.concrete),
+  ceil:    M(0xb8c0c8,.65),
+  struct:  M(0x607080,.45,.18,0,0,TEX.metal),
+  glass:   MT(0x88c8e8,.06,.5,.22,TEX.glass),
+  glassD:  MT(0x4488cc,.10,.55,.38,TEX.glass),
+  yellow:  M(0xf0c010,.30,.02,0xf0c010,.6,TEX.yellow),
+  checkin: M(0xc8b848,.62,0,0xcca020,.18,TEX.terrazzo),
+  security:M(0xc86060,.55,0,0xb02020,.25),
+  food:    M(0xc89040,.58,0,0xb06010,.22,TEX.wood),
+  shop:    M(0x8860c8,.55,0,0x6030b0,.22),
+  lounge:  M(0x4088c0,.58,0,0x2060a0,.25,TEX.metal),
+  service: M(0x50a870,.55,0,0x208040,.22),
+  gate:    M(0x2858b0,.28,.2,0x1040a8,.55),
+  gHL:     M(0x18a848,.20,.2,0x089030,1.0),
+  gBd:     M(0xc87808,.20,.1,0xb06800,.92),
+  gDl:     M(0xc02020,.20,.1,0xa01010,.92),
+  jetway:  M(0x485868,.65,.15,0,0,TEX.metal),
+  pillar:  M(0x8090a0,.42,.1,0,0,TEX.concrete),
+  you:     M(0xf59e0b,.08,.25,0xf59e0b,2.8),
+  dest:    M(0x10b981,.08,.25,0x10b981,2.8),
 };
 
 // SCENE GROUPS
@@ -512,8 +830,8 @@ function cy(rT,rB,h,s,mat,x=0,y=0,z=0,ud={}){
   m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;m.userData=ud;sg.add(m);return m;
 }
 function col(x,z){
-  cy(.22,.26,4.4,12,MAT.pillar,x,2.2,z);
-  bx(.58,.2,.58,new THREE.MeshStandardMaterial({color:0x7888a0,roughness:.4,metalness:.12}),x,4.52,z);
+  cy(.22,.26,2.6,12,MAT.pillar,x,1.3,z);
+  bx(.52,.18,.52,new THREE.MeshStandardMaterial({color:0x7888a0,roughness:.4,metalness:.12}),x,2.66,z);
 }
 function lbl(txt,wx,wy,wz,c='#1a2a3a',sz='.58rem',bold=false){
   const el=document.createElement('div');
@@ -609,14 +927,14 @@ function buildMain(){
   // Guide stripes
   bx(.65,.32,16,MAT.yellow,0,.16,0);bx(30,.32,.65,MAT.yellow,0,.16,0);
   // Walls — tall solid
-  bx(.38,4.4,16,MAT.wall,-15.19,2.2,0);bx(.38,4.4,16,MAT.wall,15.19,2.2,0);
-  bx(30.38,4.4,.38,MAT.wall,0,2.2,-8.19);
+  bx(.38,2.6,16,MAT.wall,-15.19,1.3,0);bx(.38,2.6,16,MAT.wall,15.19,1.3,0);
+  bx(30.38,2.6,.38,MAT.wall,0,1.3,-8.19);
   // Glass facade front
-  bx(30,.1,4.4,MT(0x78b8e0,.05,.4,.18),0,2.2,8.19);
+  bx(30,.1,2.6,MT(0x78b8e0,.05,.4,.18),0,1.3,8.19);
   // Ceiling
   // ceiling removed — open top view
   // Skylights (blue glow)
-  [-10,0,10].forEach(x=>bx(3.6,.14,5,MAT.glassD,x,4.5,0));
+  // skylights removed — no ceiling blocking view
   // Columns
   [-11,11].forEach(cx=>[-5,0,5].forEach(cz=>col(cx,cz)));
 
@@ -677,11 +995,11 @@ function buildCheckin(){
   bx(32,.3,20,MAT.floor,0,.15,0);
   for(let i=-9;i<=9;i+=4)bx(32,.31,.1,MAT.floorL,0,.155,i);
   bx(.65,.32,20,MAT.yellow,0,.16,0);
-  bx(.38,4.5,20,MAT.wall,-16.19,2.25,0);bx(.38,4.5,20,MAT.wall,16.19,2.25,0);
-  bx(32.4,4.5,.38,MAT.wall,0,2.25,10.19);
-  bx(32,.1,4.5,MT(0x78b8e0,.05,.4,.18),0,2.25,-10.19);
+  bx(.38,2.6,20,MAT.wall,-16.19,1.3,0);bx(.38,2.6,20,MAT.wall,16.19,1.3,0);
+  bx(32.4,2.6,.38,MAT.wall,0,1.3,10.19);
+  bx(32,.1,2.6,MT(0x78b8e0,.05,.4,.18),0,1.3,-10.19);
   // ceiling removed — open top view
-  [-11,0,11].forEach(x=>bx(4,.14,6,MAT.glassD,x,4.68,0));
+  // skylights removed — no ceiling blocking view
   [-11,0,11].forEach(cx=>[-7,7].forEach(cz=>col(cx,cz)));
   // Check-in desks
   for(let i=0;i<12;i++){
@@ -726,11 +1044,11 @@ function buildWing(sec,gateList,gX,facItems){
   // Side aisles
   bx(5.8,.3,wl,MAT.floor,-4.9,.15,0);bx(5.8,.3,wl,MAT.floor,4.9,.15,0);
   // Glass exterior
-  bx(.2,4.0,wl,MAT.glass,-ww+.1,2,0);bx(.2,4.0,wl,MAT.glass,ww-.1,2,0);
-  bx(ww*2,4.0,.2,MAT.glass,0,2,-wl/2-.1);
+  bx(.2,2.6,wl,MAT.glass,-ww+.1,1.3,0);bx(.2,2.6,wl,MAT.glass,ww-.1,1.3,0);
+  bx(ww*2,2.6,.2,MAT.glass,0,1.3,-wl/2-.1);
   // ceiling removed — open top view
   // Skylights
-  for(let z=-wl/2+5;z<wl/2;z+=8)bx(3.5,.14,5,MAT.glassD,0,4.24,z);
+  // skylights removed — no ceiling blocking view
   // Columns
   const cz=sec==='wingB'?[-12,-6,0,6,12]:[-11,-5,1,7];
   cz.forEach(z=>{col(-1.9,z);col(1.9,z);});
@@ -839,11 +1157,11 @@ function clearScn(){
   rcTargets=[];lblEls=[];lblCont.innerHTML='';
 }
 const CAM={
-  main:   {ry:0,rx:.80,z:1.0,tx:0,tz:0},
-  checkin:{ry:0,rx:.80,z:1.0,tx:0,tz:-1},
-  wingA:  {ry:0,rx:.78,z:1.0,tx:-1,tz:0},
-  wingB:  {ry:0,rx:.78,z:1.1,tx:0,tz:0},
-  wingC:  {ry:0,rx:.78,z:1.0,tx:1,tz:0},
+  main:   {ry:0,rx:1.05,z:1.0,tx:0,tz:0},
+  checkin:{ry:0,rx:1.05,z:1.0,tx:0,tz:-1},
+  wingA:  {ry:0,rx:1.0, z:1.0,tx:-1,tz:0},
+  wingB:  {ry:0,rx:1.0, z:1.1,tx:0,tz:0},
+  wingC:  {ry:0,rx:1.0, z:1.0,tx:1,tz:0},
 };
 let rotY=0,rotX=.80,zoom=1;
 function loadSec(sec){
@@ -881,7 +1199,7 @@ cwrap.addEventListener('mousedown',e=>{isDrag=true;pmx=e.clientX;pmy=e.clientY;}
 window.addEventListener('mouseup',()=>isDrag=false);
 window.addEventListener('mousemove',e=>{
   if(!isDrag)return;
-  rotY-=(e.clientX-pmx)*.006;rotX=Math.max(.18,Math.min(1.35,rotX+(e.clientY-pmy)*.004));
+  rotY-=(e.clientX-pmx)*.006;rotX=Math.max(.55,Math.min(1.35,rotX+(e.clientY-pmy)*.004));
   pmx=e.clientX;pmy=e.clientY;updateCam();
 });
 cwrap.addEventListener('wheel',e=>{zoom=Math.max(.32,Math.min(3.5,zoom+e.deltaY*.001));updateCam();e.preventDefault();},{passive:false});
@@ -896,7 +1214,7 @@ window.addEventListener('touchmove',e=>{
   if(!touchDrag)return;
   if(e.touches.length===1){
     rotY-=(e.touches[0].clientX-pt1x)*.006;
-    rotX=Math.max(.18,Math.min(1.35,rotX+(e.touches[0].clientY-pt1y)*.004));
+    rotX=Math.max(.55,Math.min(1.35,rotX+(e.touches[0].clientY-pt1y)*.004));
     pt1x=e.touches[0].clientX;pt1y=e.touches[0].clientY;updateCam();
   }
   if(e.touches.length===2){
@@ -996,6 +1314,7 @@ function setFlight(fl){
   document.getElementById('myBadge').style.display='flex';
   document.getElementById('mobBadge').style.display='flex';
   renderMyFlight(fl);startCountdown(fl);
+  const mp=document.getElementById('mapPrompt');if(mp)mp.style.display='none';
   loadSec(fl.wing);
   switchTab('myflight');renderFlightList();
   showToast('✈','Gate '+fl.gate+' · '+fl.dest+' · '+fl.time);
@@ -1009,6 +1328,7 @@ function clearFlight(){
   document.getElementById('flInp').value='';
   if(cdTimer)clearInterval(cdTimer);cdTimer=null;
   renderMyFlightEmpty();renderFlightList();loadSec(activeSection);
+  const mp=document.getElementById('mapPrompt');if(mp)mp.style.display='';
 }
 function navigateToGate(gid){
   const fl=GF[gid];
@@ -1115,15 +1435,45 @@ function renderMyFlight(fl){
 
 function renderMyFlightEmpty(){
   document.getElementById('mfContent').innerHTML=`
-  <div class="nf">
-    <div class="nfp">✈</div>
-    <div class="nft">Enter Your Flight Number</div>
-    <div class="nfs">Type your flight above and tap Find to see gate, boarding time and walking directions.</div>
-    <div class="nfdl">Try a demo flight:</div>
-    <button class="nfb" onclick="setFlight(FLIGHTS.find(f=>f.num==='BA447'))"><span>BA447 · London Heathrow</span><span class="nfbg">B12 · Boarding</span></button>
-    <button class="nfb" onclick="setFlight(FLIGHTS.find(f=>f.num==='EK202'))"><span>EK202 · Dubai</span><span class="nfbg">A04 · On Time</span></button>
-    <button class="nfb" onclick="setFlight(FLIGHTS.find(f=>f.num==='SQ317'))"><span>SQ317 · Singapore</span><span class="nfbg">C14 · On Time</span></button>
-    <button class="nfb" onclick="setFlight(FLIGHTS.find(f=>f.num==='LH456'))"><span>LH456 · Frankfurt</span><span class="nfbg" style="color:#dc2626">A08 · Delayed</span></button>
+  <div style="padding:16px">
+    <div style="background:linear-gradient(135deg,#0f2240,#1a3a6a);border-radius:10px;padding:18px;color:#fff;margin-bottom:12px;text-align:center">
+      <div style="font-size:2rem;margin-bottom:8px">✈</div>
+      <div style="font-size:.9rem;font-weight:700;margin-bottom:4px">Enter your flight number</div>
+      <div style="font-size:.72rem;color:rgba(255,255,255,.55);margin-bottom:14px;line-height:1.5">Get gate info, boarding countdown and a walking route to your gate</div>
+      <div style="display:flex;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:7px;overflow:hidden;height:36px">
+        <input id="inlineFlInp" placeholder="e.g. BA447" maxlength="6" autocomplete="off"
+          style="flex:1;background:none;border:none;outline:none;padding:0 12px;font-family:JetBrains Mono,monospace;font-size:.85rem;color:#fff;text-transform:uppercase;letter-spacing:.07em"
+          onkeydown="if(event.key==='Enter'){document.getElementById('flInp').value=this.value;doLookup()}">
+        <button onclick="document.getElementById('flInp').value=document.getElementById('inlineFlInp').value;doLookup()"
+          style="padding:0 14px;background:#2563eb;border:none;cursor:pointer;font-family:Inter,sans-serif;font-size:.7rem;font-weight:700;color:#fff;letter-spacing:.08em;text-transform:uppercase">Find →</button>
+      </div>
+    </div>
+    <div style="font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--tl);margin-bottom:8px">Quick demo — tap to navigate</div>
+    <div style="display:flex;flex-direction:column;gap:5px">
+      ${[['BA447','London Heathrow','B12','boarding'],['EK202','Dubai','A04','ontime'],['SQ317','Singapore','C14','ontime'],['LH456','Frankfurt','A08','delayed']].map(([num,dest,gate,st])=>`
+      <button onclick="setFlight(FLIGHTS.find(f=>f.num==='${num}'))"
+        style="display:flex;align-items:center;justify-content:space-between;padding:9px 11px;background:var(--bg3);border:1px solid var(--bdr);border-radius:7px;cursor:pointer;font-family:Inter,sans-serif;width:100%;text-align:left;transition:all .12s"
+        onmouseover="this.style.background='var(--bbg)';this.style.borderColor='var(--bbdr)'"
+        onmouseout="this.style.background='var(--bg3)';this.style.borderColor='var(--bdr)'">
+        <div>
+          <div style="font-family:JetBrains Mono,monospace;font-size:.75rem;font-weight:600;color:var(--navy);margin-bottom:1px">${num}</div>
+          <div style="font-size:.68rem;color:var(--tl)">${dest}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:7px">
+          <span style="font-family:JetBrains Mono,monospace;font-size:.68rem;color:var(--blue)">Gate ${gate}</span>
+          <span style="font-size:.58rem;font-weight:700;padding:2px 6px;border-radius:4px;background:${st==='boarding'?'var(--abg)':st==='delayed'?'var(--rbg)':'var(--gbg)'};color:${st==='boarding'?'var(--amber)':st==='delayed'?'var(--red)':'var(--green)'}">${st==='boarding'?'Boarding':st==='delayed'?'Delayed':'On Time'}</span>
+        </div>
+      </button>`).join('')}
+    </div>
+    <div style="margin-top:14px;padding:11px 12px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:7px">
+      <div style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#0369a1;margin-bottom:5px">💡 What you can do</div>
+      <div style="font-size:.68rem;color:#075985;line-height:1.8">
+        🗺 <b>3D Map</b> — drag to rotate, scroll to zoom<br>
+        🏬 <b>Facilities tab</b> — find shops, lounges, toilets<br>
+        🔍 <b>Search bar</b> — search any gate or facility<br>
+        📍 <b>Click anything</b> on the map for info & directions
+      </div>
+    </div>
   </div>`;
 }
 
@@ -1255,7 +1605,54 @@ function animate(){
   projectLabels();renderer.render(scene,camera);
 }
 
-// ═══ INIT ════════════════════════════════════
+// ═══ HELP OVERLAY ════════════════════════════
+function toggleHelp(){
+  const o=document.getElementById('helpOverlay');
+  const isOpen=o.style.display==='flex';
+  o.style.display=isOpen?'none':'flex';
+}
+function closeModal(){
+  const m=document.getElementById('welcomeModal');
+  m.style.opacity='0';m.style.transition='opacity .3s';
+  setTimeout(()=>m.style.display='none',300);
+  // Pulse the flight input after close
+  setTimeout(()=>{
+    const fe=document.getElementById('flEntry');
+    fe.style.transition='box-shadow .3s';
+    let p=0;const pulse=setInterval(()=>{
+      fe.style.boxShadow=p%2===0?'0 0 0 3px rgba(59,130,246,.5)':'none';p++;
+      if(p>5)clearInterval(pulse);
+    },400);
+  },500);
+  // Show coach mark on map
+  setTimeout(showCoach,800);
+}
+
+function modalPickFlight(num){
+  closeModal();
+  setTimeout(()=>{
+    document.getElementById('flInp').value=num;
+    doLookup();
+  },400);
+}
+
+// Coach mark — appears on map after modal closes
+function showCoach(){
+  if(document.getElementById('coachMark'))return;
+  const c=document.createElement('div');
+  c.id='coachMark';c.className='coach top-left';
+  c.innerHTML=`<strong>👆 Interactive 3D Map</strong>
+Drag to rotate · Scroll to zoom<br>
+<span style="color:rgba(255,255,255,.7)">Click any gate or shop to get details and directions</span><br>
+<span class="coach-dismiss" onclick="dismissCoach()">Got it ✓</span>`;
+  document.getElementById('cwrap').appendChild(c);
+  // Auto-dismiss after 8s
+  setTimeout(dismissCoach,8000);
+}
+function dismissCoach(){
+  const c=document.getElementById('coachMark');
+  if(c){c.style.opacity='0';setTimeout(()=>c.remove(),400);}
+}
 loadSec('main');
 renderFlightList();
 renderMyFlightEmpty();
