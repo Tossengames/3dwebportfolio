@@ -578,8 +578,8 @@ const FAC=[
   {id:'pharmacy',name:'Pharmacy',sub:'L1 · Check-in Hall · 05:30–22:00',icon:'💊',type:'shop',sec:'checkin'},
   {id:'baggage',name:'Baggage Services',sub:'L1 · Check-in Hall · 05:00–22:00',icon:'🧳',type:'service',sec:'checkin'},
 ];
-const FC={food:{bg:'#fef3c7',c:'#d97706'},shop:{bg:'#ede9fe',c:'#7c3aed'},service:{bg:'#dcfce7',c:'#059669'},security:{bg:'#fee2e2',c:'#dc2626'},lounge:{bg:'#e0f2fe',c:'#0369a1'}};
-const SC={ontime:'#059669',boarding:'#d97706',delayed:'#dc2626'};
+const FC={food:{bg:'#fef3c7',c:'#d97706'},shop:{bg:'#ede9fe',c:'#7c3aed'},service:{bg:'#dcfce7',c:'#34d399'},security:{bg:'#fee2e2',c:'#dc2626'},lounge:{bg:'#e0f2fe',c:'#0369a1'}};
+const SC={ontime:'#34d399',boarding:'#d97706',delayed:'#dc2626'};
 
 // ═══ STATE ═══════════════════════════════════
 let activeFlight=null,activeSection='main',hlFac=null,cdTimer=null,cdSecs=0;
@@ -588,13 +588,13 @@ let activeFlight=null,activeSection='main',hlFac=null,cdTimer=null,cdSecs=0;
 const canvas=document.getElementById('apc'),cwrap=document.getElementById('cwrap');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});
 renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-renderer.setClearColor(0xc8d8e8,1);
+renderer.setClearColor(0x28333f,1);
 renderer.shadowMap.enabled=true;
 renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 
 const scene=new THREE.Scene();
-scene.background=new THREE.Color(0xc8d8e8);
-scene.fog=new THREE.Fog(0xc8d8e8,36,62);
+scene.background=new THREE.Color(0x28333f);
+scene.fog=new THREE.Fog(0x28333f,38,64);
 
 const camera=new THREE.PerspectiveCamera(44,1,.1,200);
 const camTgt=new THREE.Vector3();
@@ -605,19 +605,19 @@ function resz(){
 }
 resz();window.addEventListener('resize',resz);
 
-// LIGHTS — calibrated for textured surfaces
-scene.add(new THREE.AmbientLight(0xfff8f0,0.75));
-const sun=new THREE.DirectionalLight(0xfff4e8,2.4);
+// LIGHTS — dim, realistic, no bleaching
+scene.add(new THREE.AmbientLight(0x8898b0,0.55));
+const sun=new THREE.DirectionalLight(0xe8c888,1.1);
 sun.position.set(14,22,12);sun.castShadow=true;
 sun.shadow.mapSize.set(2048,2048);
 sun.shadow.camera.left=-36;sun.shadow.camera.right=36;
 sun.shadow.camera.top=36;sun.shadow.camera.bottom=-36;
 sun.shadow.camera.far=90;sun.shadow.bias=-.001;
 scene.add(sun);
-const fill=new THREE.DirectionalLight(0xc8d8f0,0.8);fill.position.set(-10,12,-8);scene.add(fill);
-const rim=new THREE.DirectionalLight(0xffe0c0,.4);rim.position.set(2,6,-14);scene.add(rim);
-// Warm interior point lights
-[-9,0,9].forEach(x=>{const p=new THREE.PointLight(0xfff0d8,.7,18);p.position.set(x,3.5,0);scene.add(p);});
+const fill=new THREE.DirectionalLight(0x7080a0,0.3);fill.position.set(-10,12,-8);scene.add(fill);
+const rim=new THREE.DirectionalLight(0xa08860,.18);rim.position.set(2,6,-14);scene.add(rim);
+// Dim warm interior accent
+[-9,0,9].forEach(x=>{const p=new THREE.PointLight(0xd4a860,.28,14);p.position.set(x,3.5,0);scene.add(p);});
 
 // ── PROCEDURAL TEXTURE FACTORY ───────────────
 function mkCanvas(size=256){
@@ -629,29 +629,29 @@ function canvasTex(c,wrap=true){
   return t;
 }
 
-// 1. Marble floor — cream with grey veins
+// 1. Marble floor — mid-tone warm stone, NOT cream
 function makeMarbleTex(){
   const c=mkCanvas(512),cx=c.getContext('2d');
-  cx.fillStyle='#d6cbb5';cx.fillRect(0,0,512,512);
-  // base noise grain
+  cx.fillStyle='#9a8e7c';cx.fillRect(0,0,512,512);
+  // grain
   for(let i=0;i<6000;i++){
     const x=Math.random()*512,y=Math.random()*512,r=Math.random()*2;
-    const v=Math.floor(Math.random()*30);
-    cx.fillStyle=`rgba(${180+v},${168+v},${148+v},0.18)`;
+    const v=Math.floor(-20+Math.random()*35);
+    cx.fillStyle=`rgba(${130+v},${118+v},${98+v},0.22)`;
     cx.beginPath();cx.arc(x,y,r,0,Math.PI*2);cx.fill();
   }
-  // veins
-  for(let v=0;v<12;v++){
+  // veins — dark on mid tone
+  for(let v=0;v<14;v++){
     cx.beginPath();
     let x=Math.random()*512,y=Math.random()*512;
     cx.moveTo(x,y);
     for(let s=0;s<8;s++){x+=(-30+Math.random()*60);y+=(-20+Math.random()*40);cx.lineTo(x,y);}
-    const op=(0.05+Math.random()*0.12);
-    cx.strokeStyle=`rgba(140,128,110,${op})`;
+    const op=0.12+Math.random()*0.2;
+    cx.strokeStyle=`rgba(60,50,38,${op})`;
     cx.lineWidth=0.5+Math.random()*1.5;cx.stroke();
   }
-  // tile grid lines
-  cx.strokeStyle='rgba(100,90,75,0.35)';cx.lineWidth=1.5;
+  // tile grid
+  cx.strokeStyle='rgba(50,42,32,0.45)';cx.lineWidth=2;
   [128,256,384].forEach(p=>{
     cx.beginPath();cx.moveTo(p,0);cx.lineTo(p,512);cx.stroke();
     cx.beginPath();cx.moveTo(0,p);cx.lineTo(512,p);cx.stroke();
@@ -659,70 +659,68 @@ function makeMarbleTex(){
   return c;
 }
 
-// 2. Concrete wall — grey with subtle texture
+// 2. Concrete wall — darker grey
 function makeConcreteTex(){
   const c=mkCanvas(256),cx=c.getContext('2d');
-  cx.fillStyle='#9aa4b0';cx.fillRect(0,0,256,256);
+  cx.fillStyle='#6e7882';cx.fillRect(0,0,256,256);
   for(let i=0;i<3000;i++){
     const x=Math.random()*256,y=Math.random()*256;
-    const v=Math.floor(-20+Math.random()*40);
-    cx.fillStyle=`rgba(${128+v},${138+v},${148+v},0.12)`;
+    const v=Math.floor(-18+Math.random()*36);
+    cx.fillStyle=`rgba(${90+v},${100+v},${110+v},0.18)`;
     cx.fillRect(x,y,2,2);
   }
-  // horizontal form lines
   for(let y=32;y<256;y+=32){
-    cx.strokeStyle='rgba(70,80,90,0.18)';cx.lineWidth=1;
+    cx.strokeStyle='rgba(40,48,56,0.22)';cx.lineWidth=1;
     cx.beginPath();cx.moveTo(0,y);cx.lineTo(256,y);cx.stroke();
   }
   return c;
 }
 
-// 3. Metal brushed — for structure/seats
+// 3. Metal brushed — darker steel
 function makeMetalTex(){
   const c=mkCanvas(256),cx=c.getContext('2d');
   const g=cx.createLinearGradient(0,0,256,0);
-  g.addColorStop(0,'#5a6878');g.addColorStop(.3,'#6a7888');g.addColorStop(.6,'#546070');g.addColorStop(1,'#5a6878');
+  g.addColorStop(0,'#404e5c');g.addColorStop(.3,'#505e6e');g.addColorStop(.6,'#3c4a58');g.addColorStop(1,'#404e5c');
   cx.fillStyle=g;cx.fillRect(0,0,256,256);
-  // brushed lines
   for(let y=0;y<256;y+=2){
-    cx.strokeStyle=`rgba(255,255,255,${0.02+Math.random()*0.04})`;
+    cx.strokeStyle=`rgba(255,255,255,${0.015+Math.random()*0.03})`;
     cx.lineWidth=1;cx.beginPath();cx.moveTo(0,y);cx.lineTo(256,y);cx.stroke();
   }
   return c;
 }
 
-// 4. Asphalt/tarmac — for ground outside
+// 4. Tarmac — very dark
 function makeTarmacTex(){
   const c=mkCanvas(256),cx=c.getContext('2d');
-  cx.fillStyle='#5a6070';cx.fillRect(0,0,256,256);
+  cx.fillStyle='#3a3e46';cx.fillRect(0,0,256,256);
   for(let i=0;i<4000;i++){
-    const x=Math.random()*256,y=Math.random()*256,r=Math.random()*2.5;
-    const v=Math.floor(-15+Math.random()*30);
-    cx.fillStyle=`rgba(${80+v},${88+v},${96+v},0.3)`;
+    const x=Math.random()*256,y=Math.random()*256,r=Math.random()*2;
+    const v=Math.floor(-12+Math.random()*24);
+    cx.fillStyle=`rgba(${50+v},${56+v},${64+v},0.4)`;
     cx.beginPath();cx.arc(x,y,r,0,Math.PI*2);cx.fill();
   }
   return c;
 }
 
-// 5. Yellow stripe — bright with worn edges
+// 5. Yellow — muted, not neon
 function makeYellowTex(){
   const c=mkCanvas(64),cx=c.getContext('2d');
-  cx.fillStyle='#f0c010';cx.fillRect(0,0,64,64);
+  cx.fillStyle='#c8a008';cx.fillRect(0,0,64,64);
   for(let i=0;i<300;i++){
     const x=Math.random()*64,y=Math.random()*64;
-    cx.fillStyle=`rgba(180,140,0,${0.05+Math.random()*0.1})`;
+    cx.fillStyle=`rgba(100,75,0,${0.08+Math.random()*0.12})`;
     cx.fillRect(x,y,2,2);
   }
   return c;
 }
 
-// 6. Glass — subtle horizontal reflection bands
+// 6. Glass
 function makeGlassTex(){
   const c=mkCanvas(128),cx=c.getContext('2d');
-  cx.fillStyle='rgba(120,190,230,0.0)';cx.fillRect(0,0,128,128);
+  cx.fillStyle='rgba(0,0,0,0)';cx.fillRect(0,0,128,128);
   for(let y=0;y<128;y+=18){
     const g=cx.createLinearGradient(0,y,0,y+12);
-    g.addColorStop(0,'rgba(255,255,255,0.08)');
+    g.addColorStop(0,'rgba(255,255,255,0.07)');
     g.addColorStop(.5,'rgba(255,255,255,0.02)');
     g.addColorStop(1,'rgba(255,255,255,0)');
     cx.fillStyle=g;cx.fillRect(0,y,128,12);
@@ -730,24 +728,24 @@ function makeGlassTex(){
   return c;
 }
 
-// 7. Wood — for shop counters
+// 7. Wood — darker warm brown
 function makeWoodTex(){
   const c=mkCanvas(256),cx=c.getContext('2d');
-  cx.fillStyle='#8B6340';cx.fillRect(0,0,256,256);
+  cx.fillStyle='#5c3e22';cx.fillRect(0,0,256,256);
   for(let y=0;y<256;y+=3){
-    const v=Math.sin(y*0.2)*8+Math.random()*4;
-    cx.strokeStyle=`rgba(${100+v},${72+v},${40+v},0.3)`;
+    const v=Math.sin(y*0.2)*6+Math.random()*3;
+    cx.strokeStyle=`rgba(${70+v},${48+v},${25+v},0.35)`;
     cx.lineWidth=1+Math.random();
     cx.beginPath();cx.moveTo(0,y+Math.random()*2);cx.lineTo(256,y+Math.random()*2);cx.stroke();
   }
   return c;
 }
 
-// 8. Terrazzo — speckled floor for check-in
+// 8. Terrazzo — darker speckled
 function makeTerrazzoTex(){
   const c=mkCanvas(256),cx=c.getContext('2d');
-  cx.fillStyle='#d0c8bc';cx.fillRect(0,0,256,256);
-  const colors=['#a08878','#c0b0a0','#e8d8c8','#b09888','#808878','#d0c0b0'];
+  cx.fillStyle='#8a7e70';cx.fillRect(0,0,256,256);
+  const colors=['#6a5848','#7c6858','#a09080','#584840','#504840','#908070'];
   for(let i=0;i<800;i++){
     const x=Math.random()*256,y=Math.random()*256,r=1+Math.random()*4;
     cx.fillStyle=colors[Math.floor(Math.random()*colors.length)];
@@ -786,30 +784,30 @@ function MT(col,rough,metal,op,map=null){
     map,transparent:true,opacity:op,side:THREE.DoubleSide});
 }
 const MAT={
-  ground:  M(0x6a7480,.98,0,0,0,TEX.tarmac),
-  floor:   M(0xd0c4aa,.60,0,0,0,TEX.marble),
-  floorL:  M(0x8a7c66,.80),
-  wall:    M(0xa0aaB8,.58,0,0,0,TEX.concrete),
-  wallD:   M(0x6a7888,.65,0,0,0,TEX.concrete),
-  ceil:    M(0xb8c0c8,.65),
-  struct:  M(0x607080,.45,.18,0,0,TEX.metal),
-  glass:   MT(0x88c8e8,.06,.5,.22,TEX.glass),
-  glassD:  MT(0x4488cc,.10,.55,.38,TEX.glass),
-  yellow:  M(0xf0c010,.30,.02,0xf0c010,.6,TEX.yellow),
-  checkin: M(0xc8b848,.62,0,0xcca020,.18,TEX.terrazzo),
-  security:M(0xc86060,.55,0,0xb02020,.25),
-  food:    M(0xc89040,.58,0,0xb06010,.22,TEX.wood),
-  shop:    M(0x8860c8,.55,0,0x6030b0,.22),
-  lounge:  M(0x4088c0,.58,0,0x2060a0,.25,TEX.metal),
-  service: M(0x50a870,.55,0,0x208040,.22),
-  gate:    M(0x2858b0,.28,.2,0x1040a8,.55),
-  gHL:     M(0x18a848,.20,.2,0x089030,1.0),
-  gBd:     M(0xc87808,.20,.1,0xb06800,.92),
-  gDl:     M(0xc02020,.20,.1,0xa01010,.92),
-  jetway:  M(0x485868,.65,.15,0,0,TEX.metal),
-  pillar:  M(0x8090a0,.42,.1,0,0,TEX.concrete),
-  you:     M(0xf59e0b,.08,.25,0xf59e0b,2.8),
-  dest:    M(0x10b981,.08,.25,0x10b981,2.8),
+  ground:  M(0x383c44,.98,0,0,0,TEX.tarmac),
+  floor:   M(0x7a7060,.52,0,0,0,TEX.marble),
+  floorL:  M(0x504840,.78),
+  wall:    M(0x586070,.55,0,0,0,TEX.concrete),
+  wallD:   M(0x404850,.65,0,0,0,TEX.concrete),
+  ceil:    M(0x707880,.65),
+  struct:  M(0x384858,.42,.22,0,0,TEX.metal),
+  glass:   MT(0x5090b8,.06,.5,.28,TEX.glass),
+  glassD:  MT(0x3068a0,.10,.55,.45,TEX.glass),
+  yellow:  M(0xb88c00,.28,.02,0xc89800,.5,TEX.yellow),
+  checkin: M(0x988848,.58,0,0x887020,.18,TEX.terrazzo),
+  security:M(0x983838,.52,0,0x801818,.28),
+  food:    M(0x9a6828,.55,0,0x885010,.22,TEX.wood),
+  shop:    M(0x604898,.52,0,0x482888,.22),
+  lounge:  M(0x2d6490,.55,0,0x1a4878,.28,TEX.metal),
+  service: M(0x307848,.52,0,0x186030,.22),
+  gate:    M(0x1c4898,.25,.22,0x0c2e80,.6),
+  gHL:     M(0x0e8038,.18,.22,0x067028,1.1),
+  gBd:     M(0xa05800,.18,.12,0x904800,.95),
+  gDl:     M(0x981818,.18,.12,0x801010,.95),
+  jetway:  M(0x303e4c,.62,.18,0,0,TEX.metal),
+  pillar:  M(0x505e6c,.40,.12,0,0,TEX.concrete),
+  you:     M(0xa06008,.08,.28,0xb87010,1.8),
+  dest:    M(0x0a9060,.08,.28,0x08a060,2.2),
 };
 
 // SCENE GROUPS
@@ -831,19 +829,19 @@ function cy(rT,rB,h,s,mat,x=0,y=0,z=0,ud={}){
 }
 function col(x,z){
   cy(.22,.26,2.6,12,MAT.pillar,x,1.3,z);
-  bx(.52,.18,.52,new THREE.MeshStandardMaterial({color:0x7888a0,roughness:.4,metalness:.12}),x,2.66,z);
+  bx(.52,.18,.52,new THREE.MeshStandardMaterial({color:0x404e60,roughness:.5,metalness:.2}),x,2.66,z);
 }
-function lbl(txt,wx,wy,wz,c='#1a2a3a',sz='.58rem',bold=false){
+function lbl(txt,wx,wy,wz,c='#d0dce8',sz='.58rem',bold=false){
   const el=document.createElement('div');
   el.style.cssText=`position:absolute;font-family:Inter,sans-serif;font-size:${sz};font-weight:${bold?700:500};`+
     `color:${c};white-space:nowrap;transform:translate(-50%,-50%);`+
-    `background:rgba(255,255,255,.82);padding:2px 6px;border-radius:3px;`+
+    `background:rgba(12,22,38,.75);padding:2px 7px;border-radius:3px;`+
     `letter-spacing:.02em;pointer-events:none;backdrop-filter:blur(2px)`;
   el.textContent=txt;lblCont.appendChild(el);lblEls.push({el,wx,wy,wz});return el;
 }
-function scrMat(emCol=0x1a5fc0){
-  return new THREE.MeshStandardMaterial({color:0x0a1830,roughness:.1,metalness:.3,
-    emissive:new THREE.Color(emCol),emissiveIntensity:.9});
+function scrMat(emCol=0x103080){
+  return new THREE.MeshStandardMaterial({color:0x080e18,roughness:.15,metalness:.4,
+    emissive:new THREE.Color(emCol),emissiveIntensity:.4});
 }
 
 // GATE BUILDER
@@ -876,7 +874,7 @@ function buildGate(id,x,z,rot=0){
   // Jetway connector
   const jc=new THREE.Mesh(new THREE.BoxGeometry(.7,.52,.18),MAT.jetway);jc.position.set(0,.4,-2.62);grp.add(jc);
   // Overhead sign
-  const osM=isMe?MAT.gHL:(isBd?MAT.gBd:new THREE.MeshStandardMaterial({color:0x1a3060,roughness:.3,metalness:.2,emissive:new THREE.Color(0x1040a0),emissiveIntensity:.45}));
+  const osM=isMe?MAT.gHL:(isBd?MAT.gBd:new THREE.MeshStandardMaterial({color:0x1a3060,roughness:.3,metalness:.2,emissive:new THREE.Color(0x0a2858),emissiveIntensity:.3}));
   const os=new THREE.Mesh(new THREE.BoxGeometry(.9,.22,.08),osM);os.position.set(0,1.5,-.82);grp.add(os);
 
   // Boarding pulse ring
@@ -887,9 +885,9 @@ function buildGate(id,x,z,rot=0){
   }
   sg.add(grp);
 
-  const lc=isMe?'#059669':(isBd?'#b06000':(isDl?'#b02020':'#1a4a90'));
+  const lc=isMe?'#34d399':(isBd?'#e09030':(isDl?'#e05050':'#6890d0'));
   lbl(id,x,2.2,z,lc,'.64rem',true);
-  if(fl)lbl(fl.time,x,.14,z,'#445566','.53rem');
+  if(fl)lbl(fl.time,x,.14,z,'#8090a8','.53rem');
 }
 
 // FACILITY BUILDER
@@ -911,7 +909,7 @@ function buildFac(f,pos,size=1.5){
       new THREE.MeshBasicMaterial({color:0x10b981,transparent:true,opacity:.7,side:THREE.DoubleSide}));
     rg.rotation.x=-Math.PI/2;rg.position.set(x,.02,z);sg.add(rg);
   }
-  lbl(f.icon+' '+f.name,x,1.55,z,hl?'#059669':'#1a2a40','.59rem',true);
+  lbl(f.icon+' '+f.name,x,1.55,z,hl?'#34d399':'#9ab0c8','.59rem',true);
 }
 
 // ═══ SECTION BUILDERS ════════════════════════
@@ -930,7 +928,7 @@ function buildMain(){
   bx(.38,2.6,16,MAT.wall,-15.19,1.3,0);bx(.38,2.6,16,MAT.wall,15.19,1.3,0);
   bx(30.38,2.6,.38,MAT.wall,0,1.3,-8.19);
   // Glass facade front
-  bx(30,.1,2.6,MT(0x78b8e0,.05,.4,.18),0,1.3,8.19);
+  bx(30,.1,2.6,MT(0x3868a0,.12,.45,.28),0,1.3,8.19);
   // Ceiling
   // ceiling removed — open top view
   // Skylights (blue glow)
@@ -941,41 +939,41 @@ function buildMain(){
   // Info desk (cylinder, clickable)
   const id=cy(1.9,2.1,.72,24,MAT.struct,0,.46,0,{type:'facility',id:'info',name:'Information Desk',fac:FAC.find(f=>f.id==='info')});
   rcTargets.push(id);
-  cy(1.88,1.88,.06,24,MAT.gHL,0,.85,0);
-  lbl('ℹ️ Information',0,1.45,0,'#0d4080','.63rem',true);
+  cy(1.88,1.88,.06,24,new THREE.MeshStandardMaterial({color:0x1a6840,roughness:.4,metalness:.1}),0,.85,0);
+  lbl('ℹ️ Information',0,1.45,0,'#60a0d8','.63rem',true);
   bx(.9,.46,.08,scrMat(),-.84,1.6,0);bx(.9,.46,.08,scrMat(),.84,1.6,0);
 
   // Duty Free zone
   const df=bx(5.5,.3,4.6,MAT.shop,-10.5,.15,-2,{type:'facility',id:'dutyfree',name:'World Duty Free',fac:FAC.find(f=>f.id==='dutyfree')});
   rcTargets.push(df);
-  bx(5.5,3.0,4.6,M(0x8060cc,.44,0,0x6040b0,.18),-10.5,1.65,-2);
+  bx(5.5,3.0,4.6,M(0x483878,.55,0,0x302460,.18),-10.5,1.65,-2);
   bx(5.5,3.0,.1,MAT.glassD,-10.5,1.65,.52);
-  lbl('🛍 Duty Free',-10.5,1.35,-2,'#5030a0','.63rem',true);
+  lbl('🛍 Duty Free',-10.5,1.35,-2,'#9878d8','.63rem',true);
 
   // Terminal Café
   const tc=bx(4,.3,3.9,MAT.food,10.5,.15,-2,{type:'facility',id:'cafe1',name:'Terminal Café',fac:FAC.find(f=>f.id==='cafe1')});
   rcTargets.push(tc);
-  bx(4,2.7,3.9,M(0xb86820,.46,0,0x905010,.2),10.5,1.5,-2);
+  bx(4,2.7,3.9,M(0x6e3c10,.58,0,0x502c08,.2),10.5,1.5,-2);
   bx(4,2.7,.1,MAT.glassD,10.5,1.5,.32);
-  lbl('☕ Café',10.5,1.3,-2,'#804010','.63rem',true);
+  lbl('☕ Café',10.5,1.3,-2,'#c88040','.63rem',true);
 
   // Electronics
   const el=bx(3.5,.3,3.1,MAT.shop,-10.5,.15,3.5,{type:'facility',id:'electronics',name:'Tech & Electronics',fac:FAC.find(f=>f.id==='electronics')});
   rcTargets.push(el);
-  bx(3.5,2.3,3.1,M(0x7050c8,.44,0,0x5030b0,.2),-10.5,1.30,3.5);
-  lbl('💻 Electronics',-10.5,1.2,3.5,'#4020a0','.61rem',true);
+  bx(3.5,2.3,3.1,M(0x3c2870,.55,0,0x281a50,.2),-10.5,1.30,3.5);
+  lbl('💻 Electronics',-10.5,1.2,3.5,'#8868c8','.61rem',true);
 
   // Grab & Go
   const gg=bx(3,.3,2.6,MAT.food,10.5,.15,3.5,{type:'facility',id:'grab1',name:'Grab & Go',fac:FAC.find(f=>f.id==='grab1')});
   rcTargets.push(gg);
-  bx(3,2.1,2.6,M(0xc08030,.46,0,0xa06010,.2),10.5,1.20,3.5);
-  lbl('🛒 Grab & Go',10.5,1.15,3.5,'#804010','.61rem',true);
+  bx(3,2.1,2.6,M(0x704a18,.58,0,0x583808,.2),10.5,1.20,3.5);
+  lbl('🛒 Grab & Go',10.5,1.15,3.5,'#c88040','.61rem',true);
 
   // Hotel sign
-  bx(3.2,.34,.14,MAT.lounge,0,2.72,-8.1);lbl('🏨 Hotel →',0,2.94,-8.1,'#005080','.61rem',true);
+  bx(3.2,.28,.14,new THREE.MeshStandardMaterial({color:0x1a3858,roughness:.5,metalness:.1}),0,2.6,-8.1);lbl('🏨 Hotel →',0,2.94,-8.1,'#4898c0','.61rem',true);
   // Wing signs
-  [{t:'← Wing A',x:-9,c:'#1040b0'},{t:'▲ Wing B',x:0,c:'#1040b0'},{t:'Wing C →',x:9,c:'#1040b0'}].forEach(({t,x,c})=>{
-    bx(.96,.34,.12,M(0x2060d0,.3,0,0x1040b0,.5),x,2.72,8.1);
+  [{t:'← Wing A',x:-9,c:'#80aee0'},{t:'▲ Wing B',x:0,c:'#80aee0'},{t:'Wing C →',x:9,c:'#1040b0'}].forEach(({t,x,c})=>{
+    bx(.96,.34,.12,M(0x142850,.55,0,0x0c1e38,.3),x,2.72,8.1);
     lbl(t,x,2.95,8.1,c,'.6rem',true);
   });
   // Seating
@@ -1008,14 +1006,14 @@ function buildCheckin(){
     bx(.38,1.25,.36,scrMat(),x+.3,1.16,-3);
     bx(.9,.9,.46,MAT.struct,x,.6,3);bx(.9,.14,.46,MAT.checkin,x,1.1,3);
   }
-  lbl('✈ Check-in Desks 1–12',0,.18,-3,'#1a2a3a','.62rem',true);
-  lbl('✈ Check-in Desks 13–24',0,.18,3,'#1a2a3a','.62rem',true);
+  lbl('✈ Check-in Desks 1–12',0,.18,-3,'#9ab0c8','.62rem',true);
+  lbl('✈ Check-in Desks 13–24',0,.18,3,'#9ab0c8','.62rem',true);
   // Self check-in kiosks
   for(let i=0;i<8;i++){
     bx(.44,1.45,.36,MAT.struct,9.5-i*1.15,.86,0);
     bx(.44,.1,.36,scrMat(),9.5-i*1.15,1.61,0);
   }
-  lbl('💻 Self Check-in',4.8,2.05,0,'#1d4ed8','.64rem',true);
+  lbl('💻 Self Check-in',4.8,2.05,0,'#60a0e8','.64rem',true);
   // Security zone — red!
   const sf=bx(30,.3,4,MAT.security,0,.15,-8,{type:'facility',id:'security',name:'Security Checkpoint',fac:FAC.find(f=>f.id==='security')});rcTargets.push(sf);
   for(let i=0;i<8;i++){
@@ -1027,11 +1025,11 @@ function buildCheckin(){
   lbl('🔒 Security · 8 Lanes · ~8 min',0,2.15,-8,'#a01818','.65rem',true);
   // Baggage drop
   bx(8,.3,2.6,MAT.checkin,-9,.15,-9.8);bx(8,.75,2.6,MAT.struct,-9,.52,-9.8);
-  lbl('🧳 Baggage Drop',-9,1.1,-9.8,'#1a2a3a','.62rem',true);
+  lbl('🧳 Baggage Drop',-9,1.1,-9.8,'#9ab0c8','.62rem',true);
   buildFac(FAC.find(f=>f.id==='pharmacy'),{x:12,z:-8.5},2.3);
   buildFac(FAC.find(f=>f.id==='toilet1'),{x:-14.5,z:-8.5},1.5);
   buildFac(FAC.find(f=>f.id==='baggage'),{x:6,z:-9.5},2.3);
-  lbl('→ Main Terminal',0,.18,9.5,'#1d4ed8','.64rem',true);
+  lbl('→ Main Terminal',0,.18,9.5,'#60a0e8','.64rem',true);
   spawnPlayer(0,9);
 }
 
@@ -1056,7 +1054,7 @@ function buildWing(sec,gateList,gX,facItems){
   gateList.forEach(g=>buildGate(g.id,gX,g.z,Math.PI/2));
   // Facilities
   facItems.forEach(fi=>buildFac(fi.fac,{x:fi.x,z:fi.z},fi.size));
-  lbl('← Main Terminal',0,.18,wl/2+.5,'#1d4ed8','.64rem',true);
+  lbl('← Main Terminal',0,.18,wl/2+.5,'#60a0e8','.64rem',true);
   spawnPlayer(0,wl/2-.5);
 }
 
@@ -1068,9 +1066,9 @@ function buildWingA(){
     {fac:FAC.find(f=>f.id==='charging'),x:4.5,z:-5,size:1.3},
   ]);
   // Sushi bar building structure
-  bx(4,2.8,4,M(0xc07828,.45,0,0xa05810,.18),4.5,1.55,-11);
+  bx(4,2.8,4,M(0x6e4010,.58,0,0x503008,.18),4.5,1.55,-11);
   bx(4,2.8,.12,MAT.glassD,4.5,1.55,-8.98);
-  lbl('🍣 Sushi Bar',4.5,1.3,-11,'#904010','.63rem',true);
+  lbl('🍣 Sushi Bar',4.5,1.3,-11,'#c87840','.63rem',true);
 }
 
 function buildWingB(){
@@ -1083,14 +1081,14 @@ function buildWingB(){
   right.forEach(g=>buildGate(g.id,5,g.z,Math.PI/2));
   // Business Lounge
   const lo=bx(5.8,.3,4.8,MAT.lounge,5,.15,6.5,{type:'facility',id:'lounge',name:'Business Lounge',fac:FAC.find(f=>f.id==='lounge')});rcTargets.push(lo);
-  bx(5.8,3.0,4.8,M(0x2888c0,.42,0,0x1060a0,.22),5,1.65,6.5);
+  bx(5.8,3.0,4.8,M(0x1a5278,.55,0,0x103858,.22),5,1.65,6.5);
   bx(5.8,3.0,.12,MAT.glassD,5,1.65,9.14);
-  lbl('💺 Business Lounge',5,1.45,6.5,'#004880','.64rem',true);
+  lbl('💺 Business Lounge',5,1.45,6.5,'#5090c0','.64rem',true);
   // Altitude Bar
   const ba=bx(4.2,.3,3.4,MAT.food,-5,.15,6.5,{type:'facility',id:'bar1',name:'Altitude Bar',fac:FAC.find(f=>f.id==='bar1')});rcTargets.push(ba);
-  bx(4.2,2.6,3.4,M(0xb86820,.45,0,0x904810,.2),-5,1.45,6.5);
+  bx(4.2,2.6,3.4,M(0x6e3c10,.58,0,0x502808,.2),-5,1.45,6.5);
   bx(4.2,2.6,.12,MAT.glassD,-5,1.45,8.24);
-  lbl('🍸 Altitude Bar',-5,1.3,6.5,'#804010','.63rem',true);
+  lbl('🍸 Altitude Bar',-5,1.3,6.5,'#c88040','.63rem',true);
 }
 
 function buildWingC(){
@@ -1102,7 +1100,7 @@ function buildWingC(){
   ]);
   // Fashion boutique
   const fa=bx(4,.3,4,MAT.shop,-4.5,.15,-11,{type:'facility',id:'fashion',name:'Fashion Boutique',fac:FAC.find(f=>f.id==='fashion')});rcTargets.push(fa);
-  bx(4,2.8,4,M(0x8855c8,.42,0,0x5c30a8,.22),-4.5,1.55,-11);
+  bx(4,2.8,4,M(0x4c2e78,.55,0,0x361e58,.22),-4.5,1.55,-11);
   bx(4,2.8,.12,MAT.glassD,-4.5,1.55,-8.98);
   lbl('👗 Fashion',-4.5,1.35,-11,'#4a20a0','.63rem',true);
 }
@@ -1234,7 +1232,7 @@ function buildTTData(obj){
   const d=obj.userData;
   if(d.type==='gate'){
     const fl=d.flight,isMe=activeFlight&&activeFlight.gate===d.id;
-    const tc=isMe?{bg:'#bbf7d0',c:'#059669'}:{bg:'#dbeafe',c:'#1d6fd8'};
+    const tc=isMe?{bg:'#bbf7d0',c:'#34d399'}:{bg:'#dbeafe',c:'#1d6fd8'};
     return{
       tagBg:tc.bg,tagC:tc.c,tagTxt:isMe?'YOUR GATE':'Departure Gate',
       name:'Gate '+d.id,type:fl?fl.airline:'Unassigned',
