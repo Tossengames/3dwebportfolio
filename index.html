@@ -241,7 +241,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:52
     <a href="#work" class="nav-link">Work</a>
     <a href="#contact" class="nav-link">Contact</a>
   </div>
-  <a href="#contact" class="nav-cta">Start a Project</a>
+  <a href="contact.html" class="nav-cta">Start a Project</a>
 </nav>
 
 <!-- HERO -->
@@ -311,14 +311,15 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:52
 <!-- DEMOS -->
 <section class="demos" id="work">
   <div class="sec-label">Selected Work</div>
-  <h2 class="sec-title">Eight <em>Worlds</em></h2>
+  <h2 class="sec-title">Eleven <em>Worlds</em></h2>
   <p class="sec-sub">Every demo is a fully designed, production-ready experience — custom built, not a template.</p>
 
   <div class="filter-tabs">
-    <button class="ftab active" data-filter="all">All (8)</button>
+    <button class="ftab active" data-filter="all">All (11)</button>
     <button class="ftab" data-filter="nature">Nature</button>
     <button class="ftab" data-filter="space">Space &amp; Place</button>
     <button class="ftab" data-filter="food">Food &amp; Drink</button>
+    <button class="ftab" data-filter="luxury">Luxury</button>
     <button class="ftab" data-filter="data">Data &amp; Tech</button>
   </div>
 
@@ -354,9 +355,21 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:52
     <div class="cat-divider"><span class="cd-label">Space &amp; Place</span><div class="cd-line"></div></div>
 
     <div class="card wide" data-d="0" data-cat="space">
-      <div class="cimg"><span class="badge">Art Gallery</span><img src="https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=1000&q=85" alt="Vault"></div>
+      <span class="badge-feat">New</span>
+      <div class="cimg"><span class="badge">Airport Tech</span><img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1000&q=85" alt="AeroGuide"></div>
       <div class="cbody">
         <div class="cnum">03</div>
+        <div class="ctitle">AeroGuide — Live Terminal Navigator</div>
+        <p class="cdesc">Full airport wayfinding system with switchable terminal sections — Check-in, Main Hall, Wing A/B/C. Enter any flight number to instantly highlight your gate, see live boarding status, get step-by-step walking directions, and browse facilities. Realistic 3D terminal with gates, lounges, shops, security.</p>
+        <div class="tags"><span class="tag">Flight Lookup</span><span class="tag">Gate Navigation</span><span class="tag">5 Sections</span><span class="tag">Live Wayfinding</span><span class="tag">3D Terminal</span></div>
+        <a href="demo/airport.html" target="_blank" class="card-btn">View Demo <span class="arr">→</span></a>
+      </div>
+    </div>
+
+    <div class="card" data-d="0" data-cat="space">
+      <div class="cimg"><span class="badge">Art Gallery</span><img src="https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=700&q=85" alt="Vault"></div>
+      <div class="cbody">
+        <div class="cnum">04</div>
         <div class="ctitle">Vault — 3D Art Gallery Walkthrough</div>
         <p class="cdesc">Three fully navigable gallery rooms in WebGL. Spot-lit framed artworks on real 3D walls. Camera glides between rooms via arrow navigation. Click any artwork to reveal title, artist, year, description, and price.</p>
         <div class="tags"><span class="tag">3D Rooms</span><span class="tag">Camera Navigation</span><span class="tag">Click to Reveal</span><span class="tag">Spot Lighting</span></div>
@@ -364,10 +377,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:52
       </div>
     </div>
 
-    <div class="card" data-d="0" data-cat="space">
+    <div class="card" data-d="80" data-cat="space">
       <div class="cimg"><span class="badge">Luxury Real Estate</span><img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=700&q=85" alt="Haven"></div>
       <div class="cbody">
-        <div class="cnum">04</div>
+        <div class="cnum">05</div>
         <div class="ctitle">Haven — Luxury Real Estate</div>
         <p class="cdesc">Architectural wireframe house built entirely from 3D line geometry — semi-transparent walls, floating data points with connection lines, teal glow effects, and a deep star field backdrop.</p>
         <div class="tags"><span class="tag">Wireframe Arch</span><span class="tag">Line Geometry</span><span class="tag">Data Points</span></div>
@@ -375,14 +388,41 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:52
       </div>
     </div>
 
-    <div class="card" data-d="80" data-cat="space">
+    <div class="card" data-d="0" data-cat="space">
       <div class="cimg"><span class="badge">Travel Globe</span><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=700&q=85" alt="Atlas"></div>
       <div class="cbody">
-        <div class="cnum">05</div>
+        <div class="cnum">06</div>
         <div class="ctitle">Atlas — Interactive Travel Globe</div>
         <p class="cdesc">Rotating Earth with continent patches, lat/lon grid lines, cloud layer, 3,000 background stars, and 8 clickable destination pins with pulsing rings. Drag any direction to explore.</p>
         <div class="tags"><span class="tag">Earth Globe</span><span class="tag">Destination Pins</span><span class="tag">Drag Rotate</span></div>
         <a href="demo/travel.html" target="_blank" class="card-btn">View Demo <span class="arr">→</span></a>
+      </div>
+    </div>
+
+    <!-- LUXURY -->
+    <div class="cat-divider"><span class="cd-label">Luxury &amp; Lifestyle</span><div class="cd-line"></div></div>
+
+    <div class="card wide" data-d="0" data-cat="luxury">
+      <span class="badge-feat">New</span>
+      <div class="cimg"><span class="badge">Perfume Atelier</span><img src="https://images.unsplash.com/photo-1541643600914-78b084683702?w=1000&q=85" alt="Sillage"></div>
+      <div class="cbody">
+        <div class="cnum">07</div>
+        <div class="ctitle">Sillage — Perfume Atelier</div>
+        <p class="cdesc">Five luxury perfumes, each with a unique Three.js 3D bottle — rectangular smoked glass, lathe-turned crystal, hexagonal amber flacon, cylindrical green matte, and a rose oval. Drag to rotate any bottle. Picker panel shows 2D canvas previews. Right panel reveals scent pyramid, animated fragrance profile bars, occasions, and bottle construction details.</p>
+        <div class="tags"><span class="tag">5 Unique Bottles</span><span class="tag">Drag Rotate</span><span class="tag">Scent Pyramid</span><span class="tag">Material Switcher</span></div>
+        <a href="demo/perfume.html" target="_blank" class="card-btn">View Demo <span class="arr">→</span></a>
+      </div>
+    </div>
+
+    <div class="card" data-d="0" data-cat="luxury">
+      <span class="badge-feat">New</span>
+      <div class="cimg"><span class="badge">Modern Furniture</span><img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=700&q=85" alt="Form and Frame"></div>
+      <div class="cbody">
+        <div class="cnum">08</div>
+        <div class="ctitle">Form &amp; Frame — Furniture Studio</div>
+        <p class="cdesc">Six furniture pieces — lounge chair, 3-seat sofa, dining table, shelving unit, bar stool, and side table — all built entirely from Three.js geometry. Switch finish swatches to recolour in real time. Front / Side / Top / 3D camera views. Orbitable, zoomable. Spec grid and feature list per piece.</p>
+        <div class="tags"><span class="tag">6 3D Models</span><span class="tag">Material Swatches</span><span class="tag">Camera Views</span><span class="tag">Orbit Controls</span></div>
+        <a href="demo/furniture.html" target="_blank" class="card-btn">View Demo <span class="arr">→</span></a>
       </div>
     </div>
 
@@ -392,7 +432,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:52
     <div class="card" data-d="0" data-cat="food">
       <div class="cimg"><span class="badge">Bean to Bar</span><img src="https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=700&q=85" alt="Cacao"></div>
       <div class="cbody">
-        <div class="cnum">06</div>
+        <div class="cnum">09</div>
         <div class="ctitle">Cacao — Premium Chocolate</div>
         <p class="cdesc">Segmented 3D chocolate bar with groove details and a floating broken piece. Live variety switcher — Dark, Milk, White, Ruby — swaps material colour, roughness and glow in real time.</p>
         <div class="tags"><span class="tag">Material Switcher</span><span class="tag">Particle Dust</span><span class="tag">Drag Rotate</span></div>
@@ -406,7 +446,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:52
     <div class="card" data-d="0" data-cat="data">
       <div class="cimg"><span class="badge">Data Platform</span><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=700&q=85" alt="Prism"></div>
       <div class="cbody">
-        <div class="cnum">07</div>
+        <div class="cnum">10</div>
         <div class="ctitle">Prism — 3D Statistics Dashboard</div>
         <p class="cdesc">Three.js 3D bar chart that grows on load. Below: animated Canvas bar chart, donut chart with legend, dual-line chart, and a data table with live percentage bars. Zero chart libraries.</p>
         <div class="tags"><span class="tag">3D Bar Chart</span><span class="tag">Canvas 2D</span><span class="tag">Animated Data</span></div>
@@ -417,7 +457,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:52
     <div class="card wide" data-d="80" data-cat="data">
       <div class="cimg"><span class="badge">Image Gallery</span><img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1000&q=85" alt="Orbit"></div>
       <div class="cbody">
-        <div class="cnum">08</div>
+        <div class="cnum">11</div>
         <div class="ctitle">Orbit — Circular Image Formation</div>
         <p class="cdesc">Eight real images spinning in a 3D ring in WebGL space. Drag to rotate manually. Click any image — it scales forward, the ring rotates to bring it centre stage, and an info panel slides up from below.</p>
         <div class="tags"><span class="tag">3D Ring</span><span class="tag">Texture Loading</span><span class="tag">Drag Rotate</span><span class="tag">Click Reveal</span></div>
@@ -430,72 +470,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:52
   <!-- MID CTA -->
   <div style="text-align:center;margin-top:72px;opacity:0;transform:translateY(20px);transition:opacity .8s,transform .8s" class="mid-cta">
     <p style="font-size:1.1rem;color:var(--text);margin-bottom:24px">Like what you see? Let's build something for your brand.</p>
-    <a href="#contact" class="btn-primary">Start a Conversation <span class="arr">→</span></a>
-  </div>
-</section>
-
-<!-- CONTACT -->
-<section class="contact" id="contact">
-  <div class="contact-inner">
-    <div class="sec-label" style="opacity:1;transform:none">Get In Touch</div>
-    <h2 class="sec-title" style="opacity:1;transform:none">Let's build something <em>extraordinary</em></h2>
-    <p class="sec-sub" style="opacity:1;transform:none;margin-bottom:48px">Tell me about your project. I'll come back to you within 24 hours.</p>
-
-    <form id="contactForm">
-      <div class="form-grid">
-        <div class="form-group">
-          <label class="form-label" for="fname">Full Name *</label>
-          <input class="form-input" type="text" id="fname" name="entry.1498691609" placeholder="Your name" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="femail">Email Address *</label>
-          <input class="form-input" type="email" id="femail" name="entry.461867586" placeholder="your@email.com" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="fbrand">Brand / Company Name</label>
-          <input class="form-input" type="text" id="fbrand" name="entry.924504524" placeholder="Your brand name">
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="ftype">Project Type *</label>
-          <select class="form-select" id="ftype" name="entry.1798912967" required>
-            <option value="" disabled selected>Select project type</option>
-            <option>Full Landing Page</option>
-            <option>3D Hero Section</option>
-            <option>Product Showcase</option>
-            <option>Not Sure</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="fbudget">Budget *</label>
-          <input class="form-input" type="text" id="fbudget" name="entry.1073644282" placeholder="e.g. $2,000 or let's discuss" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="fhow">How did you find me?</label>
-          <select class="form-select" id="fhow" name="entry.355492751">
-            <option value="" disabled selected>Select one</option>
-            <option>Instagram</option>
-            <option>LinkedIn</option>
-            <option>Google Search</option>
-            <option>Others</option>
-          </select>
-        </div>
-        <div class="form-group full">
-          <label class="form-label" for="fmsg">Tell us about your project *</label>
-          <textarea class="form-textarea" id="fmsg" name="entry.21472643" placeholder="Describe your brand, what you need, any inspiration you have, your timeline..." required></textarea>
-        </div>
-      </div>
-      <button type="submit" class="form-submit" id="submitBtn">
-        Send Message <span class="arr">→</span>
-      </button>
-    </form>
-
-    <div class="form-success" id="formSuccess">
-      <span class="fs-icon">✦</span>
-      <div class="fs-title">Message received.</div>
-      <p class="fs-sub">I'll be back in touch within 24 hours.<br>In the meantime, follow along on Instagram: <strong>@3djester.dev</strong></p>
-    </div>
-
-    <p style="margin-top:28px;font-size:.85rem;color:var(--textmid)">Or email directly: <a href="mailto:3djesterstudio@gmail.com" style="color:var(--vl);text-decoration:none">3djesterstudio@gmail.com</a></p>
+    <a href="contact.html" class="btn-primary">Start a Conversation <span class="arr">→</span></a>
   </div>
 </section>
 
@@ -504,7 +479,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:52
   <h2 class="cta-h">Your brand deserves a website<br>as good as your <em>product.</em></h2>
   <p class="cta-sub">Most luxury brands have a stunning Instagram and a flat, forgettable website. Let's fix that.</p>
   <div class="cta-buttons">
-    <a href="#contact" class="btn-primary">Start a Project <span class="arr">→</span></a>
+    <a href="contact.html" class="btn-primary">Start a Project <span class="arr">→</span></a>
     <a href="mailto:3djesterstudio@gmail.com" class="btn-secondary">Email Directly <span class="arr">→</span></a>
   </div>
 </section>
@@ -513,7 +488,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:52
   <div class="ft-brand">3D<span>JESTER</span></div>
   <div class="ft-links">
     <a href="#work" class="ft-link">Work</a>
-    <a href="#contact" class="ft-link">Contact</a>
+    <a href="contact.html" class="ft-link">Contact</a>
     <a href="https://instagram.com/3djester.dev" target="_blank" class="ft-link">Instagram</a>
   </div>
   <div class="ft-copy">© 2026 3DJESTER — All rights reserved</div>
