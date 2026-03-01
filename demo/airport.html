@@ -3,894 +3,1168 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Skyport — Terminal Navigator</title>
+<title>AeroGuide — Terminal Navigator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#080e1a;--bg2:#0d1525;
-  --blue:#0ea5e9;--bluel:#38bdf8;--bluedark:#0369a1;
-  --green:#10b981;--greenl:#34d399;
-  --amber:#f59e0b;--amberl:#fbbf24;
-  --red:#ef4444;
-  --slate:#1e293b;--slatel:#334155;
-  --text:#94a3b8;--textl:#cbd5e1;
-  --white:#f0f9ff;
-  --border:rgba(14,165,233,.2);
-  --glow:rgba(14,165,233,.15);
+  --bg:#f0f4f8;--bg2:#ffffff;--bg3:#f8fafc;
+  --navy:#0f2240;--blue:#1d6fd8;--bluel:#3b82f6;--bluebg:#eff6ff;--bluebdr:#bfdbfe;
+  --green:#059669;--greenbg:#ecfdf5;--greenl:#10b981;
+  --amber:#d97706;--amberbg:#fffbeb;--amberl:#f59e0b;
+  --red:#dc2626;--redbg:#fef2f2;--purple:#7c3aed;
+  --text:#475569;--textd:#0f172a;--textl:#64748b;--textxl:#94a3b8;
+  --bdr:#e2e8f0;--bdr2:#cbd5e1;
+  --sh:0 1px 3px rgba(15,34,64,.08),0 1px 2px rgba(15,34,64,.05);
+  --sh-md:0 4px 12px rgba(15,34,64,.1);
+  --sh-lg:0 12px 24px rgba(15,34,64,.1);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden}
-body{background:var(--bg);color:var(--white);font-family:'Space Grotesk',sans-serif;font-weight:400;display:flex;flex-direction:column}
+body{background:var(--bg);color:var(--textd);font-family:Inter,sans-serif;font-weight:400;display:flex;flex-direction:column;font-size:14px}
 
 /* HEADER */
-header{height:56px;background:rgba(8,14,26,.95);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:20px;flex-shrink:0;backdrop-filter:blur(20px);z-index:100;position:relative}
-.h-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
-.h-logo{width:32px;height:32px;background:linear-gradient(135deg,var(--blue),var(--bluedark));display:flex;align-items:center;justify-content:center;font-weight:600;font-size:.75rem;letter-spacing:.04em;color:var(--white)}
-.h-name{font-size:.9rem;font-weight:600;color:var(--white);letter-spacing:.04em}
-.h-name span{color:var(--blue)}
-.h-divider{width:1px;height:24px;background:var(--border)}
-.h-flight{display:flex;align-items:center;gap:8px;padding:0 14px}
-.hf-label{font-size:.7rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text)}
-.hf-val{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--bluel);font-weight:400}
-.hf-status{display:flex;align-items:center;gap:5px;font-size:.72rem;font-weight:500;color:var(--greenl)}
-.hf-dot{width:6px;height:6px;border-radius:50%;background:var(--greenl);animation:pulse-g 2s ease-in-out infinite}
-@keyframes pulse-g{0%,100%{opacity:1}50%{opacity:.3}}
-.h-time{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--text);margin-left:auto}
-.h-search{display:flex;align-items:center;gap:8px;padding:7px 14px;background:rgba(14,165,233,.06);border:1px solid var(--border);cursor:pointer;transition:all .2s;margin-left:8px}
-.h-search:hover{background:rgba(14,165,233,.12);border-color:var(--blue)}
-.h-search input{background:none;border:none;outline:none;font-family:'Space Grotesk',sans-serif;font-size:.82rem;color:var(--white);width:160px}
-.h-search input::placeholder{color:var(--text)}
-.h-search-icon{color:var(--text);font-size:.85rem}
+header{height:54px;background:var(--navy);display:flex;align-items:center;padding:0 16px;gap:12px;flex-shrink:0;z-index:200;box-shadow:0 2px 16px rgba(15,34,64,.4)}
+.hlogo{display:flex;align-items:center;gap:8px;text-decoration:none}
+.hlogo-ico{width:30px;height:30px;background:linear-gradient(135deg,#3b82f6,#1e40af);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.hbrand{font-size:.88rem;font-weight:700;color:#fff;letter-spacing:.04em}
+.hbrand span{color:#60a5fa}
+.hsep{width:1px;height:24px;background:rgba(255,255,255,.1);flex-shrink:0}
+.hterm{padding:0 10px;font-size:.68rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.45)}
+.hterm strong{color:rgba(255,255,255,.8)}
+.hflight{display:flex;align-items:stretch;border-radius:5px;overflow:hidden;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);height:32px}
+.hflight-lbl{padding:0 10px;font-size:.62rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.38);border-right:1px solid rgba(255,255,255,.1);display:flex;align-items:center}
+.hflight-inp{background:none;border:none;outline:none;padding:0 9px;font-family:"JetBrains Mono",monospace;font-size:.86rem;font-weight:500;color:#fff;width:80px;text-transform:uppercase;letter-spacing:.08em}
+.hflight-inp::placeholder{color:rgba(255,255,255,.22)}
+.hflight-go{padding:0 12px;background:#2563eb;border:none;cursor:pointer;font-family:Inter,sans-serif;font-size:.65rem;font-weight:700;color:#fff;letter-spacing:.12em;text-transform:uppercase;transition:background .2s}
+.hflight-go:hover{background:#1d4ed8}
+.hpill{display:none;align-items:center;gap:8px;padding:5px 11px;background:rgba(59,130,246,.18);border:1px solid rgba(59,130,246,.35);border-radius:5px}
+.hpill-fl{font-family:"JetBrains Mono",monospace;font-size:.78rem;font-weight:600;color:#93c5fd}
+.hpill-g{font-family:"JetBrains Mono",monospace;font-size:.8rem;font-weight:700;color:#fff}
+.hpill-s{font-size:.62rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:2px 7px;border-radius:10px}
+.hpill-s.ontime{background:rgba(16,185,129,.18);color:#34d399}
+.hpill-s.boarding{background:rgba(245,158,11,.2);color:#fbbf24;animation:blink 1s ease-in-out infinite}
+.hpill-s.delayed{background:rgba(239,68,68,.18);color:#f87171}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+.hpill-x{background:none;border:none;cursor:pointer;color:rgba(255,255,255,.32);font-size:.9rem;padding:0 2px;line-height:1;transition:color .2s}
+.hpill-x:hover{color:#fff}
+.hright{display:flex;align-items:center;gap:9px;margin-left:auto}
+.hclock{font-family:"JetBrains Mono",monospace;font-size:.78rem;color:rgba(255,255,255,.45)}
+.hsearch{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:5px;padding:5px 10px;transition:all .2s;position:relative}
+.hsearch:focus-within{background:rgba(255,255,255,.11);border-color:rgba(255,255,255,.2)}
+.hsearch input{background:none;border:none;outline:none;font-family:Inter,sans-serif;font-size:.78rem;color:#fff;width:155px}
+.hsearch input::placeholder{color:rgba(255,255,255,.28)}
+.hsearch-ico{color:rgba(255,255,255,.32);font-size:.8rem}
+.sdrop{position:absolute;top:calc(100% + 4px);right:0;width:270px;background:#fff;border:1px solid var(--bdr);border-radius:8px;box-shadow:var(--sh-lg);z-index:500;display:none;overflow:hidden}
+.sdrop.open{display:block}
+.sdi{display:flex;align-items:center;gap:9px;padding:8px 13px;cursor:pointer;transition:background .12s;border-bottom:1px solid var(--bdr)}
+.sdi:last-child{border-bottom:none}
+.sdi:hover{background:var(--bluebg)}
+.sdi-ico{font-size:.95rem;width:20px;text-align:center;flex-shrink:0}
+.sdi-name{font-size:.76rem;font-weight:500;color:var(--textd)}
+.sdi-sub{font-size:.64rem;color:var(--textl)}
+.sdi-tag{font-size:.58rem;font-weight:700;padding:2px 6px;border-radius:3px;background:var(--bluebg);color:var(--blue);margin-left:auto;flex-shrink:0}
 
-/* MAIN LAYOUT */
-.main{flex:1;display:flex;overflow:hidden;position:relative}
+/* BODY */
+.body{flex:1;display:flex;overflow:hidden}
 
-/* LEFT PANEL */
-.left-panel{width:300px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;z-index:10}
-.panel-tabs{display:flex;border-bottom:1px solid var(--border)}
-.ptab{flex:1;padding:12px 0;text-align:center;font-size:.7rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--text);cursor:pointer;transition:all .2s;border-bottom:2px solid transparent}
-.ptab.active{color:var(--blue);border-bottom-color:var(--blue);background:rgba(14,165,233,.04)}
-.panel-content{flex:1;overflow-y:auto;padding:14px}
-.panel-content::-webkit-scrollbar{width:3px}
-.panel-content::-webkit-scrollbar-track{background:transparent}
-.panel-content::-webkit-scrollbar-thumb{background:var(--border)}
+/* SIDEBAR */
+.sidebar{width:282px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--bdr);display:flex;flex-direction:column;overflow:hidden}
+.tabs{display:flex;background:var(--bg3);border-bottom:1px solid var(--bdr);flex-shrink:0}
+.tab{flex:1;padding:10px 0;text-align:center;font-size:.63rem;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--textl);cursor:pointer;transition:all .18s;border-bottom:2px solid transparent;margin-bottom:-1px;position:relative}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+.tbadge{position:absolute;top:5px;right:5px;background:var(--amber);color:#fff;font-size:.5rem;font-weight:800;min-width:13px;height:13px;border-radius:7px;display:flex;align-items:center;justify-content:center;padding:0 3px}
+.pane{display:none;flex:1;overflow-y:auto;flex-direction:column}
+.pane.active{display:flex}
+.pane::-webkit-scrollbar{width:3px}
+.pane::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:2px}
 
 /* FLIGHT BOARD */
-.flight-row{display:grid;grid-template-columns:auto 1fr auto;gap:8px;padding:10px 12px;border:1px solid var(--border);margin-bottom:6px;cursor:pointer;transition:all .2s;background:rgba(14,165,233,.02)}
-.flight-row:hover{background:rgba(14,165,233,.07);border-color:var(--blue)}
-.flight-row.active{background:rgba(14,165,233,.1);border-color:var(--blue)}
-.fr-num{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--bluel);font-weight:400;white-space:nowrap}
-.fr-dest{font-size:.8rem;color:var(--textl);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.fr-gate{font-family:'JetBrains Mono',monospace;font-size:.72rem;font-weight:400}
-.fr-time{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--text)}
-.fr-status{font-size:.66rem;font-weight:500;padding:2px 7px;display:inline-block;margin-top:2px}
-.st-ontime{background:rgba(16,185,129,.15);color:var(--greenl)}
-.st-boarding{background:rgba(245,158,11,.15);color:var(--amberl);animation:pulse-b .8s ease-in-out infinite}
-@keyframes pulse-b{0%,100%{opacity:1}50%{opacity:.6}}
-.st-delayed{background:rgba(239,68,68,.12);color:#fca5a5}
-.st-departed{background:rgba(100,116,139,.15);color:#94a3b8}
+.bhdr{padding:9px 13px;background:var(--bg3);border-bottom:1px solid var(--bdr);display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.bh-t{font-size:.63rem;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--textd)}
+.bh-live{display:flex;align-items:center;gap:4px;font-size:.62rem;font-weight:600;color:var(--greenl)}
+.bh-dot{width:5px;height:5px;border-radius:50%;background:var(--greenl);animation:blink 2s ease-in-out infinite}
+.fc{padding:9px 13px;border-bottom:1px solid var(--bdr);cursor:pointer;transition:background .12s}
+.fc:hover{background:var(--bluebg)}
+.fc.sel{background:var(--bluebg);border-left:3px solid var(--bluel)}
+.fc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
+.fc-num{font-family:"JetBrains Mono",monospace;font-size:.76rem;font-weight:500;color:var(--navy)}
+.fc-time{font-family:"JetBrains Mono",monospace;font-size:.73rem;color:var(--textl)}
+.fc-dest{font-size:.78rem;font-weight:500;color:var(--textd);margin-bottom:1px}
+.fc-al{font-size:.66rem;color:var(--textl);margin-bottom:5px}
+.fc-btm{display:flex;justify-content:space-between;align-items:center}
+.gc{font-family:"JetBrains Mono",monospace;font-size:.68rem;font-weight:600;padding:2px 7px;border-radius:4px;background:var(--bluebg);color:var(--blue)}
+.gc.boarding{background:var(--amberbg);color:var(--amber)}
+.gc.delayed{background:var(--redbg);color:var(--red)}
+.badge{font-size:.58rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:4px}
+.bg{background:var(--greenbg);color:var(--green)}
+.ba{background:var(--amberbg);color:var(--amber);animation:blink .9s ease-in-out infinite}
+.br{background:var(--redbg);color:var(--red)}
+.bx{background:#f1f5f9;color:var(--textxl)}
 
-/* FACILITIES LIST */
-.fac-group{margin-bottom:14px}
-.fg-label{font-size:.65rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--text);margin-bottom:8px;display:block}
-.fac-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid transparent;cursor:pointer;transition:all .2s;margin-bottom:4px;border-radius:2px}
-.fac-item:hover{background:rgba(14,165,233,.07);border-color:var(--border)}
-.fac-item.active{background:rgba(14,165,233,.1);border-color:var(--blue)}
-.fi-icon{width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:1rem;background:rgba(14,165,233,.08);border:1px solid var(--border);flex-shrink:0}
-.fi-name{font-size:.8rem;color:var(--textl);font-weight:400}
-.fi-sub{font-size:.68rem;color:var(--text)}
+/* MY FLIGHT */
+.mfc{margin:10px;border-radius:10px;background:linear-gradient(140deg,var(--navy) 0%,#1a3360 100%);padding:14px;color:#fff;position:relative;overflow:hidden;flex-shrink:0}
+.mfc-glow{position:absolute;top:-25px;right:-25px;width:90px;height:90px;background:radial-gradient(circle,rgba(59,130,246,.28),transparent 70%);pointer-events:none}
+.mfc-eye{font-size:.57rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.38);margin-bottom:9px}
+.mfc-route{display:flex;align-items:center;gap:9px;margin-bottom:11px}
+.mfc-city{font-size:1.55rem;font-weight:700;color:#fff}
+.mfc-arr{color:rgba(255,255,255,.28);font-size:.8rem}
+.mfc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:11px}
+.mfc-gi label{font-size:.56rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.32);display:block;margin-bottom:2px}
+.mfc-gi span{font-family:"JetBrains Mono",monospace;font-size:.8rem;font-weight:500;color:#fff}
+.mfc-gr{display:flex;align-items:center;justify-content:space-between;padding:9px 11px;background:rgba(255,255,255,.06);border-radius:7px;margin-bottom:9px;border:1px solid rgba(255,255,255,.07)}
+.mfc-gl{font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.38)}
+.mfc-gn{font-family:"JetBrains Mono",monospace;font-size:1.55rem;font-weight:700;color:#60a5fa}
+.mfc-sp{font-size:.6rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:3px 10px;border-radius:20px;background:rgba(251,191,36,.14);color:#fbbf24;border:1px solid rgba(251,191,36,.22)}
+.mfc-cd{display:flex;justify-content:space-between;align-items:center;padding:6px 11px;background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.16);border-radius:5px;margin-bottom:9px}
+.mfc-cdl{font-size:.63rem;color:rgba(255,255,255,.38)}
+.mfc-cdv{font-family:"JetBrains Mono",monospace;font-size:.88rem;font-weight:600;color:#fbbf24}
+.btn-nav{width:100%;padding:8px;background:#2563eb;border:none;cursor:pointer;border-radius:5px;font-family:Inter,sans-serif;font-size:.7rem;font-weight:700;color:#fff;letter-spacing:.1em;text-transform:uppercase;transition:background .2s}
+.btn-nav:hover{background:#1d4ed8}
 
-/* MY FLIGHT CARD */
-.my-flight{background:linear-gradient(135deg,rgba(14,165,233,.12),rgba(3,105,161,.08));border:1px solid var(--border);padding:14px;margin-bottom:14px}
-.mf-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
-.mf-airline{font-size:.68rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--text)}
-.mf-num{font-family:'JetBrains Mono',monospace;font-size:.95rem;color:var(--bluel);font-weight:400}
-.mf-route{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.mf-city{font-size:1.4rem;font-weight:600;color:var(--white);letter-spacing:.02em}
-.mf-arrow{color:var(--text);font-size:.9rem}
-.mf-row{display:flex;gap:16px;margin-top:8px}
-.mf-item{display:flex;flex-direction:column;gap:2px}
-.mf-item-label{font-size:.65rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--text)}
-.mf-item-val{font-family:'JetBrains Mono',monospace;font-size:.88rem;color:var(--white)}
-.mf-gate-big{font-size:1.6rem;font-weight:600;color:var(--blue);font-family:'JetBrains Mono',monospace}
-.mf-countdown{display:flex;align-items:center;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
-.mfc-label{font-size:.68rem;color:var(--text)}
-.mfc-time{font-family:'JetBrains Mono',monospace;font-size:.9rem;color:var(--amberl);font-weight:400}
-.btn-navigate{width:100%;margin-top:10px;padding:8px;background:linear-gradient(135deg,var(--blue),var(--bluedark));color:var(--white);font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;transition:all .2s}
-.btn-navigate:hover{opacity:.85}
+/* WAYFINDING */
+.wfc{margin:8px 10px;border:1px solid var(--bdr);border-radius:7px;overflow:hidden;flex-shrink:0}
+.wfh{padding:9px 11px;background:var(--bg3);border-bottom:1px solid var(--bdr);display:flex;gap:7px;align-items:center}
+.wfl{font-size:.59rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--textl);display:block;margin-bottom:1px}
+.wfv{font-size:.74rem;font-weight:500;color:var(--textd)}
+.wfa{color:var(--textxl);font-size:.78rem}
+.wfs{padding:9px 11px}
+.step{display:flex;gap:8px;margin-bottom:7px;align-items:flex-start}
+.stn{width:17px;height:17px;border-radius:50%;background:var(--bluebg);border:1px solid var(--bluebdr);font-size:.6rem;font-weight:700;color:var(--blue);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.stt{font-size:.72rem;color:var(--textd);line-height:1.45}
+.std{font-size:.63rem;color:var(--textl);margin-top:1px}
+.wft{padding:6px 11px;background:var(--bg3);border-top:1px solid var(--bdr);display:flex;justify-content:space-between}
+.wftl{font-size:.63rem;color:var(--textl)}
+.wftv{font-family:"JetBrains Mono",monospace;font-size:.7rem;font-weight:600;color:var(--blue)}
 
-/* CANVAS AREA */
-.map-area{flex:1;position:relative;overflow:hidden}
-canvas#terminalCanvas{position:absolute;inset:0;width:100%;height:100%}
+/* FACILITIES */
+.fsh{padding:11px 13px 2px;flex-shrink:0}
+.fsh-t{font-size:.6rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--textl);margin-bottom:6px;padding-top:2px}
+.fi{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:5px;cursor:pointer;transition:all .12s;margin-bottom:2px;border:1px solid transparent}
+.fi:hover{background:var(--bg3);border-color:var(--bdr)}
+.fi.hl{background:var(--bluebg);border-color:var(--bluebdr)}
+.fii{width:26px;height:26px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:.82rem;flex-shrink:0}
+.fii.food{background:#fef3c7}.fii.shop{background:#ede9fe}.fii.service{background:#dcfce7}.fii.security{background:#fee2e2}.fii.lounge{background:#e0f2fe}
+.fin{font-size:.74rem;font-weight:500;color:var(--textd)}
+.fis{font-size:.62rem;color:var(--textl)}
+.fio{font-size:.57rem;font-weight:600;padding:1px 5px;border-radius:3px;background:var(--greenbg);color:var(--green);margin-left:auto;flex-shrink:0}
 
-/* FLOOR SELECTOR */
-.floor-selector{position:absolute;right:16px;top:50%;transform:translateY(-50%);z-index:20;display:flex;flex-direction:column;gap:4px}
-.floor-btn{width:40px;height:40px;background:rgba(13,21,37,.9);border:1px solid var(--border);color:var(--text);font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:'JetBrains Mono',monospace;display:flex;align-items:center;justify-content:center}
-.floor-btn.active{background:rgba(14,165,233,.15);border-color:var(--blue);color:var(--bluel)}
-.floor-btn:hover:not(.active){border-color:var(--blue);color:var(--textl)}
+/* NO FLIGHT */
+.nf{padding:18px 14px;text-align:center}
+.nf-p{font-size:2rem;margin-bottom:9px;opacity:.35}
+.nf-t{font-size:.82rem;font-weight:600;color:var(--textd);margin-bottom:4px}
+.nf-s{font-size:.7rem;color:var(--textl);line-height:1.5;margin-bottom:14px}
+.nf-dl{font-size:.58rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--textl);margin-bottom:5px}
+.nf-b{display:flex;justify-content:space-between;align-items:center;padding:6px 9px;background:var(--bg3);border:1px solid var(--bdr);border-radius:5px;cursor:pointer;font-family:Inter,sans-serif;font-size:.72rem;font-weight:500;color:var(--textd);transition:all .12s;margin-bottom:4px;width:100%;text-align:left}
+.nf-b:hover{background:var(--bluebg);border-color:var(--bluebdr);color:var(--blue)}
+.nf-bg{font-family:"JetBrains Mono",monospace;font-size:.66rem;color:var(--blue)}
 
-/* MAP CONTROLS */
-.map-controls{position:absolute;right:16px;bottom:16px;z-index:20;display:flex;flex-direction:column;gap:4px}
-.mc-btn{width:36px;height:36px;background:rgba(13,21,37,.9);border:1px solid var(--border);color:var(--text);font-size:1rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center}
-.mc-btn:hover{border-color:var(--blue);color:var(--bluel)}
+/* MAP */
+.maparea{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
+.secbar{background:var(--bg2);border-bottom:1px solid var(--bdr);padding:6px 13px;display:flex;align-items:center;gap:6px;flex-shrink:0;overflow-x:auto}
+.secbar::-webkit-scrollbar{height:0}
+.sbl{font-size:.59rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--textl);white-space:nowrap;margin-right:2px}
+.sb{padding:4px 12px;border-radius:20px;border:1px solid var(--bdr);font-size:.68rem;font-weight:500;color:var(--textl);cursor:pointer;background:transparent;font-family:Inter,sans-serif;transition:all .16s;white-space:nowrap;flex-shrink:0}
+.sb.active{background:var(--navy);color:#fff;border-color:var(--navy);box-shadow:var(--sh)}
+.sb:hover:not(.active){background:var(--bg3);border-color:var(--bdr2);color:var(--textd)}
+.sbsp{flex:1}
+.flg{display:flex;gap:3px;flex-shrink:0}
+.fb{padding:4px 10px;border-radius:20px;border:1px solid var(--bdr);font-size:.65rem;font-weight:500;color:var(--textl);cursor:pointer;background:transparent;font-family:"JetBrains Mono",monospace;transition:all .16s}
+.fb.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.cwrap{flex:1;position:relative;overflow:hidden}
+canvas#apc{position:absolute;inset:0;width:100%;height:100%;cursor:grab;display:block}
+canvas#apc:active{cursor:grabbing}
 
-/* INFO TOOLTIP */
-.map-tooltip{position:absolute;z-index:30;background:rgba(13,21,37,.97);border:1px solid var(--border);padding:12px 16px;min-width:180px;pointer-events:none;display:none;backdrop-filter:blur(16px)}
-.mt-name{font-size:.88rem;font-weight:600;color:var(--white);margin-bottom:4px}
-.mt-type{font-size:.7rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:8px}
-.mt-info{font-size:.75rem;color:var(--text);line-height:1.6}
-.mt-tag{display:inline-block;padding:2px 8px;font-size:.66rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-top:6px}
-.tag-open{background:rgba(16,185,129,.15);color:var(--greenl)}
-.tag-boarding{background:rgba(245,158,11,.15);color:var(--amberl)}
-.tag-closed{background:rgba(239,68,68,.12);color:#fca5a5}
+/* TOOLTIP */
+.tt{position:absolute;z-index:150;background:#fff;border:1px solid var(--bdr);border-radius:8px;padding:11px 13px;min-width:195px;max-width:230px;box-shadow:var(--sh-lg);display:none;pointer-events:none}
+.tt-tag{display:inline-block;padding:2px 7px;border-radius:4px;font-size:.58rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px}
+.tt-name{font-size:.86rem;font-weight:600;color:var(--textd);margin-bottom:2px}
+.tt-type{font-size:.66rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--textl);margin-bottom:6px}
+.tt-info{font-size:.71rem;color:var(--textl);line-height:1.6}
 
-/* RIGHT PANEL */
-.right-panel{width:260px;flex-shrink:0;background:var(--bg2);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
-.rp-header{padding:14px 16px;border-bottom:1px solid var(--border)}
-.rp-title{font-size:.72rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--text);margin-bottom:6px}
-.rp-selected{font-size:.95rem;font-weight:600;color:var(--white)}
-.rp-content{flex:1;overflow-y:auto;padding:14px}
-
-/* WAYFINDING PATH */
-.path-info{background:rgba(14,165,233,.06);border:1px solid var(--border);padding:12px;margin-bottom:12px}
-.pi-from,.pi-to{display:flex;align-items:center;gap:8px;padding:6px 0}
-.pi-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.pd-you{background:var(--blue)}
-.pd-dest{background:var(--greenl)}
-.pi-line{width:1px;height:14px;background:var(--border);margin-left:3.5px}
-.pi-label{font-size:.75rem;color:var(--text);flex:1}
-.pi-name{font-size:.78rem;font-weight:500;color:var(--textl)}
-.pi-steps{margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
-.ps-item{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
-.ps-num{width:18px;height:18px;background:rgba(14,165,233,.15);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:600;color:var(--blue);flex-shrink:0}
-.ps-text{font-size:.75rem;color:var(--text);line-height:1.5}
-.ps-dist{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--text);margin-top:2px}
+/* CONTROLS */
+.mctrl{position:absolute;right:13px;bottom:13px;z-index:100;display:flex;flex-direction:column;gap:4px}
+.mc{width:32px;height:32px;background:#fff;border:1px solid var(--bdr);border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.95rem;color:var(--textl);transition:all .16s;box-shadow:var(--sh)}
+.mc:hover{background:var(--bg3);color:var(--textd)}
 
 /* LEGEND */
-.legend{padding:14px 16px;border-top:1px solid var(--border)}
-.leg-title{font-size:.65rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--text);margin-bottom:10px}
-.leg-item{display:flex;align-items:center;gap:8px;margin-bottom:6px}
-.leg-dot{width:10px;height:10px;flex-shrink:0}
-.leg-label{font-size:.72rem;color:var(--text)}
+.leg{position:absolute;left:13px;bottom:13px;z-index:100;background:#fff;border:1px solid var(--bdr);border-radius:7px;padding:9px 11px;box-shadow:var(--sh)}
+.leg-t{font-size:.57rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--textl);margin-bottom:7px}
+.lr{display:flex;align-items:center;gap:6px;margin-bottom:4px;font-size:.66rem;color:var(--textl)}
+.lr:last-child{margin-bottom:0}
+.ld{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+.ll{width:14px;height:3px;border-radius:2px;flex-shrink:0}
 
-/* BOTTOM STATUS BAR */
-.status-bar{height:28px;background:rgba(8,14,26,.95);border-top:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:20px;flex-shrink:0}
-.sb-item{display:flex;align-items:center;gap:6px;font-size:.66rem;color:var(--text)}
-.sb-dot{width:5px;height:5px;border-radius:50%}
+/* HINT */
+.hint{position:absolute;bottom:13px;left:50%;transform:translateX(-50%);font-size:.62rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--textxl);pointer-events:none;white-space:nowrap;z-index:50}
 
-/* MODAL OVERLAY for boarding alert */
-.alert{position:fixed;top:72px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(245,158,11,.95);color:#000;padding:10px 20px;font-size:.8rem;font-weight:600;display:none;align-items:center;gap:10px;animation:slide-d .4s ease}
-.alert.show{display:flex}
-@keyframes slide-d{from{transform:translateX(-50%) translateY(-20px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
+/* TOAST */
+.toast{position:fixed;top:63px;left:50%;transform:translateX(-50%) translateY(-10px);z-index:600;background:#fff;border:1px solid var(--bdr);border-radius:8px;padding:10px 16px;box-shadow:var(--sh-lg);display:flex;align-items:center;gap:10px;opacity:0;transition:all .3s;pointer-events:none;min-width:280px}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast-ico{font-size:1.05rem}
+.toast-txt{font-size:.76rem;font-weight:500;color:var(--textd);flex:1}
+.toast-x{background:none;border:none;cursor:pointer;color:var(--textl);font-size:.95rem}
 
-@media(max-width:900px){
-  .left-panel{width:220px}
-  .right-panel{display:none}
-}
-@media(max-width:600px){
-  .left-panel{display:none}
-  header{padding:0 12px;gap:10px}
-}
+/* STATUSBAR */
+.sbar{height:23px;background:var(--navy);display:flex;align-items:center;padding:0 14px;gap:16px;flex-shrink:0}
+.si{display:flex;align-items:center;gap:4px;font-size:.58rem;color:rgba(255,255,255,.38)}
+.sd{width:5px;height:5px;border-radius:50%}
 </style>
 </head>
 <body>
 
-<div class="alert" id="boardingAlert">
-  ⚠️ BOARDING NOW — Flight BA447 at Gate B12. You have 12 minutes.
-</div>
-
-<!-- HEADER -->
 <header>
-  <a href="../index.html" class="h-brand">
-    <div class="h-logo">SKY</div>
-    <div class="h-name">SKY<span>PORT</span></div>
-  </a>
-  <div class="h-divider"></div>
-  <div class="h-flight">
-    <span class="hf-label">Terminal</span>
-    <span class="hf-val">T2 · International</span>
+  <a href="../index.html" class="hlogo"><div class="hlogo-ico">✈</div><div class="hbrand">AERO<span>GUIDE</span></div></a>
+  <div class="hsep"></div>
+  <div class="hterm">Terminal <strong>T2 · International</strong></div>
+  <div class="hsep"></div>
+  <div class="hflight" id="flEntry" style="height:32px">
+    <span class="hflight-lbl">Flight</span>
+    <input class="hflight-inp" id="flInput" placeholder="BA447" maxlength="6" autocomplete="off">
+    <button class="hflight-go" onclick="doLookup()">Find →</button>
   </div>
-  <div class="h-divider"></div>
-  <div class="h-flight">
-    <span class="hf-label">Your Flight</span>
-    <span class="hf-val">BA447</span>
+  <div class="hpill" id="hpill">
+    <span class="hpill-fl" id="hpFl">BA447</span>
+    <span style="color:rgba(255,255,255,.2)">·</span>
+    <span class="hpill-g" id="hpG">Gate B12</span>
+    <span class="hpill-s ontime" id="hpS">On Time</span>
+    <button class="hpill-x" onclick="clearFlight()">✕</button>
   </div>
-  <div class="h-flight">
-    <span class="hf-status"><span class="hf-dot"></span>Boarding Soon</span>
+  <div class="hright">
+    <div class="hclock" id="clk">--:--</div>
+    <div class="hsearch" id="srchWrap">
+      <span class="hsearch-ico">⌕</span>
+      <input id="srchInp" placeholder="Search gate, shop, facility…" autocomplete="off">
+      <div class="sdrop" id="sdrop"></div>
+    </div>
   </div>
-  <div class="h-search">
-    <span class="h-search-icon">⌕</span>
-    <input type="text" placeholder="Search gates, shops, facilities..." id="searchInput">
-  </div>
-  <div class="h-time" id="clockDisplay">--:--</div>
 </header>
 
-<div class="main">
-
-  <!-- LEFT PANEL -->
-  <div class="left-panel">
-    <div class="panel-tabs">
-      <div class="ptab active" data-tab="flights">Flights</div>
-      <div class="ptab" data-tab="facilities">Facilities</div>
-      <div class="ptab" data-tab="myflight">My Trip</div>
-    </div>
-
-    <!-- FLIGHTS TAB -->
-    <div class="panel-content" id="tab-flights">
-      <div style="font-size:.65rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--text);margin-bottom:10px">Departures — Live</div>
-
-      <div class="flight-row" data-gate="B12" data-status="boarding">
-        <div><div class="fr-num">BA447</div><div class="fr-time">14:35</div></div>
-        <div><div class="fr-dest">London Heathrow</div><span class="fr-status st-boarding">BOARDING</span></div>
-        <div><div class="fr-gate" style="color:var(--amberl)">B12</div></div>
-      </div>
-      <div class="flight-row" data-gate="A04" data-status="ontime">
-        <div><div class="fr-num">EK202</div><div class="fr-time">14:55</div></div>
-        <div><div class="fr-dest">Dubai International</div><span class="fr-status st-ontime">ON TIME</span></div>
-        <div><div class="fr-gate" style="color:var(--text)">A04</div></div>
-      </div>
-      <div class="flight-row" data-gate="C22" data-status="ontime">
-        <div><div class="fr-num">AA101</div><div class="fr-time">15:10</div></div>
-        <div><div class="fr-dest">New York JFK</div><span class="fr-status st-ontime">ON TIME</span></div>
-        <div><div class="fr-gate" style="color:var(--text)">C22</div></div>
-      </div>
-      <div class="flight-row" data-gate="A08" data-status="delayed">
-        <div><div class="fr-num">LH456</div><div class="fr-time">15:20</div></div>
-        <div><div class="fr-dest">Frankfurt Main</div><span class="fr-status st-delayed">DELAYED</span></div>
-        <div><div class="fr-gate" style="color:var(--text)">A08</div></div>
-      </div>
-      <div class="flight-row" data-gate="B18" data-status="ontime">
-        <div><div class="fr-num">SQ317</div><div class="fr-time">15:45</div></div>
-        <div><div class="fr-dest">Singapore Changi</div><span class="fr-status st-ontime">ON TIME</span></div>
-        <div><div class="fr-gate" style="color:var(--text)">B18</div></div>
-      </div>
-      <div class="flight-row" data-gate="C08" data-status="ontime">
-        <div><div class="fr-num">AF116</div><div class="fr-time">16:00</div></div>
-        <div><div class="fr-dest">Paris Charles de Gaulle</div><span class="fr-status st-ontime">ON TIME</span></div>
-        <div><div class="fr-gate" style="color:var(--text)">C08</div></div>
-      </div>
-      <div class="flight-row" data-gate="A12" data-status="departed">
-        <div><div class="fr-num">QF001</div><div class="fr-time">13:50</div></div>
-        <div><div class="fr-dest">Sydney Kingsford</div><span class="fr-status st-departed">DEPARTED</span></div>
-        <div><div class="fr-gate" style="color:var(--text)">A12</div></div>
-      </div>
-    </div>
-
-    <!-- FACILITIES TAB -->
-    <div class="panel-content" id="tab-facilities" style="display:none">
-      <div class="fac-group">
-        <span class="fg-label">Food & Beverage</span>
-        <div class="fac-item" data-fac="cafe" data-zone="food"><div class="fi-icon">☕</div><div><div class="fi-name">Terminal Café</div><div class="fi-sub">Level 1 · Near Gate A</div></div></div>
-        <div class="fac-item" data-fac="restaurant" data-zone="food"><div class="fi-icon">🍽</div><div><div class="fi-name">Sky Brasserie</div><div class="fi-sub">Level 2 · Central Hub</div></div></div>
-        <div class="fac-item" data-fac="bar" data-zone="food"><div class="fi-icon">🍸</div><div><div class="fi-name">Altitude Bar</div><div class="fi-sub">Level 2 · Gate B Area</div></div></div>
-        <div class="fac-item" data-fac="grab" data-zone="food"><div class="fi-icon">🛒</div><div><div class="fi-name">Grab & Go Market</div><div class="fi-sub">Level 1 · All Wings</div></div></div>
-      </div>
-      <div class="fac-group">
-        <span class="fg-label">Shops</span>
-        <div class="fac-item" data-fac="duty" data-zone="shop"><div class="fi-icon">🛍</div><div><div class="fi-name">Duty Free</div><div class="fi-sub">Level 1 · Main Hall</div></div></div>
-        <div class="fac-item" data-fac="fashion" data-zone="shop"><div class="fi-icon">👗</div><div><div class="fi-name">Fashion Boutique</div><div class="fi-sub">Level 2 · Wing C</div></div></div>
-        <div class="fac-item" data-fac="books" data-zone="shop"><div class="fi-icon">📚</div><div><div class="fi-name">Books & News</div><div class="fi-sub">Level 1 · Gate B Area</div></div></div>
-        <div class="fac-item" data-fac="pharmacy" data-zone="shop"><div class="fi-icon">💊</div><div><div class="fi-name">Pharmacy</div><div class="fi-sub">Level 1 · Central</div></div></div>
-      </div>
-      <div class="fac-group">
-        <span class="fg-label">Services</span>
-        <div class="fac-item" data-fac="lounge" data-zone="service"><div class="fi-icon">💺</div><div><div class="fi-name">Business Lounge</div><div class="fi-sub">Level 2 · Gate B</div></div></div>
-        <div class="fac-item" data-fac="wifi" data-zone="service"><div class="fi-icon">📶</div><div><div class="fi-name">Wi-Fi Hub</div><div class="fi-sub">Throughout Terminal</div></div></div>
-        <div class="fac-item" data-fac="toilet" data-zone="service"><div class="fi-icon">🚻</div><div><div class="fi-name">Restrooms</div><div class="fi-sub">All Levels · All Wings</div></div></div>
-        <div class="fac-item" data-fac="charging" data-zone="service"><div class="fi-icon">🔋</div><div><div class="fi-name">Charging Stations</div><div class="fi-sub">Level 1 · Gate Areas</div></div></div>
-        <div class="fac-item" data-fac="info" data-zone="service"><div class="fi-icon">ℹ️</div><div><div class="fi-name">Information Desk</div><div class="fi-sub">Level 1 · Main Entrance</div></div></div>
-        <div class="fac-item" data-fac="medical" data-zone="service"><div class="fi-icon">🏥</div><div><div class="fi-name">Medical Centre</div><div class="fi-sub">Level 1 · Wing A</div></div></div>
-      </div>
-    </div>
-
-    <!-- MY FLIGHT TAB -->
-    <div class="panel-content" id="tab-myflight" style="display:none">
-      <div class="my-flight">
-        <div class="mf-top">
-          <div><div class="mf-airline">British Airways</div><div class="mf-num">BA 447</div></div>
-          <div class="mf-gate-big">B12</div>
-        </div>
-        <div class="mf-route">
-          <span class="mf-city">SYD</span>
-          <span class="mf-arrow">✈</span>
-          <span class="mf-city">LHR</span>
-        </div>
-        <div class="mf-row">
-          <div class="mf-item"><span class="mf-item-label">Departs</span><span class="mf-item-val">14:35</span></div>
-          <div class="mf-item"><span class="mf-item-label">Boarding</span><span class="mf-item-val">14:05</span></div>
-          <div class="mf-item"><span class="mf-item-label">Terminal</span><span class="mf-item-val">T2</span></div>
-        </div>
-        <div class="mf-row" style="margin-top:6px">
-          <div class="mf-item"><span class="mf-item-label">Seat</span><span class="mf-item-val">23A</span></div>
-          <div class="mf-item"><span class="mf-item-label">Class</span><span class="mf-item-val">Economy</span></div>
-          <div class="mf-item"><span class="mf-item-label">Bags</span><span class="mf-item-val">1 × 23kg</span></div>
-        </div>
-        <div class="mf-countdown">
-          <span class="mfc-label">Boarding closes in</span>
-          <span class="mfc-time" id="countdown">27:00</span>
-        </div>
-        <button class="btn-navigate" onclick="navigateToGate('B12')">Navigate to Gate B12 →</button>
-      </div>
-
-      <div style="font-size:.65rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--text);margin-bottom:10px">You Are Here</div>
-      <div style="padding:10px;background:rgba(14,165,233,.06);border:1px solid var(--border);margin-bottom:12px;font-size:.78rem;color:var(--text)">
-        Near Security Exit · Level 1 · Zone B
-      </div>
-
-      <div style="font-size:.65rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--text);margin-bottom:10px">Nearby</div>
-      <div class="fac-item" style="margin-bottom:4px"><div class="fi-icon">☕</div><div><div class="fi-name">Terminal Café</div><div class="fi-sub">2 min walk · Level 1</div></div></div>
-      <div class="fac-item" style="margin-bottom:4px"><div class="fi-icon">🚻</div><div><div class="fi-name">Restrooms</div><div class="fi-sub">1 min walk · Level 1</div></div></div>
-      <div class="fac-item"><div class="fi-icon">🔋</div><div><div class="fi-name">Charging Station</div><div class="fi-sub">3 min walk · Gate B10</div></div></div>
-    </div>
+<div class="body">
+<div class="sidebar">
+  <div class="tabs">
+    <div class="tab active" data-tab="flights">Departures</div>
+    <div class="tab" data-tab="myflight">My Flight <div class="tbadge" id="myBadge" style="display:none">!</div></div>
+    <div class="tab" data-tab="facilities">Facilities</div>
   </div>
-
-  <!-- 3D MAP CANVAS -->
-  <div class="map-area">
-    <canvas id="terminalCanvas"></canvas>
-
-    <!-- Floor Selector -->
-    <div class="floor-selector">
-      <div class="floor-btn" data-floor="2">L2</div>
-      <div class="floor-btn active" data-floor="1">L1</div>
-    </div>
-
-    <!-- Map Controls -->
-    <div class="map-controls">
-      <button class="mc-btn" id="zoomIn" title="Zoom In">+</button>
-      <button class="mc-btn" id="zoomOut" title="Zoom Out">−</button>
-      <button class="mc-btn" id="resetView" title="Reset View">⊙</button>
-    </div>
-
-    <!-- Tooltip -->
-    <div class="map-tooltip" id="mapTooltip">
-      <div class="mt-name" id="tt-name">Gate B12</div>
-      <div class="mt-type" id="tt-type">Departure Gate</div>
-      <div class="mt-info" id="tt-info">BA447 · London Heathrow<br>Boarding: 14:05 · Departs: 14:35</div>
-      <div class="mt-tag tag-boarding" id="tt-tag">BOARDING SOON</div>
-    </div>
+  <div class="pane active" id="pane-flights">
+    <div class="bhdr"><span class="bh-t">Live Departures · T2</span><span class="bh-live"><span class="bh-dot"></span>Live</span></div>
+    <div id="flList"></div>
   </div>
-
-  <!-- RIGHT PANEL -->
-  <div class="right-panel">
-    <div class="rp-header">
-      <div class="rp-title">Wayfinding</div>
-      <div class="rp-selected" id="rpSelected">Gate B12</div>
-    </div>
-    <div class="rp-content">
-      <div class="path-info">
-        <div class="pi-from"><div class="pi-dot pd-you"></div><div><div class="pi-label">You are here</div><div class="pi-name">Security Exit · Zone B</div></div></div>
-        <div class="pi-line" style="margin-left:3.5px;width:1px;height:12px;background:var(--border)"></div>
-        <div class="pi-to"><div class="pi-dot pd-dest"></div><div><div class="pi-label">Destination</div><div class="pi-name" id="destName">Gate B12</div></div></div>
-        <div class="pi-steps">
-          <div id="stepsList">
-            <div class="ps-item"><div class="ps-num">1</div><div><div class="ps-text">Head straight through Zone B corridor</div><div class="ps-dist">~80m · 1 min</div></div></div>
-            <div class="ps-item"><div class="ps-num">2</div><div><div class="ps-text">Pass the Altitude Bar on your left</div><div class="ps-dist">~30m</div></div></div>
-            <div class="ps-item"><div class="ps-num">3</div><div><div class="ps-text">Take the escalator to Level 2</div><div class="ps-dist">Level 1 → Level 2</div></div></div>
-            <div class="ps-item"><div class="ps-num">4</div><div><div class="ps-text">Gate B12 is on your right</div><div class="ps-dist">~20m · Arrived ✓</div></div></div>
-          </div>
-          <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;justify-content:space-between">
-            <span style="font-size:.72rem;color:var(--text)">Total distance</span>
-            <span style="font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--bluel)" id="totalDist">~130m · 2 min</span>
-          </div>
-        </div>
-      </div>
-      <div style="font-size:.65rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--text);margin-bottom:8px">On Your Route</div>
-      <div class="fac-item" style="margin-bottom:4px"><div class="fi-icon">🍸</div><div><div class="fi-name">Altitude Bar</div><div class="fi-sub">On route · 2 min</div></div></div>
-      <div class="fac-item" style="margin-bottom:4px"><div class="fi-icon">🚻</div><div><div class="fi-name">Restrooms</div><div class="fi-sub">On route · Level 2</div></div></div>
-    </div>
-    <div class="legend">
-      <div class="leg-title">Map Legend</div>
-      <div class="leg-item"><div class="leg-dot" style="background:#f59e0b"></div><div class="leg-label">Your Location</div></div>
-      <div class="leg-item"><div class="leg-dot" style="background:#10b981"></div><div class="leg-label">Destination</div></div>
-      <div class="leg-item"><div class="leg-dot" style="background:#0ea5e9"></div><div class="leg-label">Gates</div></div>
-      <div class="leg-item"><div class="leg-dot" style="background:#8b5cf6"></div><div class="leg-label">Facilities</div></div>
-      <div class="leg-item"><div class="leg-dot" style="background:#ef4444"></div><div class="leg-label">Security / Customs</div></div>
-    </div>
-  </div>
+  <div class="pane" id="pane-myflight"><div id="mfContent"></div></div>
+  <div class="pane" id="pane-facilities"><div id="facContent"></div></div>
 </div>
 
-<!-- STATUS BAR -->
-<div class="status-bar">
-  <div class="sb-item"><div class="sb-dot" style="background:var(--greenl)"></div>All systems operational</div>
-  <div class="sb-item"><div class="sb-dot" style="background:var(--blue)"></div>T2 · International · Level 1</div>
-  <div class="sb-item"><div class="sb-dot" style="background:var(--amberl)"></div>Security wait: ~8 min</div>
-  <div class="sb-item"><div class="sb-dot" style="background:var(--blue)"></div>Wi-Fi: SkyPort_T2_Free</div>
+<div class="maparea">
+  <div class="secbar">
+    <span class="sbl">Section:</span>
+    <button class="sb" data-sec="checkin">Check-in &amp; Security</button>
+    <button class="sb active" data-sec="main">Main Terminal</button>
+    <button class="sb" data-sec="wingA">Wing A</button>
+    <button class="sb" data-sec="wingB">Wing B</button>
+    <button class="sb" data-sec="wingC">Wing C</button>
+    <div class="sbsp"></div>
+    <div class="flg">
+      <button class="fb active" data-fl="1">L1</button>
+      <button class="fb" data-fl="2">L2</button>
+    </div>
+  </div>
+  <div class="cwrap" id="cwrap">
+    <canvas id="apc"></canvas>
+    <div class="tt" id="ttEl">
+      <div class="tt-tag" id="ttTag"></div>
+      <div class="tt-name" id="ttName"></div>
+      <div class="tt-type" id="ttType"></div>
+      <div class="tt-info" id="ttInfo"></div>
+    </div>
+    <div class="mctrl">
+      <button class="mc" id="zIn">+</button>
+      <button class="mc" id="zOut">−</button>
+      <button class="mc" id="zRst">⊙</button>
+    </div>
+    <div class="leg">
+      <div class="leg-t">Legend</div>
+      <div class="lr"><div class="ld" style="background:#f59e0b"></div>You Are Here</div>
+      <div class="lr"><div class="ld" style="background:#10b981"></div>Your Gate</div>
+      <div class="lr"><div class="ld" style="background:#3b82f6"></div>Open Gate</div>
+      <div class="lr"><div class="ld" style="background:#f59e0b;opacity:.65"></div>Boarding</div>
+      <div class="lr"><div class="ld" style="background:#ef4444;opacity:.65"></div>Delayed</div>
+      <div class="lr"><div class="ld" style="background:#7c3aed;opacity:.65"></div>Facility</div>
+      <div class="lr"><div class="ll" style="background:#3b82f6"></div>Your Route</div>
+    </div>
+    <div class="hint">Drag to rotate · Scroll to zoom · Click gates to navigate</div>
+  </div>
+</div>
+</div>
+
+<div class="sbar">
+  <div class="si"><div class="sd" style="background:#10b981"></div>Systems Operational</div>
+  <div class="si"><div class="sd" style="background:#3b82f6"></div>T2 International · Sydney Airport</div>
+  <div class="si"><div class="sd" style="background:#f59e0b"></div>Security: ~8 min wait</div>
+  <div class="si"><div class="sd" style="background:#60a5fa"></div>Wi-Fi: AeroGuide_T2_Free</div>
+  <div style="margin-left:auto;font-size:.57rem;color:rgba(255,255,255,.2)">© 2026 AeroGuide Terminal Navigator</div>
+</div>
+
+<div class="toast" id="toast">
+  <span class="toast-ico" id="tIco">✈</span>
+  <span class="toast-txt" id="tTxt"></span>
+  <button class="toast-x" onclick="hideToast()">✕</button>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-// ══════════════════════════════════════════
-// TERMINAL 3D MAP
-// ══════════════════════════════════════════
-const canvas = document.getElementById('terminalCanvas');
-const mapArea = document.querySelector('.map-area');
-const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-renderer.setClearColor(0x080e1a, 1);
-renderer.shadowMap.enabled = true;
+// ═══════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════
+const FLIGHTS=[
+  {num:'BA447',dest:'London Heathrow',airline:'British Airways',time:'14:35',boards:'14:05',gate:'B12',wing:'wingB',status:'boarding',seat:'23A',cls:'Economy',bags:'1×23kg'},
+  {num:'EK202',dest:'Dubai International',airline:'Emirates',time:'14:55',boards:'14:25',gate:'A04',wing:'wingA',status:'ontime',seat:'14C',cls:'Business',bags:'2×32kg'},
+  {num:'AA101',dest:'New York JFK',airline:'American Airlines',time:'15:10',boards:'14:40',gate:'C08',wing:'wingC',status:'ontime',seat:'31D',cls:'Economy',bags:'1×23kg'},
+  {num:'LH456',dest:'Frankfurt Main',airline:'Lufthansa',time:'15:20',boards:'14:50',gate:'A08',wing:'wingA',status:'delayed',seat:'12B',cls:'Business',bags:'2×32kg'},
+  {num:'SQ317',dest:'Singapore Changi',airline:'Singapore Airlines',time:'15:45',boards:'15:15',gate:'C14',wing:'wingC',status:'ontime',seat:'42E',cls:'Economy',bags:'1×23kg'},
+  {num:'AF116',dest:'Paris Charles de Gaulle',airline:'Air France',time:'16:00',boards:'15:30',gate:'B06',wing:'wingB',status:'ontime',seat:'18A',cls:'Premium',bags:'2×23kg'},
+  {num:'QF001',dest:'Melbourne Tullamarine',airline:'Qantas',time:'16:30',boards:'16:05',gate:'A12',wing:'wingA',status:'ontime',seat:'5F',cls:'Business',bags:'1×32kg'},
+  {num:'CX101',dest:'Hong Kong International',airline:'Cathay Pacific',time:'17:15',boards:'16:45',gate:'B16',wing:'wingB',status:'ontime',seat:'22B',cls:'Economy',bags:'1×23kg'},
+  {num:'EY456',dest:'Abu Dhabi International',airline:'Etihad Airways',time:'17:40',boards:'17:10',gate:'C22',wing:'wingC',status:'ontime',seat:'8A',cls:'Business',bags:'2×32kg'},
+];
+const SL={ontime:'On Time',boarding:'Boarding Now',delayed:'Delayed',closed:'Gate Closed',departed:'Departed'};
+const GF={};FLIGHTS.forEach(f=>GF[f.gate]=f);
+const GATES={
+  wingA:[{id:'A02',z:-9},{id:'A04',z:-6},{id:'A06',z:-3},{id:'A08',z:0},{id:'A10',z:3},{id:'A12',z:6},{id:'A14',z:9},{id:'A16',z:12}],
+  wingB:[{id:'B04',z:-10},{id:'B06',z:-7},{id:'B08',z:-4},{id:'B10',z:-1},{id:'B12',z:2},{id:'B14',z:5},{id:'B16',z:8},{id:'B18',z:11}],
+  wingC:[{id:'C04',z:-9},{id:'C06',z:-6},{id:'C08',z:-3},{id:'C10',z:0},{id:'C12',z:3},{id:'C14',z:6},{id:'C16',z:9},{id:'C22',z:12}],
+};
+const FAC=[
+  {id:'dutyfree',name:'World Duty Free',sub:'L1 · Main Hall · Open 05:00–23:30',icon:'🛍',type:'shop',sec:'main'},
+  {id:'cafe1',name:'Terminal Café',sub:'L1 · Near Security · Open 05:00–23:00',icon:'☕',type:'food',sec:'main'},
+  {id:'brasserie',name:'Sky Brasserie',sub:'L2 · Central Atrium · Open 07:00–22:00',icon:'🍽',type:'food',sec:'main'},
+  {id:'grab1',name:'Grab & Go Market',sub:'L1 · All Wings · Open 24hrs',icon:'🛒',type:'food',sec:'main'},
+  {id:'electronics',name:'Tech & Electronics',sub:'L1 · Main Hall · Open 06:00–22:00',icon:'💻',type:'shop',sec:'main'},
+  {id:'info',name:'Information Desk',sub:'L1 · Main Entrance · Open 05:00–23:00',icon:'ℹ️',type:'service',sec:'main'},
+  {id:'hotel',name:'Airport Hotel',sub:'L3 · Connected Terminal · Open 24hrs',icon:'🏨',type:'service',sec:'main'},
+  {id:'toilet1',name:'Restrooms',sub:'All Wings · Every 100m · Open 24hrs',icon:'🚻',type:'service',sec:'main'},
+  {id:'charging',name:'Charging Stations',sub:'Gate areas all wings · Available 24hrs',icon:'🔋',type:'service',sec:'main'},
+  {id:'lounge',name:'Business Lounge',sub:'L2 · Wing B · Card/Biz Class · 04:00–24:00',icon:'💺',type:'lounge',sec:'wingB'},
+  {id:'bar1',name:'Altitude Bar',sub:'L2 · Wing B Corridor · Open 09:00–Last Flight',icon:'🍸',type:'food',sec:'wingB'},
+  {id:'kids',name:'Kids Play Zone',sub:'L2 · Wing B · Open 07:00–21:00',icon:'🧒',type:'service',sec:'wingB'},
+  {id:'sushi',name:'Pacific Sushi Bar',sub:'L1 · Wing A · Open 07:00–21:00',icon:'🍣',type:'food',sec:'wingA'},
+  {id:'medical',name:'Medical Centre',sub:'L1 · Wing A West · Open 06:00–22:00',icon:'🏥',type:'service',sec:'wingA'},
+  {id:'fashion',name:'Fashion Boutique',sub:'L2 · Wing C · Open 06:00–22:00',icon:'👗',type:'shop',sec:'wingC'},
+  {id:'prayer',name:'Prayer Room',sub:'L2 · Near Gate C · Open 24hrs',icon:'🕌',type:'service',sec:'wingC'},
+  {id:'security',name:'Security Checkpoint',sub:'L1 · 8 Lanes Open · Current wait: ~8 min',icon:'🔒',type:'security',sec:'checkin'},
+  {id:'customs',name:'Passport Control',sub:'L1 · International Entry · Open 24hrs',icon:'🛂',type:'security',sec:'checkin'},
+  {id:'pharmacy',name:'Pharmacy',sub:'L1 · Check-in Hall · Open 05:30–22:00',icon:'💊',type:'shop',sec:'checkin'},
+  {id:'baggage',name:'Baggage Services',sub:'L1 · Check-in Hall · Open 05:00–22:00',icon:'🧳',type:'service',sec:'checkin'},
+];
+const FC={food:{bg:'#fef3c7',c:'#d97706'},shop:{bg:'#ede9fe',c:'#7c3aed'},service:{bg:'#dcfce7',c:'#059669'},security:{bg:'#fee2e2',c:'#dc2626'},lounge:{bg:'#e0f2fe',c:'#0369a1'}};
+const SC={ontime:'#059669',boarding:'#d97706',delayed:'#dc2626'};
 
-const scene = new THREE.Scene();
-scene.fog = new THREE.Fog(0x080e1a, 30, 70);
+// State
+let activeFlight=null,activeSection='main',hlFac=null,cdTimer=null,cdSecs=0;
 
-const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 200);
-camera.position.set(0, 28, 20);
-camera.lookAt(0, 0, 0);
+// ═══════════════════════════════════════════
+// THREE.JS
+// ═══════════════════════════════════════════
+const canvas=document.getElementById('apc'),cwrap=document.getElementById('cwrap');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setClearColor(0xf0f4f8,1);
+renderer.shadowMap.enabled=true;
+renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0xf0f4f8);
+scene.fog=new THREE.Fog(0xf0f4f8,42,68);
+const camera=new THREE.PerspectiveCamera(42,1,.1,200);
+const camTgt=new THREE.Vector3();
+function resz(){const w=cwrap.clientWidth,h=cwrap.clientHeight;renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();}
+resz();window.addEventListener('resize',resz);
 
-function resize(){
-  const w = mapArea.clientWidth, h = mapArea.clientHeight;
-  renderer.setSize(w, h);
-  camera.aspect = w/h;
-  camera.updateProjectionMatrix();
-}
-resize();
-window.addEventListener('resize', resize);
+// LIGHTS
+scene.add(new THREE.AmbientLight(0xffffff,3.4));
+const sun=new THREE.DirectionalLight(0xfff8f0,2.6);sun.position.set(10,18,8);sun.castShadow=true;
+sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-30;sun.shadow.camera.right=30;sun.shadow.camera.top=30;sun.shadow.camera.bottom=-30;sun.shadow.camera.far=80;scene.add(sun);
+const fill=new THREE.DirectionalLight(0xe8f0ff,1.2);fill.position.set(-6,8,-6);scene.add(fill);
+const rim=new THREE.DirectionalLight(0xfff0e8,.65);rim.position.set(2,5,-10);scene.add(rim);
 
-// ─── MATERIALS ───
-const MAT = {
-  floor:    new THREE.MeshStandardMaterial({color:0x0d1a2e, roughness:.9, metalness:0}),
-  wall:     new THREE.MeshStandardMaterial({color:0x0f2040, roughness:.8, metalness:.05}),
-  corridor: new THREE.MeshStandardMaterial({color:0x0a1628, roughness:.85, metalness:0}),
-  gate:     new THREE.MeshStandardMaterial({color:0x0e3a6e, roughness:.5, metalness:.1, emissive:0x0a2040, emissiveIntensity:.3}),
-  gateActive: new THREE.MeshStandardMaterial({color:0x1e5a9e, roughness:.4, metalness:.15, emissive:0x0d3060, emissiveIntensity:.5}),
-  shop:     new THREE.MeshStandardMaterial({color:0x1a1040, roughness:.7, metalness:0}),
-  food:     new THREE.MeshStandardMaterial({color:0x2a1a08, roughness:.7, metalness:0}),
-  service:  new THREE.MeshStandardMaterial({color:0x0a2a1a, roughness:.7, metalness:0}),
-  security: new THREE.MeshStandardMaterial({color:0x3a0808, roughness:.6, metalness:.1, emissive:0x200404, emissiveIntensity:.3}),
-  playerPos:new THREE.MeshStandardMaterial({color:0xf59e0b, emissive:0xf59e0b, emissiveIntensity:.8, roughness:.2, metalness:.2}),
-  destMark: new THREE.MeshStandardMaterial({color:0x10b981, emissive:0x10b981, emissiveIntensity:.9, roughness:.2, metalness:.1}),
-  path:     new THREE.MeshBasicMaterial({color:0x0ea5e9, transparent:true, opacity:.5}),
-  glass:    new THREE.MeshStandardMaterial({color:0x4488aa, transparent:true, opacity:.15, roughness:.05, metalness:.8}),
+// MATERIALS
+function M(col,rough=.65,metal=0,em=0,ei=0){return new THREE.MeshStandardMaterial({color:col,roughness:rough,metalness:metal,emissive:new THREE.Color(em),emissiveIntensity:ei});}
+function MG(col,rough,metal,op){return new THREE.MeshStandardMaterial({color:col,roughness:rough,metalness:metal,transparent:true,opacity:op,side:THREE.DoubleSide});}
+const MAT={
+  floor:M(0xf8fafc,.88),floorL:M(0xe8eef5,.9),wall:M(0xedf1f6,.68),wallD:M(0xd8dee8,.72),
+  ceil:M(0xfafbfc,.82),struct:M(0xf0f4f8,.62,.02),
+  glass:MG(0xbae6fd,.08,.14,.17),glassD:MG(0x93c5fd,.1,.2,.32),
+  yellow:M(0xfde68a,.5,.02,0xfbbf24,.14),
+  checkin:M(0xfef9c3,.72),security:M(0xfee2e2,.68,0,0xfee2e2,.04),
+  food:M(0xfef3c7,.72,0,0xfef3c7,.04),shop:M(0xede9fe,.72,0,0xede9fe,.04),
+  lounge:M(0xe0f2fe,.68),service:M(0xdcfce7,.72),
+  gate:M(0xdbeafe,.42,.08,0x3b82f6,.14),
+  gHL:M(0xbbf7d0,.3,.08,0x10b981,.75),
+  gBd:M(0xfef3c7,.3,.06,0xf59e0b,.6),
+  gDl:M(0xfee2e2,.3,.06,0xef4444,.6),
+  jetway:M(0xdde2e8,.72,.05),pillar:M(0xf1f5f9,.5,.04),
+  you:M(0xf59e0b,.22,.1,0xf59e0b,1.5),
+  dest:M(0x10b981,.22,.1,0x10b981,1.5),
 };
 
-// ─── BUILD TERMINAL ───
-const terminalGroup = new THREE.Group();
-scene.add(terminalGroup);
+let sg=new THREE.Group();scene.add(sg);
+let playerM=null,destM=null,pathO=[];
+let rcTargets=[],lblEls=[];
+const lblCont=document.createElement('div');lblCont.style.cssText='position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:40';cwrap.appendChild(lblCont);
 
-function box(w, h, d, mat, x=0, y=0, z=0){
-  const m = new THREE.Mesh(new THREE.BoxGeometry(w,h,d), mat);
-  m.position.set(x,y,z);
-  m.castShadow = true;
-  m.receiveShadow = true;
-  return m;
+function bx(w,h,d,mat,x=0,y=0,z=0,ud={}){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;m.userData=ud;sg.add(m);return m;}
+function cy(rT,rB,h,s,mat,x=0,y=0,z=0,ud={}){const m=new THREE.Mesh(new THREE.CylinderGeometry(rT,rB,h,s),mat);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;m.userData=ud;sg.add(m);return m;}
+function col(x,z){cy(.18,.18,3.6,12,MAT.pillar,x,1.8,z);}
+function lbl(txt,wx,wy,wz,c='#334155',sz='.59rem',bold=false){
+  const el=document.createElement('div');
+  el.style.cssText=`position:absolute;font-family:Inter,sans-serif;font-size:${sz};font-weight:${bold?700:500};color:${c};white-space:nowrap;transform:translate(-50%,-50%);text-shadow:0 1px 4px rgba(255,255,255,.98),0 0 8px rgba(255,255,255,.8);letter-spacing:.02em;pointer-events:none`;
+  el.textContent=txt;lblCont.appendChild(el);lblEls.push({el,wx,wy,wz});return el;
 }
 
-// MAIN FLOOR — terminal footprint
-terminalGroup.add(box(38, .2, 22, MAT.floor, 0, 0, 0));
+function buildGate(id,x,z,rot=0){
+  const fl=GF[id]||null;
+  const isMe=activeFlight&&activeFlight.gate===id;
+  const isBd=fl&&fl.status==='boarding';
+  const isDl=fl&&fl.status==='delayed';
+  let gm=MAT.gate;
+  if(isMe)gm=MAT.gHL;else if(isBd)gm=MAT.gBd;else if(isDl)gm=MAT.gDl;
+  const grp=new THREE.Group();grp.position.set(x,0,z);grp.rotation.y=rot;
+  const gf=new THREE.Mesh(new THREE.BoxGeometry(2.8,.1,2.2),gm);gf.position.y=.05;gf.castShadow=true;gf.receiveShadow=true;gf.userData={type:'gate',id,flight:fl,grpX:x,grpZ:z};grp.add(gf);rcTargets.push(gf);
+  // Seating row
+  const st=new THREE.Mesh(new THREE.BoxGeometry(2.4,.04,.95),MAT.struct);st.position.set(0,.17,.5);grp.add(st);
+  // Desk
+  const dk=new THREE.Mesh(new THREE.BoxGeometry(.78,.52,.4),MAT.struct);dk.position.set(0,.31,-.58);dk.castShadow=true;grp.add(dk);
+  // Screen
+  const sc=new THREE.Mesh(new THREE.BoxGeometry(.62,.36,.04),MAT.glassD);sc.position.set(0,.8,-.76);grp.add(sc);
+  // Jetway
+  const jw=new THREE.Mesh(new THREE.BoxGeometry(.48,.36,1.7),MAT.jetway);jw.position.set(0,.27,-1.45);jw.castShadow=true;grp.add(jw);
+  // Overhead sign
+  const sm=isMe?MAT.gHL:(isBd?MAT.gBd:MAT.glassD);
+  const sg2=new THREE.Mesh(new THREE.BoxGeometry(.82,.17,.05),sm);sg2.position.set(0,1.4,-.78);grp.add(sg2);
+  if(isMe){
+    // Pulsing glow ring
+    const rg=new THREE.Mesh(new THREE.RingGeometry(.5,.7,32),new THREE.MeshBasicMaterial({color:0x10b981,transparent:true,opacity:.6,side:THREE.DoubleSide}));
+    rg.rotation.x=-Math.PI/2;rg.position.y=.01;grp.add(rg);grp.userData.pulseRing=rg;
+  }
+  sg.add(grp);
+  const lc=isMe?'#059669':(isBd?'#d97706':(isDl?'#dc2626':'#1d6fd8'));
+  lbl(id,x,2.1,z,lc,'.63rem',true);
+  if(fl)lbl(fl.time,x,.12,z,'#64748b','.54rem');
+}
 
-// CORRIDOR STRIPS (lighter floor marking)
-terminalGroup.add(box(36, .21, 2.5, MAT.corridor, 0, 0, 0));  // main corridor
-terminalGroup.add(box(2, .21, 20, MAT.corridor, -14, 0, 0));  // Wing A corridor
-terminalGroup.add(box(2, .21, 20, MAT.corridor, 0, 0, 0));    // Wing B corridor
-terminalGroup.add(box(2, .21, 20, MAT.corridor, 14, 0, 0));   // Wing C corridor
+function buildFac(f,x,z,size=1.5){
+  const hl=hlFac===f.id;
+  const fmats={food:MAT.food,shop:MAT.shop,service:MAT.service,security:MAT.security,lounge:MAT.lounge};
+  const fm=hl?MAT.gHL:(fmats[f.type]||MAT.service);
+  const fl=bx(size,.1,size,fm,x,.05,z,{type:'facility',id:f.id,name:f.name,fac:f});rcTargets.push(fl);
+  bx(size*.76,.52,size*.76,MAT.struct,x,.36,z);
+  if(hl){const rg=new THREE.Mesh(new THREE.RingGeometry(size*.57,size*.7,24),new THREE.MeshBasicMaterial({color:0x10b981,transparent:true,opacity:.6,side:THREE.DoubleSide}));rg.rotation.x=-Math.PI/2;rg.position.set(x,.02,z);sg.add(rg);}
+  lbl(f.icon+' '+f.name,x,1.05,z,hl?'#059669':'#475569','.58rem');
+}
 
-// OUTER WALLS
-[[-19,.6,0,1.2,22],[ 19,.6,0,1.2,22]].forEach(([x,y,z,w,d])=>{
-  const wall = box(w, 3, d, MAT.wall, x, 1.7, z);
-  terminalGroup.add(wall);
-});
-terminalGroup.add(box(38, 3, 1.2, MAT.wall, 0, 1.7, -11.4)); // back
-terminalGroup.add(box(38, 3, 1.2, MAT.wall, 0, 1.7, 11.4));  // front
+// ═══ SECTION BUILDERS ═══════════════════════
 
-// GLASS WALLS (facades)
-terminalGroup.add(box(36, 2.5, .1, MAT.glass, 0, 1.5, 11.3));
-
-// ─── GATES ───
-const gates = [];
-const GATE_DATA = [
-  // Wing A (left) — x around -14
-  {id:'A04', x:-16, z:-7, label:'A04', mat:MAT.gate},
-  {id:'A06', x:-16, z:-3, label:'A06', mat:MAT.gate},
-  {id:'A08', x:-16, z:1,  label:'A08', mat:MAT.gate},
-  {id:'A10', x:-16, z:5,  label:'A10', mat:MAT.gate},
-  {id:'A12', x:-16, z:9,  label:'A12', mat:MAT.gate},
-  // Wing B (centre) — x around 0
-  {id:'B10', x:-2,  z:-8, label:'B10', mat:MAT.gate},
-  {id:'B12', x:2,   z:-8, label:'B12', mat:MAT.gateActive},  // OUR GATE
-  {id:'B14', x:6,   z:-8, label:'B14', mat:MAT.gate},
-  {id:'B16', x:-2,  z:8,  label:'B16', mat:MAT.gate},
-  {id:'B18', x:2,   z:8,  label:'B18', mat:MAT.gate},
-  // Wing C (right) — x around 14
-  {id:'C06', x:14,  z:-7, label:'C06', mat:MAT.gate},
-  {id:'C08', x:14,  z:-3, label:'C08', mat:MAT.gate},
-  {id:'C22', x:16,  z:1,  label:'C22', mat:MAT.gate},
-  {id:'C24', x:16,  z:5,  label:'C24', mat:MAT.gate},
-];
-
-GATE_DATA.forEach(g=>{
-  const gGroup = new THREE.Group();
-  // Gate pod
-  const pod = box(2.5, 1, 2, g.mat, 0, .6, 0);
-  pod.userData = {type:'gate', id:g.id, label:g.label};
-  gGroup.add(pod);
-  // Jetway stub
-  const jetway = box(.4, .4, 1.5, MAT.wall, 0, .5, -1.2);
-  gGroup.add(jetway);
-  // Seating area suggestion
-  const seats = box(2, .1, 1.5, MAT.corridor, 0, .16, 1.2);
-  gGroup.add(seats);
-  gGroup.position.set(g.x, 0, g.z);
-  gGroup.userData = {type:'gate', id:g.id};
-  terminalGroup.add(gGroup);
-  gates.push({group:gGroup, pod, ...g});
-});
-
-// ─── FACILITIES ───
-const FACILITY_DATA = [
-  // Food
-  {type:'cafe',       icon:'☕', x:-8,  z:3,   color:0x2a1a08, label:'Terminal Café'},
-  {type:'restaurant', icon:'🍽', x:0,   z:4,   color:0x2a1a08, label:'Sky Brasserie'},
-  {type:'bar',        icon:'🍸', x:2,   z:-2,  color:0x1a0e30, label:'Altitude Bar'},
-  // Shops
-  {type:'duty',       icon:'🛍', x:-5,  z:-2,  color:0x1a1040, label:'Duty Free'},
-  {type:'fashion',    icon:'👗', x:8,   z:3,   color:0x1a1040, label:'Fashion'},
-  {type:'pharmacy',   icon:'💊', x:-8,  z:-3,  color:0x0a2040, label:'Pharmacy'},
-  // Services
-  {type:'toilet',     icon:'🚻', x:-12, z:1,   color:0x0a2a3a, label:'Restrooms'},
-  {type:'toilet',     icon:'🚻', x:12,  z:1,   color:0x0a2a3a, label:'Restrooms'},
-  {type:'lounge',     icon:'💺', x:4,   z:-5,  color:0x1a1a0a, label:'Business Lounge'},
-  {type:'charging',   icon:'🔋', x:-4,  z:5,   color:0x0a1a2a, label:'Charging'},
-  {type:'info',       icon:'ℹ',  x:0,   z:8,   color:0x0a2a1a, label:'Info Desk'},
-  {type:'medical',    icon:'🏥', x:-16, z:2,   color:0x0a2a1a, label:'Medical'},
-  // Security
-  {type:'security',   icon:'🔒', x:0,   z:10,  color:0x3a0808, label:'Security'},
-];
-
-const facilities = [];
-FACILITY_DATA.forEach(f=>{
-  const fGroup = new THREE.Group();
-  const facMat = new THREE.MeshStandardMaterial({
-    color:f.color, roughness:.7, metalness:.05,
-    emissive:new THREE.Color(f.color), emissiveIntensity:.2
+function buildMain(){
+  bx(30,.14,16,MAT.floor,0,.07,0);
+  for(let i=-7;i<=7;i+=3.5){bx(.07,.15,16,MAT.floorL,i,.09,0);}
+  for(let j=-7;j<=7;j+=3.5){bx(30,.15,.07,MAT.floorL,0,.09,j);}
+  bx(.5,.15,16,MAT.yellow,0,.1,0);bx(30,.15,.5,MAT.yellow,0,.1,0);
+  // Walls
+  bx(.16,3.8,16,MAT.wall,-15,1.9,0);bx(.16,3.8,16,MAT.wall,15,1.9,0);
+  bx(30,3.8,.16,MAT.wall,0,1.9,-8);bx(30,3.8,.16,MAT.glass,0,1.9,8);
+  // Ceiling + skylights
+  bx(30,.2,16,MAT.ceil,0,3.88,0);
+  [-10,0,10].forEach(x=>bx(3.5,.07,5,MAT.glassD,x,3.9,0));
+  // Columns
+  [-11,11].forEach(cx=>[-5,0,5].forEach(cz=>col(cx,cz)));
+  // Info desk (clickable)
+  const id=cy(1.85,2.0,.58,24,MAT.struct,0,.37,0,{type:'facility',id:'info',name:'Information Desk',fac:FAC.find(f=>f.id==='info')});rcTargets.push(id);
+  cy(1.84,1.84,.03,24,MAT.gHL,0,.69,0);
+  lbl('ℹ️ Information',0,1.32,0,'#1d6fd8','.61rem',true);
+  [-1,1].forEach(s=>bx(.88,.4,.06,MAT.glassD,s*.82,1.53,0));
+  // Duty Free (clickable)
+  const df=bx(5.5,.1,4.5,MAT.shop,-10.5,.06,-2,{type:'facility',id:'dutyfree',name:'World Duty Free',fac:FAC.find(f=>f.id==='dutyfree')});rcTargets.push(df);
+  bx(5.5,2.6,4.5,MAT.glassD,-10.5,1.44,-2);bx(5.5,2.6,.06,MAT.glassD,-10.5,1.44,.42);
+  lbl('🛍 World Duty Free',-10.5,1.08,-2,'#7c3aed','.61rem',true);
+  // Terminal Café (clickable)
+  const tc=bx(4,.1,3.8,MAT.food,10.5,.06,-2,{type:'facility',id:'cafe1',name:'Terminal Café',fac:FAC.find(f=>f.id==='cafe1')});rcTargets.push(tc);
+  bx(4,2.2,3.8,MAT.wall,10.5,1.18,-2);bx(4,2.2,.06,MAT.glassD,10.5,1.18,.28);
+  lbl('☕ Terminal Café',10.5,1.08,-2,'#d97706','.61rem',true);
+  // Electronics (clickable)
+  const el=bx(3.5,.1,3,MAT.shop,-10.5,.06,3.5,{type:'facility',id:'electronics',name:'Tech & Electronics',fac:FAC.find(f=>f.id==='electronics')});rcTargets.push(el);
+  bx(3.5,2,3,MAT.glassD,-10.5,1.08,3.5);
+  lbl('💻 Electronics',-10.5,.98,3.5,'#7c3aed','.59rem',true);
+  // Grab & Go (clickable)
+  const gg=bx(3,.1,2.5,MAT.food,10.5,.06,3.5,{type:'facility',id:'grab1',name:'Grab & Go Market',fac:FAC.find(f=>f.id==='grab1')});rcTargets.push(gg);
+  bx(3,1.8,2.5,MAT.wall,10.5,.97,3.5);
+  lbl('🛒 Grab & Go',10.5,.97,3.5,'#d97706','.59rem',true);
+  // Hotel connector sign
+  bx(3,.26,.06,MAT.lounge,0,2.62,-7.9);lbl('🏨 Hotel ↑',0,2.86,-7.9,'#0369a1','.59rem',true);
+  // Wing direction signs
+  [{t:'← Wing A',x:-9},{t:'Wing B ↑',x:0},{t:'Wing C →',x:9}].forEach(({t,x})=>{
+    bx(.82,.26,.06,MAT.gate,x,2.52,7.82);lbl(t,x,2.78,7.82,'#1d6fd8','.58rem',true);
   });
-  const fBox = box(1.8, .7, 1.8, facMat, 0, .45, 0);
-  fBox.userData = {...f};
-  fGroup.add(fBox);
-  fGroup.position.set(f.x, 0, f.z);
-  terminalGroup.add(fGroup);
-  facilities.push({group:fGroup, ...f});
-});
-
-// ─── PLAYER POSITION (YOU ARE HERE) ───
-const playerGroup = new THREE.Group();
-const playerBase = box(1, .15, 1, MAT.playerPos, 0, .12, 0);
-const playerPillar = box(.2, .8, .2, MAT.playerPos, 0, .55, 0);
-// Pulsing ring
-const ringGeo = new THREE.RingGeometry(.6, .8, 24);
-const ringMat = new THREE.MeshBasicMaterial({color:0xf59e0b, transparent:true, opacity:.6, side:THREE.DoubleSide});
-const ring = new THREE.Mesh(ringGeo, ringMat);
-ring.rotation.x = -Math.PI/2;
-ring.position.y = .05;
-playerGroup.add(playerBase, playerPillar, ring);
-playerGroup.position.set(-2, 0, 9.5); // Near security
-scene.add(playerGroup);
-
-// ─── DESTINATION MARKER ───
-const destGroup = new THREE.Group();
-const destBase = box(1, .15, 1, MAT.destMark, 0, .12, 0);
-const destPillar = box(.2, 1.2, .2, MAT.destMark, 0, .75, 0);
-const destRing = new THREE.Mesh(new THREE.RingGeometry(.6, .8, 24), new THREE.MeshBasicMaterial({color:0x10b981, transparent:true, opacity:.6, side:THREE.DoubleSide}));
-destRing.rotation.x = -Math.PI/2;
-destRing.position.y = .05;
-destGroup.add(destBase, destPillar, destRing);
-destGroup.position.set(2, 0, -8); // Gate B12
-destGroup.visible = true;
-scene.add(destGroup);
-
-// ─── PATH LINE ───
-function drawPath(from, to){
-  // Remove old path
-  const old = scene.getObjectByName('navPath');
-  if(old) scene.remove(old);
-  const pts = [
-    new THREE.Vector3(from.x, 0.3, from.z),
-    new THREE.Vector3(from.x, 0.3, 0),       // main corridor
-    new THREE.Vector3(to.x, 0.3, 0),
-    new THREE.Vector3(to.x, 0.3, to.z),
-  ];
-  const geo = new THREE.BufferGeometry().setFromPoints(pts);
-  const line = new THREE.Line(geo, new THREE.LineBasicMaterial({color:0x0ea5e9, transparent:true, opacity:.7}));
-  line.name = 'navPath';
-  scene.add(line);
-}
-drawPath({x:-2, z:9.5}, {x:2, z:-8});
-
-// ─── LABELS (floating text via DOM) ───
-// We overlay labels as HTML on top of canvas
-const labelContainer = document.createElement('div');
-labelContainer.style.cssText='position:absolute;inset:0;pointer-events:none;overflow:hidden';
-mapArea.appendChild(labelContainer);
-
-function addLabel(text, x, z, color='#38bdf8', small=false){
-  const el = document.createElement('div');
-  el.style.cssText=`position:absolute;font-family:'JetBrains Mono',monospace;font-size:${small?'.58rem':'.65rem'};font-weight:600;color:${color};white-space:nowrap;transform:translate(-50%,-50%);pointer-events:none;text-shadow:0 0 8px ${color}44;letter-spacing:.06em`;
-  el.textContent = text;
-  el.dataset.wx = x;
-  el.dataset.wz = z;
-  labelContainer.appendChild(el);
-  return el;
+  // Seating areas
+  [-4,4].forEach(z=>[-5,-2,1,4].forEach(x=>bx(.4,.3,.4,MAT.struct,x,.21,z)));
+  // Facilities pods
+  buildFac(FAC.find(f=>f.id==='charging'),{x:-4,z:-6},1.1);
+  buildFac(FAC.find(f=>f.id==='charging'),{x:4,z:-6},1.1);
+  buildFac(FAC.find(f=>f.id==='toilet1'),{x:-13,z:6},1.2);
+  buildFac(FAC.find(f=>f.id==='toilet1'),{x:13,z:6},1.2);
+  spawnPlayer(0,7);
 }
 
-const labels = [];
-GATE_DATA.forEach(g=>{
-  labels.push({el:addLabel(g.id, g.x, g.z, g.id==='B12'?'#fbbf24':'#38bdf8'), wx:g.x, wz:g.z, wy:1.5});
+function buildCheckin(){
+  bx(32,.14,20,MAT.floor,0,.07,0);
+  for(let i=-9;i<=9;i+=4){bx(32,.15,.07,MAT.floorL,0,.09,i);}
+  bx(.5,.15,20,MAT.yellow,0,.1,0);
+  bx(.16,4,20,MAT.wall,-16,2,0);bx(.16,4,20,MAT.wall,16,2,0);
+  bx(32,4,.16,MAT.wall,0,2,10);bx(32,4,.16,MAT.glass,0,2,-10);
+  bx(32,.2,20,MAT.ceil,0,4.12,0);
+  [-11,0,11].forEach(x=>bx(4,.07,6,MAT.glassD,x,4.14,0));
+  [-11,0,11].forEach(cx=>[-7,7].forEach(cz=>col(cx,cz)));
+  // 12 check-in desks, 2 rows
+  for(let i=0;i<12;i++){
+    const x=-13.75+i*2.5;
+    bx(.88,.78,.4,MAT.struct,x,.49,-3);bx(.88,.06,.4,MAT.checkin,x,.82,-3);bx(.34,1.1,.3,MAT.glassD,x+.3,.98,-3);
+    bx(.88,.78,.4,MAT.struct,x,.49,3);bx(.88,.06,.4,MAT.checkin,x,.82,3);
+  }
+  lbl('✈ Check-in Desks 1–12',0,.08,-3,'#334155','.59rem',true);
+  lbl('✈ Check-in Desks 13–24',0,.08,3,'#334155','.59rem',true);
+  // Self-service kiosks
+  for(let i=0;i<8;i++){bx(.4,1.32,.3,MAT.glassD,9.5-i*1.15,.8,0);}
+  lbl('💻 Self Check-in',4.7,1.88,0,'#1d6fd8','.61rem',true);
+  // Security zone (clickable)
+  const secFloor=bx(30,.14,4,MAT.security,0,.08,-8,{type:'facility',id:'security',name:'Security Checkpoint',fac:FAC.find(f=>f.id==='security')});rcTargets.push(secFloor);
+  for(let i=0;i<8;i++){
+    const sx=-10.5+i*3;
+    bx(.07,1.44,3.8,MAT.wallD,sx,.82,-8);
+    bx(2.7,.14,.82,MAT.wallD,sx+1.35,.58,-8);
+  }
+  lbl('🔒 Security · 8 Lanes Open · ~8 min wait',0,1.98,-8,'#dc2626','.64rem',true);
+  // Baggage drop
+  bx(8,.14,2.4,MAT.checkin,-9,.08,-9.7);bx(8,.64,2.4,MAT.struct,-9,.4,-9.7);
+  lbl('🧳 Baggage Drop',-9,.92,-9.7,'#334155','.59rem',true);
+  buildFac(FAC.find(f=>f.id==='pharmacy'),{x:11,z:-8.5},2);
+  buildFac(FAC.find(f=>f.id==='toilet1'),{x:-14,z:-8.5},1.2);
+  buildFac(FAC.find(f=>f.id==='baggage'),{x:5,z:-9.5},2);
+  lbl('→ Main Terminal',0,.08,9.5,'#1d6fd8','.61rem',true);
+  spawnPlayer(0,9);
+}
+
+function buildWingA(){
+  bx(4,.14,30,MAT.floor,0,.07,0);bx(.38,.15,30,MAT.yellow,0,.1,0);
+  bx(5.5,.14,30,MAT.floor,-4.8,.07,0);bx(5.5,.14,30,MAT.floor,4.8,.07,0);
+  bx(.1,3.2,30,MAT.glass,-7.5,1.6,0);bx(.1,3.2,30,MAT.glass,7.5,1.6,0);
+  bx(15,3.2,.1,MAT.glass,0,1.6,-15);bx(15,.2,30,MAT.ceil,0,3.3,0);
+  [-11,-5,1,7].forEach(z=>{col(-1.8,z);col(1.8,z);});
+  GATES.wingA.forEach(g=>buildGate(g.id,-4.5,g.z,Math.PI/2));
+  // Sushi (clickable)
+  const su=bx(3.5,.1,3.5,MAT.food,4.5,.07,-11,{type:'facility',id:'sushi',name:'Pacific Sushi Bar',fac:FAC.find(f=>f.id==='sushi')});rcTargets.push(su);
+  bx(3.5,2.2,3.5,MAT.wall,4.5,1.18,-11);bx(3.5,2.2,.06,MAT.glassD,4.5,1.18,-9.25);
+  lbl('🍣 Pacific Sushi',4.5,.98,-11,'#d97706','.59rem',true);
+  buildFac(FAC.find(f=>f.id==='medical'),{x:4.5,z:9},2.2);
+  buildFac(FAC.find(f=>f.id==='toilet1'),{x:4.5,z:2},1.2);
+  buildFac(FAC.find(f=>f.id==='charging'),{x:4.5,z:-4},1);
+  lbl('← Main Terminal',0,.08,14.5,'#1d6fd8','.61rem',true);
+  spawnPlayer(0,13);
+}
+
+function buildWingB(){
+  bx(4,.14,32,MAT.floor,0,.07,0);bx(.38,.15,32,MAT.yellow,0,.1,0);
+  bx(6,.14,32,MAT.floor,-5,.07,0);bx(6,.14,32,MAT.floor,5,.07,0);
+  bx(.1,3.5,32,MAT.glass,-8,1.75,0);bx(.1,3.5,32,MAT.glass,8,1.75,0);
+  bx(16,3.5,.1,MAT.glass,0,1.75,-16);bx(16,.22,32,MAT.ceil,0,3.62,0);
+  [-12,-6,0,6,12].forEach(z=>{col(-2,z);col(2,z);});
+  // Left gates
+  GATES.wingB.slice(0,5).forEach(g=>buildGate(g.id,-5,g.z,Math.PI/2));
+  // Right gates
+  GATES.wingB.slice(5).forEach(g=>buildGate(g.id,5,g.z,Math.PI/2));
+  // Business Lounge (clickable)
+  const lo=bx(5.5,.1,4.5,MAT.lounge,5,.07,6.5,{type:'facility',id:'lounge',name:'Business Lounge',fac:FAC.find(f=>f.id==='lounge')});rcTargets.push(lo);
+  bx(5.5,2.6,4.5,MAT.glassD,5,1.44,6.5);bx(5.5,2.6,.06,MAT.glassD,5,1.44,9.08);
+  lbl('💺 Business Lounge',5,1.18,6.5,'#0369a1','.61rem',true);
+  // Altitude Bar (clickable)
+  const ba=bx(4,.1,3.2,MAT.food,-5,.07,6.5,{type:'facility',id:'bar1',name:'Altitude Bar',fac:FAC.find(f=>f.id==='bar1')});rcTargets.push(ba);
+  bx(4,2.2,3.2,MAT.wall,-5,1.18,6.5);bx(4,2.2,.06,MAT.glassD,-5,1.18,8.1);
+  lbl('🍸 Altitude Bar',-5,.98,6.5,'#d97706','.61rem',true);
+  buildFac(FAC.find(f=>f.id==='kids'),{x:3,z:-6},2);
+  buildFac(FAC.find(f=>f.id==='toilet1'),{x:0,z:-15},1.2);
+  lbl('← Main Terminal',0,.08,15.5,'#1d6fd8','.61rem',true);
+  spawnPlayer(0,15);
+}
+
+function buildWingC(){
+  bx(4,.14,30,MAT.floor,0,.07,0);bx(.38,.15,30,MAT.yellow,0,.1,0);
+  bx(5.5,.14,30,MAT.floor,-4.8,.07,0);bx(5.5,.14,30,MAT.floor,4.8,.07,0);
+  bx(.1,3.2,30,MAT.glass,-7.5,1.6,0);bx(.1,3.2,30,MAT.glass,7.5,1.6,0);
+  bx(15,3.2,.1,MAT.glass,0,1.6,-15);bx(15,.2,30,MAT.ceil,0,3.3,0);
+  [-11,-5,1,7].forEach(z=>{col(-1.8,z);col(1.8,z);});
+  GATES.wingC.forEach(g=>buildGate(g.id,4.5,g.z,Math.PI/2));
+  // Fashion (clickable)
+  const fa=bx(3.5,.1,3.5,MAT.shop,4.5,.07,-11,{type:'facility',id:'fashion',name:'Fashion Boutique',fac:FAC.find(f=>f.id==='fashion')});rcTargets.push(fa);
+  bx(3.5,2.5,3.5,MAT.glassD,4.5,1.34,-11);
+  lbl('👗 Fashion Boutique',4.5,1.08,-11,'#7c3aed','.59rem',true);
+  buildFac(FAC.find(f=>f.id==='prayer'),{x:4.5,z:9},2);
+  buildFac(FAC.find(f=>f.id==='toilet1'),{x:-4.5,z:4},1.2);
+  buildFac(FAC.find(f=>f.id==='charging'),{x:0,z:-4},1);
+  lbl('← Main Terminal',0,.08,14.5,'#1d6fd8','.61rem',true);
+  spawnPlayer(0,13);
+}
+
+// Fix buildFac signature - accept x,z directly
+function buildFac(f,pos,size=1.5){
+  const x=pos.x,z=pos.z;
+  const hl=hlFac===f.id;
+  const fmats={food:MAT.food,shop:MAT.shop,service:MAT.service,security:MAT.security,lounge:MAT.lounge};
+  const fm=hl?MAT.gHL:(fmats[f.type]||MAT.service);
+  const fl=bx(size,.1,size,fm,x,.05,z,{type:'facility',id:f.id,name:f.name,fac:f});rcTargets.push(fl);
+  bx(size*.76,.52,size*.76,MAT.struct,x,.36,z);
+  if(hl){const rg=new THREE.Mesh(new THREE.RingGeometry(size*.57,size*.7,24),new THREE.MeshBasicMaterial({color:0x10b981,transparent:true,opacity:.6,side:THREE.DoubleSide}));rg.rotation.x=-Math.PI/2;rg.position.set(x,.02,z);sg.add(rg);}
+  lbl(f.icon+' '+f.name,x,1.05,z,hl?'#059669':'#475569','.58rem');
+}
+
+// ═══ MARKERS & PATH ════════════════════════
+
+function spawnPlayer(x,z){
+  const g=new THREE.Group();
+  // Base disc
+  const base=new THREE.Mesh(new THREE.CylinderGeometry(.3,.3,.1,24),MAT.you);base.position.y=.05;base.castShadow=true;g.add(base);
+  // Stem
+  const stem=new THREE.Mesh(new THREE.CylinderGeometry(.07,.07,.55,12),MAT.you);stem.position.y=.42;g.add(stem);
+  // Top sphere
+  const top=new THREE.Mesh(new THREE.SphereGeometry(.14,12,12),MAT.you);top.position.y=.78;g.add(top);
+  // Pulse ring
+  const ring=new THREE.Mesh(new THREE.RingGeometry(.36,.48,24),new THREE.MeshBasicMaterial({color:0xf59e0b,transparent:true,opacity:.62,side:THREE.DoubleSide}));
+  ring.rotation.x=-Math.PI/2;ring.position.y=.01;g.add(ring);g.userData.ring=ring;
+  g.position.set(x,.05,z);scene.add(g);playerM=g;
+}
+
+function spawnDest(x,z){
+  if(destM){scene.remove(destM);destM=null;}
+  const g=new THREE.Group();
+  const base=new THREE.Mesh(new THREE.CylinderGeometry(.3,.3,.1,24),MAT.dest);base.position.y=.05;base.castShadow=true;g.add(base);
+  const stem=new THREE.Mesh(new THREE.CylinderGeometry(.08,.08,.82,12),MAT.dest);stem.position.y=.5;g.add(stem);
+  const top=new THREE.Mesh(new THREE.SphereGeometry(.17,12,12),MAT.dest);top.position.y=1.0;g.add(top);
+  const ring=new THREE.Mesh(new THREE.RingGeometry(.36,.5,24),new THREE.MeshBasicMaterial({color:0x10b981,transparent:true,opacity:.62,side:THREE.DoubleSide}));
+  ring.rotation.x=-Math.PI/2;ring.position.y=.01;g.add(ring);g.userData.ring=ring;
+  g.position.set(x,.05,z);scene.add(g);destM=g;
+}
+
+function drawPath(fx,fz,tx,tz){
+  pathO.forEach(o=>scene.remove(o));pathO=[];
+  const mx=(fx+tx)/2,mz=fz+(tz-fz)*.35;
+  const pts=[new THREE.Vector3(fx,.22,fz),new THREE.Vector3(mx,.22,mz),new THREE.Vector3(tx,.22,tz)];
+  const curve=new THREE.CatmullRomCurve3(pts);
+  const cpts=curve.getPoints(80);
+  const geo=new THREE.BufferGeometry().setFromPoints(cpts);
+  const line=new THREE.Line(geo,new THREE.LineBasicMaterial({color:0x3b82f6,transparent:true,opacity:.72}));
+  line.renderOrder=1;scene.add(line);pathO.push(line);
+  for(let i=0;i<cpts.length;i+=5){
+    const dot=new THREE.Mesh(new THREE.CircleGeometry(.052,8),new THREE.MeshBasicMaterial({color:0x3b82f6,transparent:true,opacity:.48}));
+    dot.rotation.x=-Math.PI/2;dot.position.set(cpts[i].x,.23,cpts[i].z);dot.renderOrder=2;
+    scene.add(dot);pathO.push(dot);
+  }
+}
+
+// ═══ SECTION LOADING ═══════════════════════
+
+function clearScn(){
+  while(sg.children.length)sg.remove(sg.children[0]);
+  pathO.forEach(o=>scene.remove(o));pathO=[];
+  if(playerM){scene.remove(playerM);playerM=null;}
+  if(destM){scene.remove(destM);destM=null;}
+  rcTargets=[];lblEls=[];lblCont.innerHTML='';
+}
+
+const CAM={
+  main:   {ry:0,rx:.82,z:1,tx:0,tz:0},
+  checkin:{ry:0,rx:.82,z:1,tx:0,tz:-1},
+  wingA:  {ry:0,rx:.8, z:1,tx:-1,tz:0},
+  wingB:  {ry:0,rx:.8, z:1,tx:0,tz:0},
+  wingC:  {ry:0,rx:.8, z:1,tx:1,tz:0},
+};
+
+let rotY=0,rotX=.82,zoom=1;
+
+function loadSec(sec){
+  activeSection=sec;clearScn();
+  ({main:buildMain,checkin:buildCheckin,wingA:buildWingA,wingB:buildWingB,wingC:buildWingC})[sec]();
+  const c=CAM[sec];rotY=c.ry;rotX=c.rx;zoom=c.z;
+  camTgt.set(c.tx,0,c.tz);updateCam();
+  document.querySelectorAll('.sb').forEach(b=>b.classList.toggle('active',b.dataset.sec===sec));
+  // Auto-show destination if active flight in this section
+  if(activeFlight&&activeFlight.wing===sec){
+    const gp=getGateWP(activeFlight.gate);
+    if(gp&&playerM)drawPath(playerM.position.x,playerM.position.z,gp.x,gp.z);
+    if(gp)spawnDest(gp.x,gp.z);
+  }
+}
+
+function getGateWP(gid){
+  for(const o of rcTargets){
+    if(o.userData.type==='gate'&&o.userData.id===gid){
+      // Gate floor is in a group - get parent world pos
+      const wp=new THREE.Vector3();
+      if(o.parent&&o.parent.isGroup){o.parent.getWorldPosition(wp);}
+      else{o.getWorldPosition(wp);}
+      // For gates we stored grpX/grpZ on userData at build time
+      if(o.userData.grpX!==undefined)return{x:o.userData.grpX,z:o.userData.grpZ};
+      return{x:wp.x,z:wp.z};
+    }
+  }
+  return null;
+}
+
+// ═══ CAMERA ORBIT ══════════════════════════
+
+function updateCam(){
+  const r=22*zoom;
+  camera.position.x=camTgt.x+Math.sin(rotY)*Math.cos(rotX)*r;
+  camera.position.y=Math.max(2.5,Math.sin(rotX)*r);
+  camera.position.z=camTgt.z+Math.cos(rotY)*Math.cos(rotX)*r;
+  camera.lookAt(camTgt);
+}
+
+let isDrag=false,pmx=0,pmy=0;
+cwrap.addEventListener('mousedown',e=>{isDrag=true;pmx=e.clientX;pmy=e.clientY;});
+window.addEventListener('mouseup',()=>{isDrag=false;});
+window.addEventListener('mousemove',e=>{
+  if(!isDrag)return;
+  const dx=e.clientX-pmx,dy=e.clientY-pmy;
+  rotY-=dx*.006;rotX=Math.max(.2,Math.min(1.35,rotX+dy*.004));
+  pmx=e.clientX;pmy=e.clientY;updateCam();
 });
-
-// ─── LIGHTS ───
-scene.add(new THREE.AmbientLight(0x1a2a3a, 3));
-
-// Main overhead lights
-[-14, -7, 0, 7, 14].forEach(x=>{
-  [-8,-2,4].forEach(z=>{
-    const pt = new THREE.PointLight(0x4488cc, 0.8, 10);
-    pt.position.set(x, 4, z);
-    scene.add(pt);
-  });
-});
-
-// Gate B12 spotlight (our gate)
-const spotlight = new THREE.SpotLight(0xfbbf24, 3, 12, Math.PI/5, .4);
-spotlight.position.set(2, 5, -8);
-spotlight.target.position.set(2, 0, -8);
-scene.add(spotlight, spotlight.target);
-
-// Warm ceiling strips
-const strip1 = new THREE.PointLight(0x2255aa, 1.5, 18);
-strip1.position.set(0, 5, 0);
-scene.add(strip1);
-
-// ─── ORBIT CONTROLS (manual) ───
-let isDragging=false, prevMX=0, prevMY=0;
-let rotY=0, rotX=0.5, zoom=1;
-const TARGET = new THREE.Vector3(0,0,0);
-
-mapArea.addEventListener('mousedown', e=>{isDragging=true;prevMX=e.clientX;prevMY=e.clientY});
-window.addEventListener('mouseup', ()=>{isDragging=false});
-window.addEventListener('mousemove', e=>{
-  if(!isDragging)return;
-  const dx=e.clientX-prevMX, dy=e.clientY-prevMY;
-  rotY-=dx*.008;
-  rotX=Math.max(.15,Math.min(1.1,rotX+dy*.005));
-  prevMX=e.clientX;prevMY=e.clientY;
-  updateCamera();
-});
-mapArea.addEventListener('wheel', e=>{
-  zoom = Math.max(.5, Math.min(2.5, zoom+e.deltaY*.001));
-  updateCamera();
-  e.preventDefault();
-},{passive:false});
-// Touch
-let prevTX=0,prevTY=0,prevDist=0;
-mapArea.addEventListener('touchstart',e=>{prevTX=e.touches[0].clientX;prevTY=e.touches[0].clientY;if(e.touches.length===2){prevDist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);}},{passive:true});
-mapArea.addEventListener('touchmove',e=>{
-  if(e.touches.length===1){const dx=e.touches[0].clientX-prevTX,dy=e.touches[0].clientY-prevTY;rotY-=dx*.008;rotX=Math.max(.15,Math.min(1.1,rotX+dy*.005));prevTX=e.touches[0].clientX;prevTY=e.touches[0].clientY;updateCamera();}
-  if(e.touches.length===2){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);zoom=Math.max(.5,Math.min(2.5,zoom-(d-prevDist)*.01));prevDist=d;updateCamera();}
+cwrap.addEventListener('wheel',e=>{zoom=Math.max(.35,Math.min(3.2,zoom+e.deltaY*.001));updateCam();e.preventDefault();},{passive:false});
+let pt=0,pt2=0,pDst=0;
+cwrap.addEventListener('touchstart',e=>{isDrag=true;pt=e.touches[0].clientX;pt2=e.touches[0].clientY;if(e.touches.length===2)pDst=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);},{passive:true});
+window.addEventListener('touchend',()=>isDrag=false);
+window.addEventListener('touchmove',e=>{
+  if(!isDrag)return;
+  if(e.touches.length===1){const dx=e.touches[0].clientX-pt,dy=e.touches[0].clientY-pt2;rotY-=dx*.006;rotX=Math.max(.2,Math.min(1.35,rotX+dy*.004));pt=e.touches[0].clientX;pt2=e.touches[0].clientY;updateCam();}
+  if(e.touches.length===2){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);zoom=Math.max(.35,Math.min(3.2,zoom-(d-pDst)*.005));pDst=d;updateCam();}
 },{passive:true});
+document.getElementById('zIn').onclick=()=>{zoom=Math.max(.35,zoom-.2);updateCam();};
+document.getElementById('zOut').onclick=()=>{zoom=Math.min(3.2,zoom+.2);updateCam();};
+document.getElementById('zRst').onclick=()=>{const c=CAM[activeSection];rotY=c.ry;rotX=c.rx;zoom=1;updateCam();};
 
-function updateCamera(){
-  const r=28*zoom;
-  camera.position.x=Math.sin(rotY)*Math.cos(rotX)*r;
-  camera.position.y=Math.sin(rotX)*r+2;
-  camera.position.z=Math.cos(rotY)*Math.cos(rotX)*r;
-  camera.lookAt(TARGET);
-}
-updateCamera();
+// ═══ RAYCASTING ════════════════════════════
 
-// Zoom buttons
-document.getElementById('zoomIn').onclick=()=>{zoom=Math.max(.5,zoom-.2);updateCamera()};
-document.getElementById('zoomOut').onclick=()=>{zoom=Math.min(2.5,zoom+.2);updateCamera()};
-document.getElementById('resetView').onclick=()=>{rotY=0;rotX=.5;zoom=1;updateCamera()};
+const rc=new THREE.Raycaster(),rmse=new THREE.Vector2();
+const ttEl=document.getElementById('ttEl');
 
-// ─── RAYCASTING (click/hover on gates) ───
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
-const tooltip = document.getElementById('mapTooltip');
-let hoveredObj = null;
+function pickColors(type){return FC[type]||{bg:'#dcfce7',c:'#059669'};}
 
-function getMouseNDC(e){
-  const rect = mapArea.getBoundingClientRect();
-  mouse.x = ((e.clientX-rect.left)/rect.width)*2-1;
-  mouse.y = -((e.clientY-rect.top)/rect.height)*2+1;
-}
-
-const FLIGHT_INFO = {
-  'B12': {flight:'BA447', dest:'London Heathrow', time:'14:35', boarding:'14:05', status:'BOARDING SOON', tag:'tag-boarding'},
-  'A04': {flight:'EK202', dest:'Dubai', time:'14:55', boarding:'14:25', status:'ON TIME', tag:'tag-open'},
-  'C22': {flight:'AA101', dest:'New York JFK', time:'15:10', boarding:'14:40', status:'ON TIME', tag:'tag-open'},
-  'A08': {flight:'LH456', dest:'Frankfurt', time:'15:20', boarding:'14:50', status:'DELAYED', tag:'tag-closed'},
-  'B18': {flight:'SQ317', dest:'Singapore', time:'15:45', boarding:'15:15', status:'ON TIME', tag:'tag-open'},
-  'C08': {flight:'AF116', dest:'Paris CDG', time:'16:00', boarding:'15:30', status:'ON TIME', tag:'tag-open'},
-};
-const FAC_INFO = {
-  'cafe':       {label:'Terminal Café', type:'Food & Beverage', info:'Open 06:00–23:00\nCoffee, pastries, light meals', status:'OPEN', tag:'tag-open'},
-  'restaurant': {label:'Sky Brasserie', type:'Restaurant', info:'Open 07:00–22:00\nFull service dining, bar available', status:'OPEN', tag:'tag-open'},
-  'bar':        {label:'Altitude Bar', type:'Bar & Drinks', info:'Open 09:00–Last Flight\nCocktails, wines, spirits', status:'OPEN', tag:'tag-open'},
-  'duty':       {label:'Duty Free', type:'Shopping', info:'Open 05:00–23:30\nPerfume, spirits, luxury goods', status:'OPEN', tag:'tag-open'},
-  'lounge':     {label:'Business Lounge', type:'Premium Lounge', info:'Open 05:00–23:00\nBusiness class & card holders only', status:'OPEN', tag:'tag-open'},
-  'toilet':     {label:'Restrooms', type:'Facilities', info:'24 hours · Accessible facilities\nShower rooms available (fee)', status:'OPEN', tag:'tag-open'},
-  'security':   {label:'Security', type:'Security Checkpoint', info:'Open 04:00–Last Flight\nCurrent wait: ~8 minutes', status:'OPEN', tag:'tag-open'},
-  'medical':    {label:'Medical Centre', type:'Healthcare', info:'Open 06:00–22:00\nFirst aid, pharmacy, nurse on duty', status:'OPEN', tag:'tag-open'},
-};
-
-mapArea.addEventListener('mousemove', e=>{
-  getMouseNDC(e);
-  raycaster.setFromCamera(mouse, camera);
-  const objs = [];
-  terminalGroup.traverse(c=>{if(c.isMesh && c.userData.type)objs.push(c);});
-  const hits = raycaster.intersectObjects(objs);
-  if(hits.length>0){
-    const hit = hits[0].object;
-    const data = hit.userData;
-    let name='', type='', info='', tagClass='', tagText='';
-    if(data.type==='gate'){
-      const fi = FLIGHT_INFO[data.id];
-      if(fi){name=`Gate ${data.id}`;type='Departure Gate';info=`${fi.flight} · ${fi.dest}\nBoarding: ${fi.boarding} · Departs: ${fi.time}`;tagText=fi.status;tagClass=fi.tag;}
-      else{name=`Gate ${data.id}`;type='Departure Gate';info='No flight assigned';tagText='AVAILABLE';tagClass='tag-open';}
-    }else if(data.type){
-      const fi=FAC_INFO[data.type];
-      if(fi){name=fi.label;type=fi.type;info=fi.info;tagText=fi.status;tagClass=fi.tag;}
-    }
-    if(name){
-      document.getElementById('tt-name').textContent=name;
-      document.getElementById('tt-type').textContent=type;
-      document.getElementById('tt-info').innerHTML=info.replace('\n','<br>');
-      document.getElementById('tt-tag').textContent=tagText;
-      document.getElementById('tt-tag').className='mt-tag '+tagClass;
-      const rect=mapArea.getBoundingClientRect();
-      let tx=e.clientX-rect.left+14, ty=e.clientY-rect.top-30;
-      if(tx+200>rect.width)tx=e.clientX-rect.left-210;
-      tooltip.style.left=tx+'px';tooltip.style.top=ty+'px';
-      tooltip.style.display='block';
-      canvas.style.cursor='pointer';
-    }
-  }else{
-    tooltip.style.display='none';
-    canvas.style.cursor='grab';
+function buildTTData(obj){
+  const d=obj.userData;
+  if(d.type==='gate'){
+    const fl=d.flight;const isMe=activeFlight&&activeFlight.gate===d.id;
+    const tc=isMe?{bg:'#bbf7d0',c:'#059669'}:{bg:'#dbeafe',c:'#1d6fd8'};
+    const statusStr=fl?`<span style="font-weight:700;color:${SC[fl.status]||'#475569'}">${SL[fl.status]||'—'}</span>`:'—';
+    return{
+      tagBg:tc.bg,tagC:tc.c,tagTxt:isMe?'YOUR GATE':'Departure Gate',
+      name:'Gate '+d.id,
+      type:fl?fl.airline:'No flight assigned',
+      info:fl?`<b>${fl.num}</b> · ${fl.dest}<br>🕐 Departs <b>${fl.time}</b> · Boards ${fl.boards}<br>Seat: ${fl.seat} · ${fl.cls}<br>Status: ${statusStr}${isMe?'<br><br>💚 <b>Navigate: click to set route</b>':''}`:'No flight currently at this gate'
+    };
   }
-});
-
-mapArea.addEventListener('click', e=>{
-  getMouseNDC(e);
-  raycaster.setFromCamera(mouse, camera);
-  const objs=[];
-  terminalGroup.traverse(c=>{if(c.isMesh && c.userData.type)objs.push(c);});
-  const hits=raycaster.intersectObjects(objs);
-  if(hits.length>0){
-    const data=hits[0].object.userData;
-    if(data.type==='gate' && data.id){
-      navigateToGate(data.id);
-    }
+  if(d.type==='facility'){
+    const f=d.fac;const pc=pickColors(f?.type);
+    return{
+      tagBg:pc.bg,tagC:pc.c,tagTxt:(f?.type||'facility').toUpperCase(),
+      name:d.name,type:'Terminal Facility',
+      info:f?`${f.sub}`:'Terminal facility'
+    };
   }
-});
-
-function navigateToGate(gateId){
-  const gd = GATE_DATA.find(g=>g.id===gateId);
-  if(!gd)return;
-  destGroup.position.set(gd.x, 0, gd.z);
-  destGroup.visible=true;
-  drawPath({x:-2,z:9.5},{x:gd.x,z:gd.z});
-  document.getElementById('rpSelected').textContent='Gate '+gateId;
-  document.getElementById('destName').textContent='Gate '+gateId;
-  const fi = FLIGHT_INFO[gateId];
-  if(fi){
-    document.getElementById('stepsList').innerHTML=`
-      <div class="ps-item"><div class="ps-num">1</div><div><div class="ps-text">Head toward the ${gateId.charAt(0)} Wing corridor</div><div class="ps-dist">~60m · 1 min</div></div></div>
-      <div class="ps-item"><div class="ps-num">2</div><div><div class="ps-text">Follow signs for Gates ${gateId.charAt(0)}01–${gateId.charAt(0)}20</div><div class="ps-dist">~40m</div></div></div>
-      <div class="ps-item"><div class="ps-num">3</div><div><div class="ps-text">Gate ${gateId} will be on ${Math.random()>.5?'your right':'your left'}</div><div class="ps-dist">~20m · Arrived ✓</div></div></div>
-    `;
-    document.getElementById('totalDist').textContent=`~${Math.round(80+Math.random()*80)}m · ${Math.ceil(1+Math.random()*3)} min`;
-  }
-  // Highlight gate
-  gates.forEach(g=>{
-    if(g.id===gateId){
-      g.pod.material = MAT.gateActive;
-    }else{
-      g.pod.material = MAT.gate;
-    }
-  });
+  return null;
 }
 
-// ─── PANEL TABS ───
-document.querySelectorAll('.ptab').forEach(tab=>{
-  tab.addEventListener('click',()=>{
-    document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('active'));
-    tab.classList.add('active');
-    ['flights','facilities','myflight'].forEach(id=>{
-      document.getElementById('tab-'+id).style.display='none';
-    });
-    document.getElementById('tab-'+tab.dataset.tab).style.display='block';
-  });
+cwrap.addEventListener('mousemove',e=>{
+  const rect=cwrap.getBoundingClientRect();
+  rmse.x=((e.clientX-rect.left)/rect.width)*2-1;
+  rmse.y=-((e.clientY-rect.top)/rect.height)*2+1;
+  rc.setFromCamera(rmse,camera);
+  const hits=rc.intersectObjects(rcTargets);
+  if(hits.length){
+    const td=buildTTData(hits[0].object);
+    if(td){
+      document.getElementById('ttTag').textContent=td.tagTxt;
+      document.getElementById('ttTag').style.cssText=`background:${td.tagBg};color:${td.tagC};display:inline-block;padding:2px 7px;border-radius:4px;font-size:.58rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px`;
+      document.getElementById('ttName').textContent=td.name;
+      document.getElementById('ttType').textContent=td.type;
+      document.getElementById('ttInfo').innerHTML=td.info;
+      let tx=e.clientX-rect.left+16,ty=e.clientY-rect.top-20;
+      if(tx+240>rect.width)tx=e.clientX-rect.left-250;
+      if(ty<10)ty=10;
+      ttEl.style.left=tx+'px';ttEl.style.top=ty+'px';ttEl.style.display='block';
+      canvas.style.cursor='pointer';return;
+    }
+  }
+  ttEl.style.display='none';canvas.style.cursor=isDrag?'grabbing':'grab';
 });
 
-// ─── FLIGHT ROW CLICKS ───
-document.querySelectorAll('.flight-row').forEach(row=>{
-  row.addEventListener('click',()=>{
-    document.querySelectorAll('.flight-row').forEach(r=>r.classList.remove('active'));
-    row.classList.add('active');
-    navigateToGate(row.dataset.gate);
-  });
+cwrap.addEventListener('click',e=>{
+  const rect=cwrap.getBoundingClientRect();
+  rmse.x=((e.clientX-rect.left)/rect.width)*2-1;
+  rmse.y=-((e.clientY-rect.top)/rect.height)*2+1;
+  rc.setFromCamera(rmse,camera);
+  const hits=rc.intersectObjects(rcTargets);
+  if(!hits.length)return;
+  const d=hits[0].object.userData;
+  if(d.type==='gate')navigateToGate(d.id);
+  else if(d.type==='facility')highlightFacility(d.id);
 });
 
-// ─── SEARCH ───
-document.getElementById('searchInput').addEventListener('input', e=>{
-  const q=e.target.value.toLowerCase();
+// ═══ FLIGHT FUNCTIONS ══════════════════════
+
+function doLookup(){
+  const q=document.getElementById('flInput').value.trim().toUpperCase();
   if(!q)return;
-  const gateMatch=GATE_DATA.find(g=>g.id.toLowerCase()===q||('gate '+g.id.toLowerCase())===q);
-  if(gateMatch){navigateToGate(gateMatch.id);e.target.value='';}
-});
+  const fl=FLIGHTS.find(f=>f.num===q);
+  if(!fl){showToast('⚠️','Flight '+q+' not found in T2 system. Try BA447, EK202, SQ317…');return;}
+  setFlight(fl);
+}
+document.getElementById('flInput').addEventListener('keydown',e=>{if(e.key==='Enter')doLookup();});
 
-// ─── CLOCK ───
+function setFlight(fl){
+  activeFlight=fl;
+  // Header pill
+  document.getElementById('flEntry').style.display='none';
+  const pill=document.getElementById('hpill');pill.style.display='flex';
+  document.getElementById('hpFl').textContent=fl.num;
+  document.getElementById('hpG').textContent='Gate '+fl.gate;
+  const ps=document.getElementById('hpS');ps.textContent=SL[fl.status]||fl.status;ps.className='hpill-s '+fl.status;
+  document.getElementById('myBadge').style.display='flex';
+  renderMyFlight(fl);
+  startCountdown(fl);
+  switchSection(fl.wing);
+  switchTab('myflight');
+  renderFlightList();
+  showToast('✈','Gate '+fl.gate+' · '+fl.dest+' · Departs '+fl.time);
+}
+
+function clearFlight(){
+  activeFlight=null;
+  document.getElementById('flEntry').style.display='flex';
+  document.getElementById('hpill').style.display='none';
+  document.getElementById('myBadge').style.display='none';
+  document.getElementById('flInput').value='';
+  if(cdTimer){clearInterval(cdTimer);cdTimer=null;}
+  renderMyFlightEmpty();
+  renderFlightList();
+  loadSec(activeSection);
+}
+
+function navigateToGate(gid){
+  const fl=GF[gid];
+  if(!fl&&!activeFlight){
+    showToast('ℹ️','Click any flight in Departures to set it as your flight first');return;
+  }
+  // If different section, switch to it
+  const wing=fl?fl.wing:FLIGHTS.find(f=>f.gate===gid)?.wing;
+  if(wing&&wing!==activeSection){switchSection(wing);setTimeout(()=>doNavigate(gid),200);}
+  else doNavigate(gid);
+}
+
+function doNavigate(gid){
+  const gp=getGateWP(gid);
+  if(!gp){showToast('⚠️','Gate '+gid+' not visible in this section');return;}
+  if(playerM)drawPath(playerM.position.x,playerM.position.z,gp.x,gp.z);
+  spawnDest(gp.x,gp.z);
+  showToast('🗺️','Route to Gate '+gid+' shown on map');
+}
+
+function highlightFacility(id){
+  hlFac=id;
+  const f=FAC.find(x=>x.id===id);
+  if(f&&f.sec!==activeSection){switchSection(f.sec);}
+  else{loadSec(activeSection);}
+  showToast('📍',f?(f.name+' · '+f.sub):'Facility highlighted');
+  // Highlight in facility list
+  document.querySelectorAll('.fi').forEach(el=>el.classList.toggle('hl',el.dataset.id===id));
+  switchTab('facilities');
+}
+
+// Countdown timer
+function startCountdown(fl){
+  if(cdTimer)clearInterval(cdTimer);
+  const parts=fl.boards.split(':');
+  const now=new Date();
+  const boardTime=new Date();boardTime.setHours(parseInt(parts[0]),parseInt(parts[1]),0,0);
+  cdSecs=Math.max(0,Math.floor((boardTime-now)/1000));
+  function tick(){
+    if(cdSecs<=0){clearInterval(cdTimer);cdTimer=null;const v=document.getElementById('cdv');if(v)v.textContent='Boarding Closed';return;}
+    const m=Math.floor(cdSecs/60),s=cdSecs%60;
+    const v=document.getElementById('cdv');
+    if(v)v.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    cdSecs--;
+  }
+  tick();cdTimer=setInterval(tick,1000);
+}
+
+// ═══ UI RENDERERS ══════════════════════════
+
+function renderFlightList(){
+  const el=document.getElementById('flList');el.innerHTML='';
+  FLIGHTS.forEach(fl=>{
+    const isSel=activeFlight&&activeFlight.num===fl.num;
+    const gc={boarding:'boarding',delayed:'delayed'};
+    const bc={ontime:'bg',boarding:'ba',delayed:'br',departed:'bx',closed:'bx'};
+    el.innerHTML+=`<div class="fc${isSel?' sel':''}" onclick="setFlight(FLIGHTS.find(f=>f.num==='${fl.num}'))">
+      <div class="fc-top"><span class="fc-num">${fl.num}</span><span class="fc-time">${fl.time}</span></div>
+      <div class="fc-dest">${fl.dest}</div>
+      <div class="fc-al">${fl.airline}</div>
+      <div class="fc-btm">
+        <span class="gc${gc[fl.status]?' '+gc[fl.status]:''}">${fl.gate}</span>
+        <span class="badge ${bc[fl.status]||'bx'}">${SL[fl.status]||fl.status}</span>
+      </div>
+    </div>`;
+  });
+}
+
+function renderMyFlight(fl){
+  const origCity=fl.dest.substring(0,3).toUpperCase();
+  const spMap={ontime:'On Time',boarding:'Boarding!',delayed:'Delayed',closed:'Gate Closed'};
+  // Build wayfinding steps
+  const stepsByWing={
+    wingA:[
+      {txt:'Exit Security into Main Terminal',dist:'~60m · 1 min'},
+      {txt:'Follow signs for Wing A (left corridor)',dist:'~90m · 1.5 min'},
+      {txt:'Gate '+fl.gate+' is on your left — look for the '+( fl.status==='boarding'?'amber boarding light':'blue gate sign'),dist:'~20m · Arrived'},
+    ],
+    wingB:[
+      {txt:'Exit Security into Main Terminal',dist:'~60m · 1 min'},
+      {txt:'Head straight — Wing B is the central corridor',dist:'~70m · 1 min'},
+      {txt:'Gate '+fl.gate+' is '+(parseInt(fl.gate.slice(1))<=10?'in the first half':'in the second half')+' of Wing B',dist:'~25m · Arrived'},
+    ],
+    wingC:[
+      {txt:'Exit Security into Main Terminal',dist:'~60m · 1 min'},
+      {txt:'Follow Wing C signs (right corridor)',dist:'~90m · 1.5 min'},
+      {txt:'Gate '+fl.gate+' is on your right side of Wing C',dist:'~20m · Arrived'},
+    ],
+  };
+  const steps=stepsByWing[fl.wing]||stepsByWing.wingB;
+  const stepsHTML=steps.map((s,i)=>`<div class="step"><div class="stn">${i+1}</div><div><div class="stt">${s.txt}</div><div class="std">${s.dist}</div></div></div>`).join('');
+
+  document.getElementById('mfContent').innerHTML=`
+  <div class="mfc">
+    <div class="mfc-glow"></div>
+    <div class="mfc-eye">${fl.airline} · ${fl.cls}</div>
+    <div class="mfc-route">
+      <span class="mfc-city">SYD</span>
+      <span class="mfc-arr">✈</span>
+      <span class="mfc-city">${origCity}</span>
+    </div>
+    <div class="mfc-grid">
+      <div class="mfc-gi"><label>Flight</label><span>${fl.num}</span></div>
+      <div class="mfc-gi"><label>Seat</label><span>${fl.seat}</span></div>
+      <div class="mfc-gi"><label>Bags</label><span>${fl.bags}</span></div>
+      <div class="mfc-gi"><label>Boards</label><span>${fl.boards}</span></div>
+      <div class="mfc-gi"><label>Departs</label><span>${fl.time}</span></div>
+      <div class="mfc-gi"><label>Terminal</label><span>T2 Int'l</span></div>
+    </div>
+    <div class="mfc-gr">
+      <div><div class="mfc-gl">Your Gate</div><div class="mfc-gn">${fl.gate}</div></div>
+      <div class="mfc-sp">${spMap[fl.status]||fl.status}</div>
+    </div>
+    <div class="mfc-cd">
+      <span class="mfc-cdl">Boarding closes in</span>
+      <span class="mfc-cdv" id="cdv">--:--</span>
+    </div>
+    <button class="btn-nav" onclick="navigateToGate('${fl.gate}')">Navigate to Gate ${fl.gate} →</button>
+  </div>
+
+  <div style="padding:0 10px 8px">
+    <div class="wfc">
+      <div class="wfh">
+        <div><span class="wfl">From</span><span class="wfv">📍 Security Exit</span></div>
+        <span class="wfa">→</span>
+        <div><span class="wfl">To</span><span class="wfv">✈ Gate ${fl.gate}</span></div>
+      </div>
+      <div class="wfs">${stepsHTML}</div>
+      <div class="wft"><span class="wftl">Total walking distance</span><span class="wftv">~150–200m · 3–4 min</span></div>
+    </div>
+
+    <div style="margin-top:8px;padding:9px 11px;background:#fffbeb;border:1px solid #fde68a;border-radius:6px">
+      <div style="font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#d97706;margin-bottom:4px">⚡ Quick Tips</div>
+      <div style="font-size:.7rem;color:#92400e;line-height:1.6">
+        ${fl.status==='boarding'?'🔴 <b>Boarding now!</b> Head to the gate immediately.<br>':''}
+        ${fl.status==='delayed'?'🟡 <b>Flight delayed.</b> Check screens for updates.<br>':''}
+        🔋 Charging stations available near Gate ${fl.gate}<br>
+        🚻 Restrooms 40m before your gate<br>
+        ${fl.cls==='Business'?'💺 Business Lounge open in Wing B L2':'🛒 Grab & Go market in Main Terminal'}
+      </div>
+    </div>
+  </div>`;
+
+  // Re-run countdown with the restored element
+  if(cdSecs>0){
+    function tick2(){
+      const v=document.getElementById('cdv');
+      if(!v||cdSecs<=0){return;}
+      const m=Math.floor(cdSecs/60),s=cdSecs%60;
+      v.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    }
+    tick2();
+  }
+}
+
+function renderMyFlightEmpty(){
+  document.getElementById('mfContent').innerHTML=`
+  <div class="nf">
+    <div class="nf-p">✈</div>
+    <div class="nf-t">Enter Your Flight Number</div>
+    <div class="nf-s">Type your flight number at the top and press Find to see your gate, boarding time, and walking directions.</div>
+    <div class="nf-dl">Try a demo flight:</div>
+    <button class="nf-b" onclick="setFlight(FLIGHTS.find(f=>f.num==='BA447'))"><span>BA447 · London Heathrow</span><span class="nf-bg">Gate B12</span></button>
+    <button class="nf-b" onclick="setFlight(FLIGHTS.find(f=>f.num==='EK202'))"><span>EK202 · Dubai International</span><span class="nf-bg">Gate A04</span></button>
+    <button class="nf-b" onclick="setFlight(FLIGHTS.find(f=>f.num==='SQ317'))"><span>SQ317 · Singapore Changi</span><span class="nf-bg">Gate C14</span></button>
+    <button class="nf-b" onclick="setFlight(FLIGHTS.find(f=>f.num==='LH456'))"><span>LH456 · Frankfurt (Delayed)</span><span class="nf-bg" style="color:#dc2626">Gate A08</span></button>
+  </div>`;
+}
+
+function renderFacilities(){
+  const cats=[
+    {key:'food',label:'🍽 Food & Drink'},
+    {key:'shop',label:'🛍 Shopping'},
+    {key:'lounge',label:'💺 Lounges'},
+    {key:'service',label:'🔧 Services'},
+    {key:'security',label:'🔒 Security & Entry'},
+  ];
+  let html='';
+  cats.forEach(cat=>{
+    const items=FAC.filter(f=>f.type===cat.key);
+    if(!items.length)return;
+    html+=`<div class="fsh"><div class="fsh-t">${cat.label}</div>`;
+    items.forEach(f=>{
+      const hl=hlFac===f.id;
+      html+=`<div class="fi${hl?' hl':''}" data-id="${f.id}" onclick="highlightFacility('${f.id}')">
+        <div class="fii ${f.type}">${f.icon}</div>
+        <div><div class="fin">${f.name}</div><div class="fis">${f.sub.split('·')[0].trim()}</div></div>
+        <span class="fio">Open</span>
+      </div>`;
+    });
+    html+='</div>';
+  });
+  document.getElementById('facContent').innerHTML=html;
+}
+
+// ═══ SEARCH ════════════════════════════════
+
+const srchInp=document.getElementById('srchInp');
+const sdrop=document.getElementById('sdrop');
+
+srchInp.addEventListener('input',()=>{
+  const q=srchInp.value.trim().toLowerCase();
+  if(q.length<1){sdrop.classList.remove('open');return;}
+  const results=[];
+  // Search flights
+  FLIGHTS.forEach(f=>{
+    if(f.num.toLowerCase().includes(q)||f.dest.toLowerCase().includes(q)||f.gate.toLowerCase().includes(q)){
+      results.push({icon:'✈',name:f.num+' · '+f.dest,sub:'Gate '+f.gate+' · '+SL[f.status],tag:f.gate,action:()=>setFlight(f)});
+    }
+  });
+  // Search facilities
+  FAC.forEach(f=>{
+    if(f.name.toLowerCase().includes(q)||f.sub.toLowerCase().includes(q)){
+      results.push({icon:f.icon,name:f.name,sub:f.sub.split('·')[0].trim(),tag:f.type,action:()=>highlightFacility(f.id)});
+    }
+  });
+  if(!results.length){sdrop.classList.remove('open');return;}
+  sdrop.innerHTML=results.slice(0,7).map((r,i)=>`
+    <div class="sdi" onclick="sdropClick(${i})">
+      <span class="sdi-ico">${r.icon}</span>
+      <div><div class="sdi-name">${r.name}</div><div class="sdi-sub">${r.sub}</div></div>
+      <span class="sdi-tag">${r.tag}</span>
+    </div>`).join('');
+  sdrop._actions=results.slice(0,7).map(r=>r.action);
+  sdrop.classList.add('open');
+});
+function sdropClick(i){sdrop._actions[i]();sdrop.classList.remove('open');srchInp.value='';}
+document.addEventListener('click',e=>{if(!document.getElementById('srchWrap').contains(e.target))sdrop.classList.remove('open');});
+
+// ═══ TAB & SECTION SWITCHING ═══════════════
+
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
+  document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('active',p.id==='pane-'+name));
+}
+function switchSection(sec){loadSec(sec);}
+
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>switchTab(t.dataset.tab)));
+document.querySelectorAll('.sb').forEach(b=>b.addEventListener('click',()=>loadSec(b.dataset.sec)));
+document.querySelectorAll('.fb').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.fb').forEach(x=>x.classList.remove('active'));b.classList.add('active');
+  showToast('ℹ️','Level '+b.dataset.fl+' map coming soon');
+}));
+
+// ═══ TOAST ═════════════════════════════════
+
+let toastTimer=null;
+function showToast(ico,txt){
+  document.getElementById('tIco').textContent=ico;
+  document.getElementById('tTxt').textContent=txt;
+  const t=document.getElementById('toast');t.classList.add('show');
+  if(toastTimer)clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),4000);
+}
+function hideToast(){document.getElementById('toast').classList.remove('show');}
+
+// ═══ CLOCK ═════════════════════════════════
+
 function updateClock(){
   const now=new Date();
-  document.getElementById('clockDisplay').textContent=
-    now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  const h=String(now.getHours()).padStart(2,'0'),m=String(now.getMinutes()).padStart(2,'0'),s=String(now.getSeconds()).padStart(2,'0');
+  document.getElementById('clk').textContent=h+':'+m+':'+s;
 }
-updateClock();
-setInterval(updateClock,1000);
+updateClock();setInterval(updateClock,1000);
 
-// ─── COUNTDOWN ───
-let secs = 27*60;
-setInterval(()=>{
-  secs--;
-  if(secs<0){clearInterval();return;}
-  const m=Math.floor(secs/60), s=secs%60;
-  document.getElementById('countdown').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-  if(secs===15*60){
-    document.getElementById('boardingAlert').classList.add('show');
-    setTimeout(()=>document.getElementById('boardingAlert').classList.remove('show'),8000);
+// ═══ LABEL PROJECTION ══════════════════════
+
+function projectLabels(){
+  const w=cwrap.clientWidth,h=cwrap.clientHeight;
+  lblEls.forEach(({el,wx,wy,wz})=>{
+    const v=new THREE.Vector3(wx,wy,wz);
+    v.project(camera);
+    const sx=(v.x*.5+.5)*w,sy=(-.5*v.y+.5)*h;
+    if(v.z>1){el.style.display='none';return;}
+    el.style.display='block';el.style.left=sx+'px';el.style.top=sy+'px';
+  });
+}
+
+// ═══ ANIMATE ═══════════════════════════════
+
+let t=0;
+function animate(){
+  requestAnimationFrame(animate);t+=.014;
+  // Pulse player marker ring
+  if(playerM&&playerM.userData.ring){
+    playerM.userData.ring.material.opacity=.4+Math.sin(t*2.5)*.22;
+    playerM.userData.ring.scale.setScalar(1+Math.sin(t*2.5)*.12);
   }
-},1000);
-
-// ─── FLOOR SELECTOR ───
-document.querySelectorAll('.floor-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.floor-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
+  // Pulse dest marker ring
+  if(destM&&destM.userData.ring){
+    destM.userData.ring.material.opacity=.4+Math.sin(t*2.5+1)*.22;
+    destM.userData.ring.scale.setScalar(1+Math.sin(t*2.5+1)*.12);
+  }
+  // Pulse gate rings for boarding/my gate
+  sg.children.forEach(child=>{
+    if(child.isGroup&&child.userData.pulseRing){
+      child.userData.pulseRing.material.opacity=.35+Math.sin(t*2)*.28;
+      child.userData.pulseRing.scale.setScalar(1+Math.sin(t*2)*.1);
+    }
   });
-});
-
-// ─── LABEL PROJECT POSITIONS ───
-const v3 = new THREE.Vector3();
-function projectLabel(worldX, worldY, worldZ){
-  v3.set(worldX, worldY, worldZ);
-  v3.project(camera);
-  const rect = mapArea.getBoundingClientRect();
-  const x = (v3.x*.5+.5)*rect.width;
-  const y = (-v3.y*.5+.5)*rect.height;
-  return {x, y, visible: v3.z < 1};
+  projectLabels();
+  renderer.render(scene,camera);
 }
 
-// ─── ANIMATE ───
-let t = 0;
-(function animate(){
-  requestAnimationFrame(animate);
-  t += .016;
+// ═══ INIT ══════════════════════════════════
 
-  // Pulse player ring
-  ring.material.opacity = .4+.3*Math.sin(t*3);
-  ring.scale.setScalar(1+.15*Math.sin(t*3));
-
-  // Pulse dest ring
-  destRing.material.opacity = .4+.3*Math.sin(t*3+Math.PI);
-  destRing.scale.setScalar(1+.15*Math.sin(t*3+Math.PI));
-
-  // Bobbing markers
-  playerGroup.position.y = Math.sin(t*2)*.05;
-  destGroup.position.y = Math.sin(t*2+1)*.05;
-
-  // Gate B12 spotlight pulse
-  spotlight.intensity = 2.5+.5*Math.sin(t*1.5);
-
-  // Update label positions
-  labels.forEach(lbl=>{
-    const p = projectLabel(lbl.wx, lbl.wy||1.5, lbl.wz);
-    lbl.el.style.left = p.x+'px';
-    lbl.el.style.top = p.y+'px';
-    lbl.el.style.opacity = p.visible ? '1' : '0';
-  });
-
-  renderer.render(scene, camera);
-})();
+loadSec('main');
+renderFlightList();
+renderMyFlightEmpty();
+renderFacilities();
+updateCam();
+animate();
 </script>
 </body>
 </html>
