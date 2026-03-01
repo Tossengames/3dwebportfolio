@@ -368,42 +368,52 @@ let activeFlight=null,activeSection='main',hlFac=null,cdTimer=null,cdSecs=0;
 const canvas=document.getElementById('apc'),cwrap=document.getElementById('cwrap');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
 renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-renderer.setClearColor(0xf0f4f8,1);
+renderer.setClearColor(0x1a2a3a,1);
 renderer.shadowMap.enabled=true;
 renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 const scene=new THREE.Scene();
-scene.background=new THREE.Color(0xf0f4f8);
-scene.fog=new THREE.Fog(0xf0f4f8,42,68);
+scene.background=new THREE.Color(0xd8e4f0);
+scene.fog=new THREE.Fog(0xd8e4f0,38,65);
 const camera=new THREE.PerspectiveCamera(42,1,.1,200);
 const camTgt=new THREE.Vector3();
 function resz(){const w=cwrap.clientWidth,h=cwrap.clientHeight;renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();}
 resz();window.addEventListener('resize',resz);
 
-// LIGHTS
-scene.add(new THREE.AmbientLight(0xffffff,3.4));
-const sun=new THREE.DirectionalLight(0xfff8f0,2.6);sun.position.set(10,18,8);sun.castShadow=true;
-sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-30;sun.shadow.camera.right=30;sun.shadow.camera.top=30;sun.shadow.camera.bottom=-30;sun.shadow.camera.far=80;scene.add(sun);
-const fill=new THREE.DirectionalLight(0xe8f0ff,1.2);fill.position.set(-6,8,-6);scene.add(fill);
-const rim=new THREE.DirectionalLight(0xfff0e8,.65);rim.position.set(2,5,-10);scene.add(rim);
+// LIGHTS — balanced so shadows and depth show
+scene.add(new THREE.AmbientLight(0xffffff,0.85));
+const sun=new THREE.DirectionalLight(0xfff8f0,2.2);sun.position.set(12,20,10);sun.castShadow=true;
+sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-34;sun.shadow.camera.right=34;sun.shadow.camera.top=34;sun.shadow.camera.bottom=-34;sun.shadow.camera.far=90;sun.shadow.bias=-0.001;scene.add(sun);
+const fill=new THREE.DirectionalLight(0xc8d8f0,1.0);fill.position.set(-8,10,-6);scene.add(fill);
+const rim=new THREE.DirectionalLight(0xffe8d0,.5);rim.position.set(0,4,-12);scene.add(rim);
+[-8,0,8].forEach(x=>{const pt=new THREE.PointLight(0xfff5e0,0.55,20);pt.position.set(x,3.8,0);scene.add(pt);});
 
-// MATERIALS
-function M(col,rough=.65,metal=0,em=0,ei=0){return new THREE.MeshStandardMaterial({color:col,roughness:rough,metalness:metal,emissive:new THREE.Color(em),emissiveIntensity:ei});}
+// MATERIALS — strongly contrasting so every element reads
+function M(col,rough=.55,metal=0,em=0,ei=0){return new THREE.MeshStandardMaterial({color:col,roughness:rough,metalness:metal,emissive:new THREE.Color(em),emissiveIntensity:ei});}
 function MG(col,rough,metal,op){return new THREE.MeshStandardMaterial({color:col,roughness:rough,metalness:metal,transparent:true,opacity:op,side:THREE.DoubleSide});}
 const MAT={
-  floor:M(0xf8fafc,.88),floorL:M(0xe8eef5,.9),wall:M(0xedf1f6,.68),wallD:M(0xd8dee8,.72),
-  ceil:M(0xfafbfc,.82),struct:M(0xf0f4f8,.62,.02),
-  glass:MG(0xbae6fd,.08,.14,.17),glassD:MG(0x93c5fd,.1,.2,.32),
-  yellow:M(0xfde68a,.5,.02,0xfbbf24,.14),
-  checkin:M(0xfef9c3,.72),security:M(0xfee2e2,.68,0,0xfee2e2,.04),
-  food:M(0xfef3c7,.72,0,0xfef3c7,.04),shop:M(0xede9fe,.72,0,0xede9fe,.04),
-  lounge:M(0xe0f2fe,.68),service:M(0xdcfce7,.72),
-  gate:M(0xdbeafe,.42,.08,0x3b82f6,.14),
-  gHL:M(0xbbf7d0,.3,.08,0x10b981,.75),
-  gBd:M(0xfef3c7,.3,.06,0xf59e0b,.6),
-  gDl:M(0xfee2e2,.3,.06,0xef4444,.6),
-  jetway:M(0xdde2e8,.72,.05),pillar:M(0xf1f5f9,.5,.04),
-  you:M(0xf59e0b,.22,.1,0xf59e0b,1.5),
-  dest:M(0x10b981,.22,.1,0x10b981,1.5),
+  floor:  M(0xddd0b8,.75),   // warm stone floor
+  floorL: M(0xb8aa94,.82),   // darker grid — visible contrast
+  wall:   M(0xb0bac8,.62),   // cool medium grey walls
+  wallD:  M(0x8090a4,.68),   // dark grey for dividers
+  ceil:   M(0xccd4dc,.68),   // lighter grey ceiling
+  struct: M(0x708090,.58,.06), // blue-grey for seats/desks
+  glass:  MG(0x88c4e8,.08,.35,.25),
+  glassD: MG(0x4488cc,.12,.45,.42),
+  yellow: M(0xf5c518,.38,.02,0xf5c518,.45),  // bright yellow guide stripe
+  checkin: M(0xe8d878,.65,0,0xd4b820,.12),   // yellow zone
+  security:M(0xe08888,.62,0,0xc83030,.18),   // red zone
+  food:    M(0xe8b060,.62,0,0xd07818,.18),   // amber zone
+  shop:    M(0xa888d8,.62,0,0x8050c0,.18),   // purple zone
+  lounge:  M(0x60b0d8,.62,0,0x2878b0,.22),   // blue zone
+  service: M(0x78c890,.62,0,0x28904c,.18),   // green zone
+  gate:    M(0x4878c8,.32,.12,0x2050b0,.45), // solid BLUE gate pad
+  gHL:     M(0x28b868,.25,.12,0x109848,.95), // bright GREEN — your gate
+  gBd:     M(0xd89020,.25,.08,0xc07800,.88), // amber — boarding
+  gDl:     M(0xc83030,.25,.08,0xb02020,.88), // red — delayed
+  jetway:  M(0x607080,.68,.12),
+  pillar:  M(0xa0aabb,.48,.08),
+  you:     M(0xf59e0b,.12,.18,0xf59e0b,2.2),
+  dest:    M(0x10b981,.12,.18,0x10b981,2.2),
 };
 
 let sg=new THREE.Group();scene.add(sg);
@@ -413,11 +423,17 @@ const lblCont=document.createElement('div');lblCont.style.cssText='position:abso
 
 function bx(w,h,d,mat,x=0,y=0,z=0,ud={}){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;m.userData=ud;sg.add(m);return m;}
 function cy(rT,rB,h,s,mat,x=0,y=0,z=0,ud={}){const m=new THREE.Mesh(new THREE.CylinderGeometry(rT,rB,h,s),mat);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;m.userData=ud;sg.add(m);return m;}
-function col(x,z){cy(.18,.18,3.6,12,MAT.pillar,x,1.8,z);}
-function lbl(txt,wx,wy,wz,c='#334155',sz='.59rem',bold=false){
+function col(x,z){
+  // Base
+  cy(.22,.25,4.2,12,MAT.pillar,x,2.1,z);
+  // Cap
+  bx(.55,.18,.55,new THREE.MeshStandardMaterial({color:0x8090a4,roughness:.45,metalness:.1}),x,4.3,z);
+}
+function lbl(txt,wx,wy,wz,c='#1a2a3a',sz='.59rem',bold=false){
   const el=document.createElement('div');
-  el.style.cssText=`position:absolute;font-family:Inter,sans-serif;font-size:${sz};font-weight:${bold?700:500};color:${c};white-space:nowrap;transform:translate(-50%,-50%);text-shadow:0 1px 4px rgba(255,255,255,.98),0 0 8px rgba(255,255,255,.8);letter-spacing:.02em;pointer-events:none`;
+  el.style.cssText=`position:absolute;font-family:Inter,sans-serif;font-size:${sz};font-weight:${bold?700:500};color:${c};white-space:nowrap;transform:translate(-50%,-50%);background:rgba(255,255,255,.75);padding:1px 5px;border-radius:3px;letter-spacing:.02em;pointer-events:none;backdrop-filter:blur(2px)`;
   el.textContent=txt;lblCont.appendChild(el);lblEls.push({el,wx,wy,wz});return el;
+}
 }
 
 function buildGate(id,x,z,rot=0){
@@ -428,18 +444,20 @@ function buildGate(id,x,z,rot=0){
   let gm=MAT.gate;
   if(isMe)gm=MAT.gHL;else if(isBd)gm=MAT.gBd;else if(isDl)gm=MAT.gDl;
   const grp=new THREE.Group();grp.position.set(x,0,z);grp.rotation.y=rot;
-  const gf=new THREE.Mesh(new THREE.BoxGeometry(2.8,.1,2.2),gm);gf.position.y=.05;gf.castShadow=true;gf.receiveShadow=true;gf.userData={type:'gate',id,flight:fl,grpX:x,grpZ:z};grp.add(gf);rcTargets.push(gf);
-  // Seating row
-  const st=new THREE.Mesh(new THREE.BoxGeometry(2.4,.04,.95),MAT.struct);st.position.set(0,.17,.5);grp.add(st);
+  const gf=new THREE.Mesh(new THREE.BoxGeometry(2.8,.22,2.2),gm);gf.position.y=.11;gf.castShadow=true;gf.receiveShadow=true;gf.userData={type:'gate',id,flight:fl,grpX:x,grpZ:z};grp.add(gf);rcTargets.push(gf);
+  // Seating row — clearly visible bench
+  const st=new THREE.Mesh(new THREE.BoxGeometry(2.4,.12,.95),MAT.struct);st.position.set(0,.28,.5);grp.add(st);
+  // Seat backs
+  const sb=new THREE.Mesh(new THREE.BoxGeometry(2.4,.5,.08),MAT.struct);sb.position.set(0,.52,.95);grp.add(sb);
   // Desk
-  const dk=new THREE.Mesh(new THREE.BoxGeometry(.78,.52,.4),MAT.struct);dk.position.set(0,.31,-.58);dk.castShadow=true;grp.add(dk);
-  // Screen
-  const sc=new THREE.Mesh(new THREE.BoxGeometry(.62,.36,.04),MAT.glassD);sc.position.set(0,.8,-.76);grp.add(sc);
-  // Jetway
-  const jw=new THREE.Mesh(new THREE.BoxGeometry(.48,.36,1.7),MAT.jetway);jw.position.set(0,.27,-1.45);jw.castShadow=true;grp.add(jw);
+  const dk=new THREE.Mesh(new THREE.BoxGeometry(.78,.62,.44),MAT.struct);dk.position.set(0,.36,-.62);dk.castShadow=true;grp.add(dk);
+  // Screen — bright blue glow
+  const sc=new THREE.Mesh(new THREE.BoxGeometry(.62,.38,.05),new THREE.MeshStandardMaterial({color:0x1a6fd8,roughness:.1,metalness:.3,emissive:new THREE.Color(0x1a6fd8),emissiveIntensity:.8}));sc.position.set(0,.82,-.78);grp.add(sc);
+  // Jetway — darker distinct color
+  const jw=new THREE.Mesh(new THREE.BoxGeometry(.52,.44,1.9),MAT.jetway);jw.position.set(0,.31,-1.55);jw.castShadow=true;grp.add(jw);
   // Overhead sign
-  const sm=isMe?MAT.gHL:(isBd?MAT.gBd:MAT.glassD);
-  const sg2=new THREE.Mesh(new THREE.BoxGeometry(.82,.17,.05),sm);sg2.position.set(0,1.4,-.78);grp.add(sg2);
+  const sm=isMe?MAT.gHL:(isBd?MAT.gBd:new THREE.MeshStandardMaterial({color:0x334455,roughness:.3,metalness:.2,emissive:new THREE.Color(0x1a3060),emissiveIntensity:.4}));
+  const sg2=new THREE.Mesh(new THREE.BoxGeometry(.88,.2,.07),sm);sg2.position.set(0,1.45,-.82);grp.add(sg2);
   if(isMe){
     // Pulsing glow ring
     const rg=new THREE.Mesh(new THREE.RingGeometry(.5,.7,32),new THREE.MeshBasicMaterial({color:0x10b981,transparent:true,opacity:.6,side:THREE.DoubleSide}));
@@ -464,52 +482,65 @@ function buildFac(f,x,z,size=1.5){
 // ═══ SECTION BUILDERS ═══════════════════════
 
 function buildMain(){
-  bx(30,.14,16,MAT.floor,0,.07,0);
-  for(let i=-7;i<=7;i+=3.5){bx(.07,.15,16,MAT.floorL,i,.09,0);}
-  for(let j=-7;j<=7;j+=3.5){bx(30,.15,.07,MAT.floorL,0,.09,j);}
-  bx(.5,.15,16,MAT.yellow,0,.1,0);bx(30,.15,.5,MAT.yellow,0,.1,0);
-  // Walls
-  bx(.16,3.8,16,MAT.wall,-15,1.9,0);bx(.16,3.8,16,MAT.wall,15,1.9,0);
-  bx(30,3.8,.16,MAT.wall,0,1.9,-8);bx(30,3.8,.16,MAT.glass,0,1.9,8);
-  // Ceiling + skylights
-  bx(30,.2,16,MAT.ceil,0,3.88,0);
-  [-10,0,10].forEach(x=>bx(3.5,.07,5,MAT.glassD,x,3.9,0));
-  // Columns
+  // Ground plane under everything
+  bx(60,.08,60,new THREE.MeshStandardMaterial({color:0xb8c8d8,roughness:.95}),0,-.04,0);
+  // Main concourse floor — thicker slab
+  bx(30,.28,16,MAT.floor,0,.14,0);
+  // Floor grid tiles — visible contrast
+  for(let i=-7;i<=7;i+=3.5){bx(.12,.29,16,MAT.floorL,i,.145,0);}
+  for(let j=-7;j<=7;j+=3.5){bx(30,.29,.12,MAT.floorL,0,.145,j);}
+  // Central yellow guide stripe — wide and bright
+  bx(.7,.3,16,MAT.yellow,0,.15,0);bx(30,.3,.7,MAT.yellow,0,.15,0);
+  // Walls — tall and solid
+  bx(.35,4.2,16,MAT.wall,-15,2.1,0);bx(.35,4.2,16,MAT.wall,15,2.1,0);
+  bx(30,4.2,.35,MAT.wall,0,2.1,-8);
+  // Glass front facade — blue tinted, visible
+  bx(30,4.2,.18,MAT.glass,0,2.1,8);
+  // Ceiling
+  bx(30,.3,16,MAT.ceil,0,4.35,0);
+  // Skylights — glowing blue
+  [-10,0,10].forEach(x=>bx(3.5,.12,5,MAT.glassD,x,4.38,0));
+  // Columns — thick and prominent
   [-11,11].forEach(cx=>[-5,0,5].forEach(cz=>col(cx,cz)));
-  // Info desk (clickable)
-  const id=cy(1.85,2.0,.58,24,MAT.struct,0,.37,0,{type:'facility',id:'info',name:'Information Desk',fac:FAC.find(f=>f.id==='info')});rcTargets.push(id);
-  cy(1.84,1.84,.03,24,MAT.gHL,0,.69,0);
-  lbl('ℹ️ Information',0,1.32,0,'#1d6fd8','.61rem',true);
-  [-1,1].forEach(s=>bx(.88,.4,.06,MAT.glassD,s*.82,1.53,0));
-  // Duty Free (clickable)
-  const df=bx(5.5,.1,4.5,MAT.shop,-10.5,.06,-2,{type:'facility',id:'dutyfree',name:'World Duty Free',fac:FAC.find(f=>f.id==='dutyfree')});rcTargets.push(df);
-  bx(5.5,2.6,4.5,MAT.glassD,-10.5,1.44,-2);bx(5.5,2.6,.06,MAT.glassD,-10.5,1.44,.42);
-  lbl('🛍 World Duty Free',-10.5,1.08,-2,'#7c3aed','.61rem',true);
-  // Terminal Café (clickable)
-  const tc=bx(4,.1,3.8,MAT.food,10.5,.06,-2,{type:'facility',id:'cafe1',name:'Terminal Café',fac:FAC.find(f=>f.id==='cafe1')});rcTargets.push(tc);
-  bx(4,2.2,3.8,MAT.wall,10.5,1.18,-2);bx(4,2.2,.06,MAT.glassD,10.5,1.18,.28);
-  lbl('☕ Terminal Café',10.5,1.08,-2,'#d97706','.61rem',true);
-  // Electronics (clickable)
-  const el=bx(3.5,.1,3,MAT.shop,-10.5,.06,3.5,{type:'facility',id:'electronics',name:'Tech & Electronics',fac:FAC.find(f=>f.id==='electronics')});rcTargets.push(el);
-  bx(3.5,2,3,MAT.glassD,-10.5,1.08,3.5);
-  lbl('💻 Electronics',-10.5,.98,3.5,'#7c3aed','.59rem',true);
-  // Grab & Go (clickable)
-  const gg=bx(3,.1,2.5,MAT.food,10.5,.06,3.5,{type:'facility',id:'grab1',name:'Grab & Go Market',fac:FAC.find(f=>f.id==='grab1')});rcTargets.push(gg);
-  bx(3,1.8,2.5,MAT.wall,10.5,.97,3.5);
-  lbl('🛒 Grab & Go',10.5,.97,3.5,'#d97706','.59rem',true);
-  // Hotel connector sign
-  bx(3,.26,.06,MAT.lounge,0,2.62,-7.9);lbl('🏨 Hotel ↑',0,2.86,-7.9,'#0369a1','.59rem',true);
-  // Wing direction signs
+  // Info desk
+  const id=cy(1.85,2.0,.72,24,MAT.struct,0,.44,0,{type:'facility',id:'info',name:'Information Desk',fac:FAC.find(f=>f.id==='info')});rcTargets.push(id);
+  cy(1.84,1.84,.04,24,MAT.gHL,0,.82,0);
+  lbl('ℹ️ Information',0,1.4,0,'#1d4ed8','.63rem',true);
+  [-1,1].forEach(s=>bx(.88,.44,.08,MAT.glassD,s*.82,1.6,0));
+  // Duty Free — solid shop with thick walls
+  const df=bx(5.5,.28,4.5,MAT.shop,-10.5,.14,-2,{type:'facility',id:'dutyfree',name:'World Duty Free',fac:FAC.find(f=>f.id==='dutyfree')});rcTargets.push(df);
+  bx(5.5,2.8,4.5,new THREE.MeshStandardMaterial({color:0x9070cc,roughness:.5,metalness:.1,emissive:new THREE.Color(0x6040a0),emissiveIntensity:.12}),-10.5,1.68,-2);
+  bx(5.5,2.8,.1,MAT.glassD,-10.5,1.68,.48);
+  lbl('🛍 Duty Free',-10.5,1.2,-2,'#6030b0','.63rem',true);
+  // Terminal Café
+  const tc=bx(4,.28,3.8,MAT.food,10.5,.14,-2,{type:'facility',id:'cafe1',name:'Terminal Café',fac:FAC.find(f=>f.id==='cafe1')});rcTargets.push(tc);
+  bx(4,2.5,3.8,new THREE.MeshStandardMaterial({color:0xc07830,roughness:.5,metalness:.05,emissive:new THREE.Color(0x904010),emissiveIntensity:.15}),10.5,1.39,-2);
+  bx(4,2.5,.1,MAT.glassD,10.5,1.39,.3);
+  lbl('☕ Terminal Café',10.5,1.2,-2,'#a04000','.63rem',true);
+  // Electronics
+  const el=bx(3.5,.28,3,MAT.shop,-10.5,.14,3.5,{type:'facility',id:'electronics',name:'Tech & Electronics',fac:FAC.find(f=>f.id==='electronics')});rcTargets.push(el);
+  bx(3.5,2.2,3,MAT.glassD,-10.5,1.24,3.5);
+  lbl('💻 Electronics',-10.5,1.1,3.5,'#5020a0','.61rem',true);
+  // Grab & Go
+  const gg=bx(3,.28,2.5,MAT.food,10.5,.14,3.5,{type:'facility',id:'grab1',name:'Grab & Go Market',fac:FAC.find(f=>f.id==='grab1')});rcTargets.push(gg);
+  bx(3,2,2.5,new THREE.MeshStandardMaterial({color:0xd09040,roughness:.5}),10.5,1.14,3.5);
+  lbl('🛒 Grab & Go',10.5,1.1,3.5,'#a06000','.61rem',true);
+  // Hotel sign
+  bx(3.2,.32,.12,MAT.lounge,0,2.7,-7.88);lbl('🏨 Hotel ↑',0,2.95,-7.88,'#0060a0','.61rem',true);
+  // Wing direction signs — bright prominent
   [{t:'← Wing A',x:-9},{t:'Wing B ↑',x:0},{t:'Wing C →',x:9}].forEach(({t,x})=>{
-    bx(.82,.26,.06,MAT.gate,x,2.52,7.82);lbl(t,x,2.78,7.82,'#1d6fd8','.58rem',true);
+    bx(.92,.32,.1,new THREE.MeshStandardMaterial({color:0x2060d0,roughness:.3,emissive:new THREE.Color(0x1040b0),emissiveIntensity:.4}),x,2.68,7.88);
+    lbl(t,x,2.96,7.88,'#1040c0','.6rem',true);
   });
-  // Seating areas
-  [-4,4].forEach(z=>[-5,-2,1,4].forEach(x=>bx(.4,.3,.4,MAT.struct,x,.21,z)));
-  // Facilities pods
-  buildFac(FAC.find(f=>f.id==='charging'),{x:-4,z:-6},1.1);
-  buildFac(FAC.find(f=>f.id==='charging'),{x:4,z:-6},1.1);
-  buildFac(FAC.find(f=>f.id==='toilet1'),{x:-13,z:6},1.2);
-  buildFac(FAC.find(f=>f.id==='toilet1'),{x:13,z:6},1.2);
+  // Seating — benches that cast shadows
+  [-4,4].forEach(z=>[-5,-2,1,4].forEach(x=>{
+    bx(.45,.38,.45,MAT.struct,x,.33,z);  // seat pad
+    bx(.45,.52,.08,MAT.struct,x,.48,z+.22); // seat back
+  }));
+  buildFac(FAC.find(f=>f.id==='charging'),{x:-4,z:-6},1.2);
+  buildFac(FAC.find(f=>f.id==='charging'),{x:4,z:-6},1.2);
+  buildFac(FAC.find(f=>f.id==='toilet1'),{x:-13,z:6},1.3);
+  buildFac(FAC.find(f=>f.id==='toilet1'),{x:13,z:6},1.3);
   spawnPlayer(0,7);
 }
 
@@ -617,10 +648,17 @@ function buildFac(f,pos,size=1.5){
   const hl=hlFac===f.id;
   const fmats={food:MAT.food,shop:MAT.shop,service:MAT.service,security:MAT.security,lounge:MAT.lounge};
   const fm=hl?MAT.gHL:(fmats[f.type]||MAT.service);
-  const fl=bx(size,.1,size,fm,x,.05,z,{type:'facility',id:f.id,name:f.name,fac:f});rcTargets.push(fl);
-  bx(size*.76,.52,size*.76,MAT.struct,x,.36,z);
-  if(hl){const rg=new THREE.Mesh(new THREE.RingGeometry(size*.57,size*.7,24),new THREE.MeshBasicMaterial({color:0x10b981,transparent:true,opacity:.6,side:THREE.DoubleSide}));rg.rotation.x=-Math.PI/2;rg.position.set(x,.02,z);sg.add(rg);}
-  lbl(f.icon+' '+f.name,x,1.05,z,hl?'#059669':'#475569','.58rem');
+  // Floor pad — thick
+  const fl=bx(size,.22,size,fm,x,.11,z,{type:'facility',id:f.id,name:f.name,fac:f});rcTargets.push(fl);
+  // Kiosk body — tall box
+  bx(size*.72,.9,size*.72,MAT.struct,x,.67,z);
+  // Top cap — colored
+  bx(size*.72,.18,size*.72,fm,x,1.17,z);
+  if(hl){
+    const rg=new THREE.Mesh(new THREE.RingGeometry(size*.6,size*.75,24),new THREE.MeshBasicMaterial({color:0x10b981,transparent:true,opacity:.7,side:THREE.DoubleSide}));
+    rg.rotation.x=-Math.PI/2;rg.position.set(x,.02,z);sg.add(rg);
+  }
+  lbl(f.icon+' '+f.name,x,1.45,z,hl?'#059669':'#1a3050','.6rem',true);
 }
 
 // ═══ MARKERS & PATH ════════════════════════
