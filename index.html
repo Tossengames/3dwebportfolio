@@ -723,4 +723,10 @@ document.getElementById('contactForm').addEventListener('submit',async function(
   }
 
   // Show success regardless — no-cors doesn't let us read the response
-  document.getElementById('contactForm').style.display='n
+  document.getElementById('contactForm').style.display='none';
+  document.getElementById('contactSuccess').style.display='block';
+  btn.textContent='Send Message';
+});
+</script>
+</body>
+</html>
