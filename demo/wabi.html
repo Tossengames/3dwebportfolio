@@ -160,6 +160,13 @@ nav.scrolled {
 .hero {
   position:relative; height:100vh; min-height:600px;
   overflow:hidden;
+  background:#0e0a06;
+}
+@media(max-width:767px) {
+  .hero {
+    background: radial-gradient(ellipse at 65% 35%, #3d1e08 0%, #1a1008 55%, #0e0a06 100%);
+    min-height:520px;
+  }
 }
 #hero-canvas {
   position:absolute; inset:0;
@@ -1048,10 +1055,17 @@ footer {
   const canvas = document.getElementById('hero-canvas');
   const hero   = document.getElementById('hero');
 
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:false });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+  // Skip 3D on mobile — show CSS gradient instead
+  if (window.innerWidth < 768) {
+    canvas.style.display = 'none';
+    hero.style.background = 'radial-gradient(ellipse at 60% 40%, #3d1e08 0%, #1a1008 50%, #0e0a06 100%)';
+    return;
+  }
+
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: window.innerWidth > 1024, alpha:false, powerPreference:'high-performance' });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.2));
   renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.type = THREE.BasicShadowMap;
   renderer.outputEncoding  = THREE.sRGBEncoding;
   renderer.toneMapping     = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 0.85;
@@ -1063,6 +1077,9 @@ footer {
   camera.position.set(0, 3.5, 9);
   camera.lookAt(0, 1.2, 0);
 
+  // Pause rendering when tab hidden
+  document.addEventListener('visibilitychange', () => { if(document.hidden) renderer.setAnimationLoop(null); });
+
   function resize() {
     const w = hero.clientWidth, h = hero.clientHeight;
     renderer.setSize(w, h);
@@ -1073,35 +1090,32 @@ footer {
   window.addEventListener('resize', resize);
 
   /* ── LIGHTS ── */
-  // Deep ambient — nearly dark
   scene.add(new THREE.AmbientLight(0x1a1208, 0.6));
 
-  // Warm candle key from right
+  // Single shadow-casting key light only
   const candleKey = new THREE.PointLight(0xffa040, 3.5, 18, 1.8);
   candleKey.position.set(3.5, 2.8, 2);
   candleKey.castShadow = true;
-  candleKey.shadow.mapSize.set(512,512);
+  candleKey.shadow.mapSize.set(256, 256);
   candleKey.shadow.bias = -0.002;
   scene.add(candleKey);
 
-  // Second candle, left background
+  // No shadows on secondary lights
   const candleLeft = new THREE.PointLight(0xff8020, 1.8, 14, 2);
   candleLeft.position.set(-4, 2.2, -1);
   scene.add(candleLeft);
 
-  // Soft moonlight from above — cool fill
   const moon = new THREE.DirectionalLight(0x8090c0, 0.25);
   moon.position.set(-2, 8, 4);
   scene.add(moon);
 
-  // Warm top (like shoji glow)
   const shoji = new THREE.SpotLight(0xffd080, 1.2, 20, Math.PI/5, 0.7, 1.5);
   shoji.position.set(0, 7, 3);
   shoji.target.position.set(0, 0, 0);
   scene.add(shoji); scene.add(shoji.target);
 
   /* ── CANVAS TEXTURE HELPERS ── */
-  function mkTex(fn, w=512, h=512) {
+  function mkTex(fn, w=256, h=256) {
     const cv = document.createElement('canvas'); cv.width=w; cv.height=h;
     fn(cv.getContext('2d'), w, h);
     return new THREE.CanvasTexture(cv);
@@ -1436,9 +1450,7 @@ footer {
     holder.castShadow=true; g.add(holder);
     const stick=new THREE.Mesh(new THREE.CylinderGeometry(0.005,0.005,0.45,6), new THREE.MeshStandardMaterial({color:0xc8a050,roughness:0.9}));
     stick.position.y=0.22; g.add(stick);
-    // Glow at tip
-    const glow=new THREE.PointLight(0xff6010,0.4,0.8,2);
-    glow.position.set(x,y+0.44,z); scene.add(glow);
+    // Single shared glow — no per-object light
     g.position.set(x,y,z); return g;
   }
 
@@ -1459,8 +1471,7 @@ footer {
         g.add(panel);
       });
     });
-    const glow=new THREE.PointLight(0xffa030,1.2,2.5,2);
-    glow.position.set(x,y+0.65,z); scene.add(glow);
+    // No per-lantern point light — emissive material provides glow effect
     g.position.set(x,y,z); return g;
   }
 
@@ -1520,7 +1531,7 @@ footer {
     g.add(holder);
     const flame=new THREE.Mesh(new THREE.ConeGeometry(0.018,0.06,8), new THREE.MeshStandardMaterial({color:0xff9020,emissive:0xff6010,emissiveIntensity:2,transparent:true,opacity:.9}));
     flame.position.y=0.23; g.add(flame);
-    const fl=new THREE.PointLight(0xff8020,0.8,2,2); fl.position.set(x,y+0.23,z); scene.add(fl);
+    // No per-candle point light — candleKey light covers the table area
     g.position.set(x,y,z); return g;
   }
   scene.add(mkCandle(-0.2, 0.62, 1.7));
@@ -1566,22 +1577,22 @@ let cart = [];
 let activeFilter = 'all';
 
 const PRODUCT_DATA = [
-  { id:"p001", name:"Tetsubin Cast Iron Teapot", romaji:"Tetsubin", price:89, category:"tea", tags:["teapot","iron","ceremony"], image:"https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&q=80", description:"Hand-cast iron teapot from Iwate Prefecture. The sand-cast technique creates a uniquely textured surface that retains heat beautifully. Includes stainless steel infuser. A cornerstone of any Japanese tea practice.", origin:"Iwate, Japan", affiliate:"https://www.amazon.com", source:"amazon", featured:true },
-  { id:"p002", name:"Yunomi Ceramic Tea Cup Set", romaji:"Yunomi", price:48, category:"tea", tags:["cup","ceramic","set"], image:"https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=600&q=80", description:"Set of two hand-thrown stoneware yunomi cups with warm ash glaze. Each piece is unique — natural imperfections celebrate the wabi-sabi philosophy. Dishwasher safe.", origin:"Kyoto, Japan", affiliate:"https://www.etsy.com", source:"etsy", featured:true },
-  { id:"p003", name:"Matcha Ceremony Set", romaji:"Matcha Dogu", price:124, category:"tea", tags:["matcha","ceremony","bowl","whisk"], image:"https://images.unsplash.com/photo-1515823064-d6e0c04616a7?w=600&q=80", description:"Complete chado set: handmade chawan bowl, chasen bamboo whisk, chashaku bamboo scoop and chakin cloth. Everything needed for a proper tea ceremony at home.", origin:"Uji, Kyoto", affiliate:"https://www.amazon.com", source:"amazon", featured:false },
-  { id:"p004", name:"Ramen Bowl Set of Two", romaji:"Donburi", price:56, category:"tableware", tags:["bowl","ramen","ceramic"], image:"https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=600&q=80", description:"Deep ceramic ramen bowls with a traditional blue-white pattern. Wide rim keeps broth hot. The flared design makes eating easy. Microwave and dishwasher safe.", origin:"Aichi, Japan", affiliate:"https://www.amazon.com", source:"amazon", featured:false },
-  { id:"p005", name:"Chopstick Rest Set", romaji:"Hashioki", price:32, category:"tableware", tags:["chopstick","ceramic","rest"], image:"https://images.unsplash.com/photo-1617196034183-421b4040ed20?w=600&q=80", description:"Set of five ceramic chopstick rests in the shape of waves and clouds. Each one hand-painted with cobalt underglaze. A small ritual object that elevates any table.", origin:"Arita, Saga", affiliate:"https://www.etsy.com", source:"etsy", featured:false },
-  { id:"p006", name:"Lacquerware Serving Tray", romaji:"Nurimono", price:78, category:"tableware", tags:["tray","lacquer","serving"], image:"https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&q=80", description:"Traditional urushi lacquer tray with deep crimson interior and jet black exterior. Lightweight yet strong — transforms everyday meals into ceremony.", origin:"Wajima, Ishikawa", affiliate:"https://www.amazon.com", source:"amazon", featured:true },
-  { id:"p007", name:"Shoji Paper Floor Lamp", romaji:"Andon", price:145, category:"decor", tags:["lamp","shoji","paper","light"], image:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80", description:"Floor-standing andon lamp with natural washi paper panels and bamboo frame. The warm diffused light creates the perfect ambience for any Japanese-inspired room.", origin:"Gifu, Japan", affiliate:"https://www.etsy.com", source:"etsy", featured:true },
-  { id:"p008", name:"Indigo Noren Doorway Curtain", romaji:"Noren", price:64, category:"decor", tags:["noren","curtain","indigo","fabric"], image:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=600&q=80", description:"Hand-dyed indigo noren with traditional family crest pattern. 100% cotton, split panel design. 85×150cm. Perfect for doorways or hung as wall art.", origin:"Tokushima, Japan", affiliate:"https://www.etsy.com", source:"etsy", featured:false },
-  { id:"p009", name:"Koh Incense — Cedar & Hinoki", romaji:"Koh", price:38, category:"zen", tags:["incense","cedar","hinoki","scent"], image:"https://images.unsplash.com/photo-1545173168-9f1947eebb7f?w=600&q=80", description:"Traditional koh incense in Cedar and Hinoki Cypress. 40 sticks per variety with handmade ceramic holder and ash bed. Each stick burns for approximately 25 minutes.", origin:"Awaji Island, Japan", affiliate:"https://www.amazon.com", source:"amazon", featured:true },
-  { id:"p010", name:"Desktop Zen Sand Garden", romaji:"Karesansui", price:55, category:"zen", tags:["zen","sand","garden","rake","meditation"], image:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80", description:"Desktop karesansui garden with white sand, three natural stones, carved wooden rake and raking pattern guide. Paulownia wood tray. Ideal for mindful breaks.", origin:"Kyoto, Japan", affiliate:"https://www.amazon.com", source:"amazon", featured:false },
-  { id:"p011", name:"Celadon Incense Burner", romaji:"Koro", price:44, category:"zen", tags:["incense","ceramic","burner","koro"], image:"https://images.unsplash.com/photo-1545173168-9f1947eebb7f?w=600&q=80", description:"Celadon-glazed porcelain koro with pierced chrysanthemum lid. Pale jade glaze fired at 1300°C. Holds stick and cone incense. A beautiful accent piece when not in use.", origin:"Hasami, Nagasaki", affiliate:"https://www.etsy.com", source:"etsy", featured:false },
-  { id:"p012", name:"Bonsai Starter Kit", romaji:"Bonsai", price:89, category:"zen", tags:["bonsai","plant","pot","garden"], image:"https://images.unsplash.com/photo-1599598425-c4e2b754c8c5?w=600&q=80", description:"Japanese maple bonsai kit with handmade unglazed ceramic pot, bonsai soil, copper wire and pruning shears. Includes a 32-page English care guide.", origin:"Saitama, Japan", affiliate:"https://www.amazon.com", source:"amazon", featured:true },
-  { id:"p013", name:"Bamboo Tea Tray", romaji:"Chaban", price:42, category:"tea", tags:["bamboo","tray","tea"], image:"https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&q=80", description:"Natural bamboo gongfu tea tray with built-in drainage reservoir and removable waste water container. Slatted surface. A clean and beautiful centrepiece for any tea space.", origin:"Kagoshima, Japan", affiliate:"https://www.amazon.com", source:"amazon", featured:false },
-  { id:"p014", name:"Kakemono Ink Wash Scroll", romaji:"Kakemono", price:98, category:"decor", tags:["scroll","art","ink","wall"], image:"https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=600&q=80", description:"Hand-painted hanging scroll with sumi-e ink wash of Mount Fuji at dawn. Mounted on silk brocade with bamboo rollers. 30×120cm. Arrives ready to hang.", origin:"Kyoto, Japan", affiliate:"https://www.etsy.com", source:"etsy", featured:false },
-  { id:"p015", name:"Furoshiki Wrapping Cloth Set", romaji:"Furoshiki", price:36, category:"decor", tags:["furoshiki","fabric","wrapping","textile"], image:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=600&q=80", description:"Set of three 70cm furoshiki in wave, plum blossom and asanoha geometric patterns. 100% cotton. Wrap gifts, carry goods, or hang as decorative textiles.", origin:"Kyoto, Japan", affiliate:"https://www.etsy.com", source:"etsy", featured:false },
-  { id:"p016", name:"Stone Snow Lantern", romaji:"Ishidoro", price:168, category:"zen", tags:["lantern","stone","garden","light"], image:"https://images.unsplash.com/photo-1571867424488-4565932edb41?w=600&q=80", description:"Hand-carved granite garden lantern in yukimi-doro 'snow viewing' style. 45cm tall. Weathers beautifully outdoors — equally stunning inside as sculptural accent.", origin:"Gifu, Japan", affiliate:"https://www.amazon.com", source:"amazon", featured:false }
+  { id:"p001", name:"Tetsubin Cast Iron Teapot", romaji:"Tetsubin", price:89, category:"tea", tags:["teapot","iron","ceremony"], image:"https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&q=75", description:"Hand-cast iron teapot from Iwate Prefecture. The sand-cast technique creates a uniquely textured surface that retains heat beautifully. Includes stainless steel infuser. A cornerstone of any Japanese tea practice.", origin:"Iwate, Japan", affiliate:"https://www.amazon.com", source:"amazon", featured:true },
+  { id:"p002", name:"Yunomi Ceramic Tea Cup Set", romaji:"Yunomi", price:48, category:"tea", tags:["cup","ceramic","set"], image:"https://images.unsplash.com/photo-1603199506016-b9a594b593c0?w=600&q=75", description:"Set of two hand-thrown stoneware yunomi cups with warm ash glaze. Each piece is unique — natural imperfections celebrate the wabi-sabi philosophy. Dishwasher safe.", origin:"Kyoto, Japan", affiliate:"https://www.etsy.com", source:"etsy", featured:true },
+  { id:"p003", name:"Matcha Ceremony Set", romaji:"Matcha Dogu", price:124, category:"tea", tags:["matcha","ceremony","bowl","whisk"], image:"https://images.unsplash.com/photo-1515823064-d6e0c04616a7?w=600&q=75", description:"Complete chado set: handmade chawan bowl, chasen bamboo whisk, chashaku bamboo scoop and chakin cloth. Everything needed for a proper tea ceremony at home.", origin:"Uji, Kyoto", affiliate:"https://www.amazon.com", source:"amazon", featured:false },
+  { id:"p004", name:"Ramen Bowl Set of Two", romaji:"Donburi", price:56, category:"tableware", tags:["bowl","ramen","ceramic"], image:"https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=600&q=75", description:"Deep ceramic ramen bowls with a traditional blue-white pattern. Wide rim keeps broth hot. The flared design makes eating easy. Microwave and dishwasher safe.", origin:"Aichi, Japan", affiliate:"https://www.amazon.com", source:"amazon", featured:false },
+  { id:"p005", name:"Chopstick Rest Set", romaji:"Hashioki", price:32, category:"tableware", tags:["chopstick","ceramic","rest"], image:"https://images.unsplash.com/photo-1617196034183-421b4040ed20?w=600&q=75", description:"Set of five ceramic chopstick rests in the shape of waves and clouds. Each one hand-painted with cobalt underglaze. A small ritual object that elevates any table.", origin:"Arita, Saga", affiliate:"https://www.etsy.com", source:"etsy", featured:false },
+  { id:"p006", name:"Lacquerware Serving Tray", romaji:"Nurimono", price:78, category:"tableware", tags:["tray","lacquer","serving"], image:"https://images.unsplash.com/photo-1576506295286-5cda18df43e7?w=600&q=75", description:"Traditional urushi lacquer tray with deep crimson interior and jet black exterior. Lightweight yet strong — transforms everyday meals into ceremony.", origin:"Wajima, Ishikawa", affiliate:"https://www.amazon.com", source:"amazon", featured:true },
+  { id:"p007", name:"Shoji Paper Floor Lamp", romaji:"Andon", price:145, category:"decor", tags:["lamp","shoji","paper","light"], image:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=75", description:"Floor-standing andon lamp with natural washi paper panels and bamboo frame. The warm diffused light creates the perfect ambience for any Japanese-inspired room.", origin:"Gifu, Japan", affiliate:"https://www.etsy.com", source:"etsy", featured:true },
+  { id:"p008", name:"Indigo Noren Doorway Curtain", romaji:"Noren", price:64, category:"decor", tags:["noren","curtain","indigo","fabric"], image:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=600&q=75", description:"Hand-dyed indigo noren with traditional family crest pattern. 100% cotton, split panel design. 85×150cm. Perfect for doorways or hung as wall art.", origin:"Tokushima, Japan", affiliate:"https://www.etsy.com", source:"etsy", featured:false },
+  { id:"p009", name:"Koh Incense — Cedar & Hinoki", romaji:"Koh", price:38, category:"zen", tags:["incense","cedar","hinoki","scent"], image:"https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=600&q=75", description:"Traditional koh incense in Cedar and Hinoki Cypress. 40 sticks per variety with handmade ceramic holder and ash bed. Each stick burns for approximately 25 minutes.", origin:"Awaji Island, Japan", affiliate:"https://www.amazon.com", source:"amazon", featured:true },
+  { id:"p010", name:"Desktop Zen Sand Garden", romaji:"Karesansui", price:55, category:"zen", tags:["zen","sand","garden","rake","meditation"], image:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=75", description:"Desktop karesansui garden with white sand, three natural stones, carved wooden rake and raking pattern guide. Paulownia wood tray. Ideal for mindful breaks.", origin:"Kyoto, Japan", affiliate:"https://www.amazon.com", source:"amazon", featured:false },
+  { id:"p011", name:"Celadon Incense Burner", romaji:"Koro", price:44, category:"zen", tags:["incense","ceramic","burner","koro"], image:"https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=600&q=75", description:"Celadon-glazed porcelain koro with pierced chrysanthemum lid. Pale jade glaze fired at 1300°C. Holds stick and cone incense. A beautiful accent piece when not in use.", origin:"Hasami, Nagasaki", affiliate:"https://www.etsy.com", source:"etsy", featured:false },
+  { id:"p012", name:"Bonsai Starter Kit", romaji:"Bonsai", price:89, category:"zen", tags:["bonsai","plant","pot","garden"], image:"https://images.unsplash.com/photo-1599598425-c4e2b754c8c5?w=600&q=75", description:"Japanese maple bonsai kit with handmade unglazed ceramic pot, bonsai soil, copper wire and pruning shears. Includes a 32-page English care guide.", origin:"Saitama, Japan", affiliate:"https://www.amazon.com", source:"amazon", featured:true },
+  { id:"p013", name:"Bamboo Tea Tray", romaji:"Chaban", price:42, category:"tea", tags:["bamboo","tray","tea"], image:"https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=600&q=75", description:"Natural bamboo gongfu tea tray with built-in drainage reservoir and removable waste water container. Slatted surface. A clean and beautiful centrepiece for any tea space.", origin:"Kagoshima, Japan", affiliate:"https://www.amazon.com", source:"amazon", featured:false },
+  { id:"p014", name:"Kakemono Ink Wash Scroll", romaji:"Kakemono", price:98, category:"decor", tags:["scroll","art","ink","wall"], image:"https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=600&q=75", description:"Hand-painted hanging scroll with sumi-e ink wash of Mount Fuji at dawn. Mounted on silk brocade with bamboo rollers. 30×120cm. Arrives ready to hang.", origin:"Kyoto, Japan", affiliate:"https://www.etsy.com", source:"etsy", featured:false },
+  { id:"p015", name:"Furoshiki Wrapping Cloth Set", romaji:"Furoshiki", price:36, category:"decor", tags:["furoshiki","fabric","wrapping","textile"], image:"https://images.unsplash.com/photo-1553361371-9b22f78e8b1d?w=600&q=75", description:"Set of three 70cm furoshiki in wave, plum blossom and asanoha geometric patterns. 100% cotton. Wrap gifts, carry goods, or hang as decorative textiles.", origin:"Kyoto, Japan", affiliate:"https://www.etsy.com", source:"etsy", featured:false },
+  { id:"p016", name:"Stone Snow Lantern", romaji:"Ishidoro", price:168, category:"zen", tags:["lantern","stone","garden","light"], image:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=600&q=75", description:"Hand-carved granite garden lantern in yukimi-doro 'snow viewing' style. 45cm tall. Weathers beautifully outdoors — equally stunning inside as sculptural accent.", origin:"Gifu, Japan", affiliate:"https://www.amazon.com", source:"amazon", featured:false }
 ];
 
 PRODUCTS = PRODUCT_DATA;
