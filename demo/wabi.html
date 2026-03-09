@@ -1273,12 +1273,109 @@ footer {
   addShelf(1.95, -4.8, 6.5, 0.65); // mid shelf
   addShelf(3.0, -4.8, 6, 0.6);    // top shelf
 
+  /* ── OBJECT TEXTURES ── */
+
+  // Cast iron texture for teapot
+  const ironTex = mkTex((cx, w, h) => {
+    cx.fillStyle = '#252030'; cx.fillRect(0,0,w,h);
+    // Pebbled sand-cast surface
+    for (let n=0; n<6000; n++) {
+      const r = Math.random()*3+1;
+      const v = Math.random()*30-15;
+      cx.fillStyle = `rgba(${v<0?0:80},${v<0?0:70},${v<0?0:90},${Math.abs(v)/200})`;
+      cx.beginPath(); cx.arc(Math.random()*w, Math.random()*h, r, 0, Math.PI*2); cx.fill();
+    }
+    // Fine noise
+    for (let n=0; n<2000; n++) {
+      cx.fillStyle = `rgba(255,255,255,${Math.random()*0.03})`;
+      cx.fillRect(Math.random()*w, Math.random()*h, 1, 1);
+    }
+  });
+
+  // Celadon glaze texture
+  const celadonTex = mkTex((cx, w, h) => {
+    const gr = cx.createRadialGradient(w*.4, h*.3, 20, w*.5, h*.5, w*.7);
+    gr.addColorStop(0, '#c8e8d0');
+    gr.addColorStop(0.4, '#8ab8a0');
+    gr.addColorStop(1, '#4a8060');
+    cx.fillStyle = gr; cx.fillRect(0,0,w,h);
+    // Glaze crackle lines
+    for (let n=0; n<40; n++) {
+      cx.strokeStyle = 'rgba(0,60,30,0.12)'; cx.lineWidth = 0.5;
+      cx.beginPath();
+      const sx = Math.random()*w, sy = Math.random()*h;
+      cx.moveTo(sx, sy);
+      cx.bezierCurveTo(sx+Math.random()*60-30, sy+Math.random()*60-30,
+                        sx+Math.random()*80-40, sy+Math.random()*80-40,
+                        sx+Math.random()*100-50, sy+Math.random()*100-50);
+      cx.stroke();
+    }
+    // Highlight
+    cx.fillStyle = 'rgba(255,255,255,0.18)';
+    cx.beginPath(); cx.ellipse(w*.35, h*.25, w*.18, h*.12, -0.4, 0, Math.PI*2); cx.fill();
+  });
+
+  // Raku / terracotta texture for bowls and cups
+  const rakuTex = mkTex((cx, w, h) => {
+    cx.fillStyle = '#7a4828'; cx.fillRect(0,0,w,h);
+    // Fire marks
+    for (let n=0; n<3000; n++) {
+      const v = Math.random()*25-12;
+      cx.fillStyle = `rgba(${v>0?255:100},${v>0?150:60},${v>0?80:40},${Math.abs(v)/300})`;
+      cx.fillRect(Math.random()*w, Math.random()*h, 2, 2);
+    }
+    // Dark smoke patches
+    for (let n=0; n<8; n++) {
+      const gx = cx.createRadialGradient(Math.random()*w, Math.random()*h, 10, Math.random()*w, Math.random()*h, 80);
+      gx.addColorStop(0, 'rgba(20,10,5,0.25)');
+      gx.addColorStop(1, 'rgba(20,10,5,0)');
+      cx.fillStyle = gx; cx.fillRect(0,0,w,h);
+    }
+    // Glaze drip
+    cx.fillStyle = 'rgba(180,120,60,0.3)';
+    cx.fillRect(w*.3, 0, w*.15, h*.4);
+  });
+
+  // Lacquer texture
+  const lacquerTex = mkTex((cx, w, h) => {
+    const gr = cx.createLinearGradient(0, 0, w, h);
+    gr.addColorStop(0, '#5a0808');
+    gr.addColorStop(0.5, '#8a1010');
+    gr.addColorStop(1, '#3a0505');
+    cx.fillStyle = gr; cx.fillRect(0,0,w,h);
+    // Deep gloss highlight
+    cx.fillStyle = 'rgba(255,120,80,0.12)';
+    cx.beginPath(); cx.ellipse(w*.4, h*.2, w*.25, h*.1, -0.3, 0, Math.PI*2); cx.fill();
+    // Subtle surface texture
+    for (let n=0; n<500; n++) {
+      cx.fillStyle = `rgba(0,0,0,${Math.random()*0.06})`;
+      cx.fillRect(Math.random()*w, Math.random()*h, 3, 1);
+    }
+  });
+
+  // Sandy ceramic / ash glaze
+  const ashGlazeTex = mkTex((cx, w, h) => {
+    cx.fillStyle = '#b8a880'; cx.fillRect(0,0,w,h);
+    for (let n=0; n<4000; n++) {
+      const v = Math.random()*20-10;
+      cx.fillStyle = `rgba(${v>0?255:100},${v>0?230:150},${v>0?180:100},${Math.abs(v)/350})`;
+      cx.fillRect(Math.random()*w, Math.random()*h, 1, 1);
+    }
+    // Ash pool areas
+    for (let n=0; n<5; n++) {
+      const gx = cx.createRadialGradient(Math.random()*w, Math.random()*h, 5, Math.random()*w, Math.random()*h, 60);
+      gx.addColorStop(0, 'rgba(200,190,160,0.4)');
+      gx.addColorStop(1, 'rgba(200,190,160,0)');
+      cx.fillStyle = gx; cx.fillRect(0,0,w,h);
+    }
+  });
+
   /* ── OBJECTS ON SHELVES ── */
 
   // Teapot (bottom shelf, center-left)
   function mkTeapot(x, y, z) {
     const g = new THREE.Group();
-    const bodyMat = new THREE.MeshStandardMaterial({color:0x2a2830, roughness:0.6, metalness:0.3});
+    const bodyMat = new THREE.MeshStandardMaterial({color:0x2a2830, map:ironTex, roughness:0.65, metalness:0.25});
     const body = new THREE.Mesh(new THREE.SphereGeometry(0.22,20,16), bodyMat);
     body.scale.y = 0.85; body.castShadow=true; g.add(body);
     // Lid
@@ -1300,7 +1397,7 @@ footer {
   // Tea cup
   function mkCup(x,y,z,col=0x8a6040) {
     const g=new THREE.Group();
-    const mat2 = new THREE.MeshStandardMaterial({color:col,roughness:0.75,metalness:0.04});
+    const mat2 = new THREE.MeshStandardMaterial({color:col, map:rakuTex, roughness:0.78, metalness:0.03});
     const cup = new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.07,0.14,16), mat2);
     cup.castShadow=true; g.add(cup);
     const saucer = new THREE.Mesh(new THREE.CylinderGeometry(0.15,0.14,0.03,16), mat2);
@@ -1310,7 +1407,7 @@ footer {
 
   // Vase / bottle
   function mkVase(x,y,z) {
-    const mat2=new THREE.MeshStandardMaterial({color:0x4a3060,roughness:0.3,metalness:0.2});
+    const mat2=new THREE.MeshStandardMaterial({color:0x5a4070, map:celadonTex, roughness:0.28, metalness:0.15});
     const pts=[];
     for(let i=0;i<=10;i++){
       const t=i/10;
@@ -1324,7 +1421,7 @@ footer {
 
   // Bowl
   function mkBowl(x,y,z) {
-    const mat2=new THREE.MeshStandardMaterial({color:0x6a4020,roughness:0.7,metalness:0.08});
+    const mat2=new THREE.MeshStandardMaterial({color:0x7a4828, map:rakuTex, roughness:0.72, metalness:0.06});
     const geo=new THREE.SphereGeometry(0.18,16,10,0,Math.PI*2,0,Math.PI*.45);
     const bowl=new THREE.Mesh(geo,mat2);
     bowl.rotation.x=Math.PI; bowl.position.set(x,y+.02,z);
@@ -1334,7 +1431,7 @@ footer {
   // Incense holder
   function mkIncense(x,y,z) {
     const g=new THREE.Group();
-    const mat2=new THREE.MeshStandardMaterial({color:0x8a8060,roughness:0.8});
+    const mat2=new THREE.MeshStandardMaterial({color:0x9a9070, map:ashGlazeTex, roughness:0.78});
     const holder=new THREE.Mesh(new THREE.CylinderGeometry(0.08,0.1,0.08,12), mat2);
     holder.castShadow=true; g.add(holder);
     const stick=new THREE.Mesh(new THREE.CylinderGeometry(0.005,0.005,0.45,6), new THREE.MeshStandardMaterial({color:0xc8a050,roughness:0.9}));
