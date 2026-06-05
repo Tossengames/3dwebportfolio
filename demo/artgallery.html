@@ -3,814 +3,734 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>Art Compulsions — 3D Gallery</title>
+<title>Art Compulsions — 3D Art Gallery Experience</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#faf8f4;
-  --bg2:#f3efe8;
-  --bg3:#ede8df;
-  --ink:#1a1714;
-  --ink2:#4a4540;
-  --ink3:#8a8278;
-  --gold:#9a7c3a;
-  --gold2:#b8962e;
-  --gold3:#d4af5a;
-  --gold-pale:#f5ecd4;
-  --white:#ffffff;
-  --border:#e2dbd0;
-  --shadow:rgba(26,23,20,0.10);
-}
-html{scroll-behavior:smooth;font-size:16px}
-body{background:var(--bg);color:var(--ink);font-family:'Jost',sans-serif;font-weight:300;line-height:1.6;overflow-x:hidden}
-
-::-webkit-scrollbar{width:5px}
-::-webkit-scrollbar-track{background:var(--bg2)}
-::-webkit-scrollbar-thumb{background:var(--gold3);border-radius:3px}
-
-nav{
-  position:fixed;top:0;left:0;right:0;z-index:500;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 5vw;height:68px;
-  background:rgba(250,248,244,0.92);
-  backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--border);
-  transition:box-shadow .3s;
-}
-nav.scrolled{box-shadow:0 2px 24px rgba(26,23,20,0.07)}
-.nav-brand{
-  font-family:'Playfair Display',serif;
-  font-size:1.2rem;font-weight:500;
-  color:var(--ink);letter-spacing:.04em;
-  text-decoration:none;
-}
-.nav-brand span{color:var(--gold2)}
-.nav-links{display:flex;gap:32px;list-style:none}
-.nav-links a{
-  font-size:.72rem;font-weight:400;letter-spacing:.2em;
-  text-transform:uppercase;color:var(--ink2);
-  text-decoration:none;transition:color .25s;
-}
-.nav-links a:hover{color:var(--gold2)}
-.nav-contact{display:flex;gap:12px}
-.nav-icon{
-  width:36px;height:36px;border-radius:50%;
-  border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  color:var(--ink2);font-size:.95rem;
-  text-decoration:none;transition:all .25s;background:var(--white);
-}
-.nav-icon:hover{border-color:var(--gold2);color:var(--gold2);background:var(--gold-pale)}
-.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
-.nav-hamburger span{display:block;width:22px;height:1.5px;background:var(--ink);transition:all .3s}
-
-#hero{
-  min-height:100vh;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:120px 5vw 80px;
-  position:relative;overflow:hidden;
-  background:linear-gradient(160deg,var(--white) 0%,var(--bg2) 60%,var(--bg3) 100%);
-  text-align:center;
-}
-.hero-kicker{
-  font-size:.68rem;font-weight:400;letter-spacing:.32em;
-  text-transform:uppercase;color:var(--gold2);
-  margin-bottom:28px;
-  display:flex;align-items:center;gap:14px;
-}
-.hero-kicker::before,.hero-kicker::after{
-  content:'';width:40px;height:1px;background:var(--gold3);
-}
-.hero-h1{
-  font-family:'Playfair Display',serif;
-  font-size:clamp(2.6rem,6vw,5rem);
-  font-weight:500;line-height:1.15;
-  color:var(--ink);letter-spacing:-.01em;
-  max-width:820px;margin:0 auto 28px;
-}
-.hero-h1 em{font-style:italic;color:var(--gold2)}
-.hero-sub{
-  font-size:clamp(.9rem,1.5vw,1.05rem);font-weight:300;
-  color:var(--ink3);max-width:520px;margin:0 auto 48px;
-  letter-spacing:.02em;line-height:1.8;
-}
-.btn-primary{
-  display:inline-flex;align-items:center;gap:10px;
-  padding:15px 38px;
-  background:var(--ink);color:var(--white);
-  font-family:'Jost',sans-serif;font-size:.72rem;
-  font-weight:400;letter-spacing:.22em;text-transform:uppercase;
-  text-decoration:none;border:none;cursor:pointer;
-  transition:background .3s,transform .2s,box-shadow .3s;
-  box-shadow:0 4px 24px rgba(26,23,20,.18);
-}
-.btn-primary:hover{background:var(--gold2);transform:translateY(-2px);box-shadow:0 8px 32px rgba(154,124,58,.35)}
-.hero-scroll-hint{
-  position:absolute;bottom:36px;left:50%;transform:translateX(-50%);
-  display:flex;flex-direction:column;align-items:center;gap:8px;
-  font-size:.6rem;letter-spacing:.24em;text-transform:uppercase;color:var(--ink3);
-  opacity:.55;animation:bounce 2s ease-in-out infinite;
-}
-@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(5px)}}
-
-.section-wrap{max-width:1300px;margin:0 auto;padding:0 5vw}
-section{padding:100px 0}
-.section-label{
-  font-size:.62rem;font-weight:400;letter-spacing:.3em;
-  text-transform:uppercase;color:var(--gold2);
-  display:flex;align-items:center;gap:12px;margin-bottom:16px;
-}
-.section-label::before{content:'';width:28px;height:1px;background:var(--gold3)}
-.section-title{
-  font-family:'Playfair Display',serif;
-  font-size:clamp(1.8rem,3.5vw,2.8rem);
-  font-weight:500;color:var(--ink);
-  letter-spacing:-.01em;margin-bottom:16px;
-}
-.section-desc{
-  font-size:.95rem;font-weight:300;color:var(--ink3);
-  line-height:1.9;max-width:560px;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-#gallery{background:var(--white)}
-.gallery-intro{
-  display:flex;flex-wrap:wrap;
-  align-items:flex-end;justify-content:space-between;
-  gap:24px;margin-bottom:56px;
-}
-.gallery-count{
-  font-family:'Playfair Display',serif;
-  font-size:3rem;font-weight:400;
-  color:var(--gold3);opacity:.35;line-height:1;
-  font-style:italic;
-}
-.paintings-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:24px;
-}
-@media(max-width:900px){.paintings-grid{grid-template-columns:repeat(2,1fr);gap:16px}}
-@media(max-width:560px){.paintings-grid{grid-template-columns:1fr;gap:16px}}
-
-.p-card{
-  position:relative;cursor:pointer;
-  background:var(--bg2);overflow:hidden;
-  transition:box-shadow .4s,transform .4s;
-  box-shadow:0 2px 16px rgba(26,23,20,.07);
-}
-.p-card:hover{
-  transform:translateY(-6px);
-  box-shadow:0 16px 48px rgba(26,23,20,.15);
-}
-.p-card-img{
-  width:100%;aspect-ratio:4/3;overflow:hidden;
-  position:relative;
-}
-.p-card-img img{
-  width:100%;height:100%;object-fit:cover;
-  display:block;
-  transition:transform .7s cubic-bezier(.25,.46,.45,.94),filter .4s;
-}
-.p-card:hover .p-card-img img{
-  transform:scale(1.06);
-}
-.p-card-overlay{
-  position:absolute;inset:0;
-  background:linear-gradient(to top,rgba(26,23,20,.6) 0%,transparent 55%);
-  opacity:0;transition:opacity .4s;
-  display:flex;align-items:flex-end;justify-content:center;
-  padding-bottom:20px;
-}
-.p-card:hover .p-card-overlay{opacity:1}
-.p-card-cta{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:9px 22px;
-  background:var(--white);
-  font-size:.62rem;font-weight:500;
-  letter-spacing:.2em;text-transform:uppercase;color:var(--ink);
-  border:none;cursor:pointer;
-}
-.p-card-body{padding:18px 20px 20px}
-.p-card-title{
-  font-family:'Playfair Display',serif;
-  font-size:1rem;font-weight:500;
-  color:var(--ink);margin-bottom:4px;
-}
-.p-card-artist{
-  font-size:.68rem;font-weight:400;letter-spacing:.12em;
-  text-transform:uppercase;color:var(--gold2);
+:root {
+  --bg: #faf8f4;
+  --bg2: #f5f2ec;
+  --ink: #1a1a1a;
+  --ink-light: #666;
+  --gold: #c4a35a;
+  --gold-dark: #a07d3a;
+  --border: #e5e0d8;
 }
 
-#viewer{
-  position:fixed;inset:0;z-index:800;
-  display:flex;flex-direction:column;
-  background:var(--bg);
-  opacity:0;pointer-events:none;
-  transition:opacity .6s ease;
-}
-#viewer.active{opacity:1;pointer-events:all}
-
-.viewer-bar{
-  flex-shrink:0;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 24px;height:60px;
-  background:var(--white);
-  border-bottom:1px solid var(--border);
-  box-shadow:0 2px 12px var(--shadow);
-  z-index:2;
-}
-.viewer-bar-left{display:flex;align-items:center;gap:16px}
-.btn-back{
-  display:flex;align-items:center;gap:8px;
-  padding:8px 18px;border:1px solid var(--border);
-  background:var(--white);color:var(--ink);
-  font-family:'Jost',sans-serif;font-size:.65rem;
-  font-weight:400;letter-spacing:.18em;text-transform:uppercase;
-  cursor:pointer;transition:all .25s;
-}
-.btn-back:hover{border-color:var(--ink);background:var(--ink);color:var(--white)}
-.viewer-painting-name{
-  font-family:'Playfair Display',serif;
-  font-size:.95rem;font-weight:400;font-style:italic;color:var(--ink2);
-}
-.viewer-painting-artist-small{
-  font-size:.6rem;font-weight:400;letter-spacing:.16em;
-  text-transform:uppercase;color:var(--ink3);margin-left:4px;
-}
-.drag-hint-bar{
-  font-size:.6rem;font-weight:300;letter-spacing:.2em;
-  text-transform:uppercase;color:var(--ink3);opacity:.55;
-  display:flex;align-items:center;gap:10px;transition:opacity .8s;
-}
-.drag-hint-bar.hidden{opacity:0}
-
-#canvas-wrap{
-  flex:1;position:relative;overflow:hidden;
-  background:radial-gradient(ellipse at 50% 45%,#f8f4ee 0%,#ede8df 55%,#e0d9ce 100%);
-  min-height:0;
-}
-#three-canvas{display:block;width:100%;height:100%}
-
-.viewer-controls{
-  flex-shrink:0;
-  background:var(--white);
-  border-top:1px solid var(--border);
-  box-shadow:0 -2px 16px var(--shadow);
-}
-.controls-tabs{
-  display:flex;border-bottom:1px solid var(--border);
-}
-.ctrl-tab{
-  flex:1;padding:13px 8px;text-align:center;
-  font-size:.62rem;font-weight:400;letter-spacing:.18em;
-  text-transform:uppercase;color:var(--ink3);
-  cursor:pointer;border:none;background:none;
-  transition:all .25s;border-bottom:2px solid transparent;
-  margin-bottom:-1px;
-}
-.ctrl-tab.active{color:var(--gold2);border-bottom-color:var(--gold2)}
-.ctrl-tab:hover{color:var(--ink)}
-.controls-body{
-  padding:16px 20px 20px;
-  max-height:200px;overflow-y:auto;
-}
-.ctrl-panel{display:none}
-.ctrl-panel.active{display:block}
-
-.opt-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
-.opt-pill{
-  padding:7px 16px;border:1px solid var(--border);
-  background:var(--bg);color:var(--ink2);
-  font-family:'Jost',sans-serif;font-size:.62rem;
-  font-weight:400;letter-spacing:.14em;text-transform:uppercase;
-  cursor:pointer;transition:all .22s;border-radius:2px;
-}
-.opt-pill:hover{border-color:var(--gold2);color:var(--gold2)}
-.opt-pill.active{background:var(--ink);border-color:var(--ink);color:var(--white)}
-
-.color-row{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-bottom:12px}
-.swatch{
-  width:28px;height:28px;border-radius:2px;cursor:pointer;
-  border:2px solid transparent;outline:2px solid transparent;
-  transition:transform .2s,outline-color .2s;
-}
-.swatch:hover{transform:scale(1.15)}
-.swatch.active{outline-color:var(--gold2);transform:scale(1.15)}
-.custom-color-btn{
-  width:28px;height:28px;border-radius:2px;
-  border:1.5px dashed var(--border);
-  background:var(--bg);cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  font-size:.75rem;color:var(--ink3);
-  position:relative;
-}
-.custom-color-btn:hover{border-color:var(--gold2)}
-.custom-color-btn input{
-  position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.5;
+  overflow-x: hidden;
 }
 
-.slider-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px}
-.slider-top{display:flex;justify-content:space-between;margin-bottom:7px}
-.slider-name{font-size:.6rem;font-weight:400;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3)}
-.slider-num{font-family:'Playfair Display',serif;font-size:.8rem;font-style:italic;color:var(--gold2)}
-input[type=range]{
-  width:100%;-webkit-appearance:none;height:2px;
-  background:var(--border);outline:none;border-radius:1px;
-}
-input[type=range]::-webkit-slider-thumb{
-  -webkit-appearance:none;width:13px;height:13px;
-  border-radius:50%;background:var(--ink);cursor:pointer;
-  border:2px solid var(--white);box-shadow:0 0 0 1px var(--border);
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
 }
 
-.light-preset-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
-.lp-btn{
-  display:flex;flex-direction:column;align-items:center;gap:4px;
-  padding:10px 14px;border:1px solid var(--border);
-  background:var(--bg);cursor:pointer;border-radius:2px;
-  transition:all .22s;min-width:72px;
+/* Loading screen - lightweight */
+#loading {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+  transition: opacity 0.5s;
 }
-.lp-btn:hover{border-color:var(--gold2)}
-.lp-btn.active{border-color:var(--ink);background:var(--ink)}
-.lp-icon{font-size:1.1rem}
-.lp-name{font-size:.58rem;font-weight:400;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)}
-.lp-btn.active .lp-name{color:var(--gold3)}
-
-#about{background:var(--bg2)}
-.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
-@media(max-width:768px){.about-grid{grid-template-columns:1fr;gap:40px}}
-.about-visual{
-  aspect-ratio:4/5;
-  background:linear-gradient(135deg,var(--bg3) 0%,var(--border) 100%);
-  position:relative;overflow:hidden;
+#loading.hidden {
+  opacity: 0;
+  pointer-events: none;
 }
-.about-quote{
-  font-family:'Playfair Display',serif;
-  font-size:clamp(1.2rem,2vw,1.5rem);font-style:italic;
-  color:var(--ink2);line-height:1.7;margin-bottom:28px;
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--border);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
 }
-.about-quote::before{content:'\201C';color:var(--gold2);font-size:2rem;line-height:0;vertical-align:-.4em;margin-right:4px}
-.about-text{font-size:.9rem;font-weight:300;color:var(--ink3);line-height:1.9;margin-bottom:24px}
-.divider{width:48px;height:1px;background:var(--gold3);margin-bottom:24px}
-
-#contact{
-  background:var(--ink);
-  padding:100px 0;
-}
-#contact .section-label{color:var(--gold3)}
-#contact .section-title{color:var(--white)}
-#contact .section-desc{color:rgba(250,248,244,.5)}
-.contact-grid{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:80px;align-items:center;
-  margin-top:60px;
-}
-@media(max-width:768px){.contact-grid{grid-template-columns:1fr;gap:40px}}
-.contact-methods{display:flex;flex-direction:column;gap:16px}
-.contact-btn{
-  display:flex;align-items:center;gap:18px;
-  padding:18px 24px;
-  border:1px solid rgba(250,248,244,.12);
-  background:rgba(250,248,244,.04);
-  color:rgba(250,248,244,.8);
-  text-decoration:none;cursor:pointer;
-  font-family:'Jost',sans-serif;font-size:.8rem;font-weight:300;letter-spacing:.06em;
-  transition:all .3s;
-}
-.contact-btn:hover{
-  border-color:var(--gold2);background:rgba(154,124,58,.12);
-  color:var(--white);transform:translateX(6px);
-}
-.contact-btn-icon{
-  width:40px;height:40px;border-radius:50%;
-  border:1px solid rgba(250,248,244,.15);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1rem;flex-shrink:0;
-}
-.contact-tagline{
-  font-family:'Playfair Display',serif;
-  font-size:clamp(1.3rem,2.5vw,1.9rem);
-  font-style:italic;font-weight:400;
-  color:rgba(250,248,244,.75);
-  line-height:1.6;
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
-footer{
-  background:var(--ink);
-  border-top:1px solid rgba(250,248,244,.08);
-  padding:28px 5vw;
-  display:flex;align-items:center;justify-content:space-between;
-  flex-wrap:wrap;gap:12px;
+/* Navigation */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 16px 24px;
+  background: rgba(250, 248, 244, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  transition: all 0.3s;
 }
-.footer-brand{
-  font-family:'Playfair Display',serif;
-  font-size:.95rem;font-weight:500;color:rgba(250,248,244,.45);letter-spacing:.06em;
+nav.scrolled {
+  padding: 12px 24px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.05);
 }
-.footer-copy{font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(250,248,244,.25)}
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--ink);
+}
+.logo span {
+  color: var(--gold);
+}
+.nav-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+}
+.nav-links a {
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-light);
+  transition: color 0.2s;
+}
+.nav-links a:hover {
+  color: var(--gold);
+}
+.menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
 
-@media(max-width:768px){
-  .nav-links{display:none}
-  .nav-hamburger{display:flex}
-  .nav-mobile{
-    display:none;position:fixed;inset:68px 0 0;z-index:499;
-    background:rgba(250,248,244,.97);backdrop-filter:blur(16px);
-    flex-direction:column;align-items:center;justify-content:center;gap:32px;
+/* Hero Section */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 100px 24px 60px;
+  background: linear-gradient(135deg, var(--bg) 0%, var(--bg2) 100%);
+}
+.hero-content {
+  max-width: 800px;
+}
+.hero-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 24px;
+}
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 500;
+  line-height: 1.2;
+  margin-bottom: 24px;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--gold);
+}
+.hero p {
+  font-size: clamp(1rem, 2vw, 1.1rem);
+  color: var(--ink-light);
+  max-width: 550px;
+  margin: 0 auto 32px;
+}
+.btn-primary {
+  display: inline-block;
+  padding: 14px 36px;
+  background: var(--ink);
+  color: white;
+  text-decoration: none;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.btn-primary:hover {
+  background: var(--gold);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(196, 163, 90, 0.3);
+}
+
+/* Gallery Section */
+.gallery {
+  padding: 80px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.section-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+.section-header .label {
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+.section-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+.section-header p {
+  color: var(--ink-light);
+  max-width: 500px;
+  margin: 0 auto;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+}
+.art-card {
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+.art-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+}
+.art-card-img {
+  width: 100%;
+  aspect-ratio: 4/3;
+  background: var(--bg2);
+  overflow: hidden;
+}
+.art-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s;
+}
+.art-card:hover .art-card-img img {
+  transform: scale(1.05);
+}
+.art-card-info {
+  padding: 20px;
+}
+.art-card-info h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+.art-card-info p {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* About Section */
+.about {
+  background: var(--bg2);
+  padding: 80px 24px;
+}
+.about-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+.about-text .quote {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-style: italic;
+  color: var(--gold-dark);
+  margin: 24px 0;
+  padding-left: 20px;
+  border-left: 2px solid var(--gold);
+}
+.about-text p {
+  color: var(--ink-light);
+  margin-bottom: 16px;
+  line-height: 1.7;
+}
+.about-visual {
+  background: linear-gradient(135deg, #e8e0d5, #ddd2c4);
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 4rem;
+  color: rgba(0,0,0,0.1);
+}
+
+/* Contact Section */
+.contact {
+  padding: 80px 24px;
+  background: var(--ink);
+  color: white;
+}
+.contact-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+.contact-info h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+.contact-info p {
+  opacity: 0.7;
+  margin-bottom: 30px;
+}
+.contact-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.contact-btn {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 24px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  text-decoration: none;
+  color: white;
+  transition: all 0.3s;
+}
+.contact-btn:hover {
+  background: rgba(196, 163, 90, 0.2);
+  border-color: var(--gold);
+  transform: translateX(5px);
+}
+.contact-icon {
+  font-size: 24px;
+}
+.contact-btn span:first-child {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+/* Footer */
+footer {
+  background: var(--ink);
+  padding: 24px;
+  text-align: center;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.7rem;
+  opacity: 0.5;
+}
+
+/* 3D Viewer Overlay */
+.viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: #1a1a1a;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+.viewer.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.viewer-header {
+  padding: 16px 24px;
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+}
+.viewer-title {
+  color: white;
+}
+.viewer-title h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+.viewer-title p {
+  font-size: 0.7rem;
+  opacity: 0.6;
+}
+.close-viewer {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 8px;
+}
+.canvas-container {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  touch-action: none;
+}
+#canvas3d {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.viewer-controls {
+  padding: 16px 24px;
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(10px);
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  z-index: 10;
+}
+.ctrl-btn {
+  padding: 8px 16px;
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: white;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 4px;
+}
+.ctrl-btn.active {
+  background: var(--gold);
+  color: var(--ink);
+}
+.hint {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.6);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  color: white;
+  pointer-events: none;
+  z-index: 10;
+  white-space: nowrap;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
   }
-  .nav-mobile.open{display:flex}
-  .nav-mobile a{
-    font-family:'Playfair Display',serif;font-size:1.4rem;
-    color:var(--ink);text-decoration:none;font-style:italic;
+  .menu-btn {
+    display: block;
+  }
+  .about-container,
+  .contact-container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .grid {
+    gap: 20px;
+  }
+  .viewer-controls {
+    gap: 8px;
+  }
+  .ctrl-btn {
+    padding: 6px 12px;
+    font-size: 0.6rem;
+  }
+  .hint {
+    font-size: 0.6rem;
+    bottom: 70px;
   }
 }
 
-.fade-in{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
-.fade-in.visible{opacity:1;transform:none}
-
-#loading{
-  position:fixed;inset:0;z-index:1000;
-  background:var(--white);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:24px;transition:opacity .7s ease;
+/* Animations */
+.fade-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s ease;
 }
-#loading.done{opacity:0;pointer-events:none}
-.loading-brand{
-  font-family:'Playfair Display',serif;
-  font-size:1.4rem;font-weight:500;color:var(--ink);letter-spacing:.06em;
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
-.loading-brand span{color:var(--gold2);font-style:italic}
-.loading-track{width:180px;height:1px;background:var(--border)}
-.loading-fill{height:100%;width:0;background:var(--gold2);transition:width 1s ease}
 </style>
 </head>
 <body>
 
+<!-- Loading -->
 <div id="loading">
-  <div class="loading-brand">Art <span>Compulsions</span></div>
-  <div class="loading-track"><div class="loading-fill" id="load-fill"></div></div>
-  <div class="loading-msg">Preparing the gallery…</div>
+  <div class="loading-spinner"></div>
+  <div style="font-size: 0.8rem; letter-spacing: 0.2em;">LOADING GALLERY</div>
 </div>
 
-<nav id="main-nav">
-  <a href="#" class="nav-brand">Art <span>Compulsions</span></a>
-  <ul class="nav-links">
-    <li><a href="#gallery">Gallery</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-  <div style="display:flex;align-items:center;gap:12px">
-    <div class="nav-contact">
-      <a href="mailto:hello@artcompulsions.net" class="nav-icon" title="Email">✉</a>
-      <a href="https://instagram.com/artcompulsions" target="_blank" class="nav-icon" title="Instagram">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
-      </a>
-      <a href="tel:+10000000000" class="nav-icon" title="Phone">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.01 2.2 2 2 0 012 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.92z"/></svg>
-      </a>
-    </div>
-    <div class="nav-hamburger" id="hamburger">
-      <span></span><span></span><span></span>
-    </div>
+<!-- Navigation -->
+<nav id="nav">
+  <div class="nav-container">
+    <a href="#" class="logo">Art <span>Compulsions</span></a>
+    <ul class="nav-links">
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="menu-btn" id="menuBtn">☰</button>
   </div>
 </nav>
 
-<div class="nav-mobile" id="mobile-nav">
-  <a href="#gallery" onclick="closeMobileNav()">Gallery</a>
-  <a href="#about" onclick="closeMobileNav()">About</a>
-  <a href="#contact" onclick="closeMobileNav()">Contact</a>
-</div>
-
-<section id="hero">
-  <div class="hero-kicker">Original Fine Art</div>
-  <h1 class="hero-h1">Experience Art in <em>Three Dimensions</em></h1>
-  <p class="hero-sub">Browse our curated collection of original paintings. Select any work to place it in our immersive 3D viewer — frame it, light it, make it yours.</p>
-  <a href="#gallery" class="btn-primary">Explore the Collection →</a>
-  <div class="hero-scroll-hint">Scroll</div>
-</section>
-
-<section id="gallery">
-  <div class="section-wrap">
-    <div class="gallery-intro fade-in">
-      <div>
-        <div class="section-label">The Collection</div>
-        <h2 class="section-title">Selected Works</h2>
-        <p class="section-desc">Each piece is available to view in our interactive 3D room. Customize the frame and lighting to find the perfect presentation.</p>
-      </div>
-      <div class="gallery-count">06</div>
-    </div>
-    <div class="paintings-grid" id="paintings-grid"></div>
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">Original Fine Art</div>
+    <h1>Experience Art in <em>Three Dimensions</em></h1>
+    <p>Browse our curated collection of original paintings. Select any work to place it in our immersive 3D viewer — frame it, light it, make it yours.</p>
+    <a href="#gallery" class="btn-primary">Explore Collection →</a>
   </div>
 </section>
 
-<section id="about">
-  <div class="section-wrap">
-    <div class="about-grid">
-      <div class="about-visual fade-in">
-        <div class="about-visual-inner" style="display:flex;align-items:center;justify-content:center;height:100%">
-          <div class="about-ornament" style="font-family:'Playfair Display',serif;font-size:5rem;color:var(--gold3);opacity:.2;">AC</div>
+<!-- Gallery -->
+<section id="gallery" class="gallery">
+  <div class="section-header fade-up">
+    <div class="label">The Collection</div>
+    <h2>Selected Works</h2>
+    <p>Each piece is available to view in our interactive 3D room</p>
+  </div>
+  <div class="grid" id="galleryGrid"></div>
+</section>
+
+<!-- About -->
+<section id="about" class="about">
+  <div class="about-container">
+    <div class="about-text fade-up">
+      <div class="label">Our Story</div>
+      <h2 style="font-family: 'Playfair Display', serif; font-size: 2rem; margin: 16px 0;">Driven by Compulsion</h2>
+      <div class="quote">"Art is not what you see, but what you make others see."</div>
+      <p>Art Compulsions is a boutique gallery dedicated to original works that move you — pieces created from pure creative compulsion, not commission. Every painting in our collection carries the unfiltered vision of its maker.</p>
+      <p>Our 3D viewer lets you experience each work as it would hang in your space — with full control over framing, materials, and lighting.</p>
+    </div>
+    <div class="about-visual fade-up">
+      AC
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact" class="contact">
+  <div class="contact-container">
+    <div class="contact-info fade-up">
+      <div class="label" style="color: var(--gold);">Get in Touch</div>
+      <h2>Let's Talk Art</h2>
+      <p>Whether you're interested in a piece, a commission, or simply want to learn more — we'd love to hear from you.</p>
+      <div style="font-family: 'Playfair Display', serif; font-style: italic; margin-top: 24px;">"Every great collection begins with a single conversation."</div>
+    </div>
+    <div class="contact-methods fade-up">
+      <a href="mailto:hello@artcompulsions.net" class="contact-btn">
+        <div class="contact-icon">✉</div>
+        <div>
+          <span>Email</span><br>
+          hello@artcompulsions.net
         </div>
-      </div>
-      <div class="fade-in">
-        <div class="section-label">Our Story</div>
-        <h2 class="section-title">Driven by Compulsion</h2>
-        <div class="divider"></div>
-        <p class="about-quote">Art is not what you see, but what you make others see.</p>
-        <p class="about-text">Art Compulsions is a boutique gallery dedicated to original works that move you — pieces created from pure creative compulsion, not commission. Every painting in our collection carries the unfiltered vision of its maker.</p>
-        <p class="about-text">Our 3D viewer lets you experience each work as it would hang in your space — with full control over framing, materials, and lighting so you can find the presentation that speaks to you.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="contact">
-  <div class="section-wrap">
-    <div class="section-label">Get in Touch</div>
-    <h2 class="section-title">Let's Talk Art</h2>
-    <div class="contact-grid">
-      <div>
-        <p class="section-desc">Whether you're interested in a piece, a commission, or simply want to learn more about the collection — we'd love to hear from you.</p>
-        <p class="contact-tagline" style="margin-top:32px">"Every great collection begins with a single conversation."</p>
-      </div>
-      <div class="contact-methods">
-        <a href="mailto:hello@artcompulsions.net" class="contact-btn">
-          <div class="contact-btn-icon">✉</div>
-          <div>
-            <div class="contact-btn-label">Email</div>
-            <div>hello@artcompulsions.net</div>
-          </div>
-        </a>
-        <a href="https://instagram.com/artcompulsions" target="_blank" class="contact-btn">
-          <div class="contact-btn-icon">📷</div>
-          <div>
-            <div class="contact-btn-label">Instagram</div>
-            <div>@artcompulsions</div>
-          </div>
-        </a>
-        <a href="tel:+10000000000" class="contact-btn">
-          <div class="contact-btn-icon">📞</div>
-          <div>
-            <div class="contact-btn-label">Phone</div>
-            <div>+1 (000) 000-0000</div>
-          </div>
-        </a>
-      </div>
+      </a>
+      <a href="#" class="contact-btn">
+        <div class="contact-icon">📷</div>
+        <div>
+          <span>Instagram</span><br>
+          @artcompulsions
+        </div>
+      </a>
     </div>
   </div>
 </section>
 
 <footer>
-  <div class="footer-brand">Art Compulsions</div>
-  <div class="footer-copy">© 2025 Art Compulsions. All rights reserved.</div>
+  <p>© 2025 Art Compulsions. All rights reserved.</p>
 </footer>
 
-<div id="viewer">
-  <div class="viewer-bar">
-    <div class="viewer-bar-left">
-      <button class="btn-back" id="btn-back">← Back</button>
-      <div>
-        <span class="viewer-painting-name" id="vp-name"></span>
-        <span class="viewer-painting-artist-small" id="vp-artist"></span>
-      </div>
+<!-- 3D Viewer Overlay -->
+<div id="viewer" class="viewer">
+  <div class="viewer-header">
+    <div class="viewer-title">
+      <h3 id="viewerTitle">Loading...</h3>
+      <p id="viewerArtist"></p>
     </div>
-    <div class="drag-hint-bar" id="drag-hint">🖱️ Drag to rotate · Scroll to zoom</div>
+    <button class="close-viewer" id="closeViewer">✕</button>
   </div>
-  <div id="canvas-wrap">
-    <canvas id="three-canvas"></canvas>
+  <div class="canvas-container" id="canvasContainer">
+    <canvas id="canvas3d"></canvas>
+    <div class="hint" id="hint">🖱️ Drag to rotate • Pinch to zoom</div>
   </div>
   <div class="viewer-controls">
-    <div class="controls-tabs">
-      <button class="ctrl-tab active" data-tab="frame-mat">Material</button>
-      <button class="ctrl-tab" data-tab="frame-color">Color</button>
-      <button class="ctrl-tab" data-tab="frame-size">Width</button>
-      <button class="ctrl-tab" data-tab="lighting">Lighting</button>
-      <button class="ctrl-tab" data-tab="environment">Room</button>
-    </div>
-    <div class="controls-body">
-      <div class="ctrl-panel active" id="tab-frame-mat">
-        <div class="opt-row">
-          <button class="opt-pill active" data-mat="wood">🪵 Wood</button>
-          <button class="opt-pill" data-mat="plastic">Plastic</button>
-          <button class="opt-pill" data-mat="steel">Steel</button>
-        </div>
-      </div>
-      <div class="ctrl-panel" id="tab-frame-color">
-        <div class="color-row">
-          <div class="swatch active" data-hex="#5c3a1e" style="background:#5c3a1e"></div>
-          <div class="swatch" data-hex="#2b1a0e" style="background:#2b1a0e"></div>
-          <div class="swatch" data-hex="#8b5e3c" style="background:#8b5e3c"></div>
-          <div class="swatch" data-hex="#c8a96e" style="background:#c8a96e"></div>
-          <div class="swatch" data-hex="#b8922a" style="background:#b8922a"></div>
-          <div class="swatch" data-hex="#1a1a1a" style="background:#1a1a1a"></div>
-          <div class="swatch" data-hex="#f0ece4" style="background:#f0ece4;border:1px solid #ddd"></div>
-          <div class="swatch" data-hex="#9ca3af" style="background:#9ca3af"></div>
-          <div class="custom-color-btn">+<input type="color" id="custom-color" value="#5c3a1e"/></div>
-        </div>
-      </div>
-      <div class="ctrl-panel" id="tab-frame-size">
-        <div class="opt-row">
-          <button class="opt-pill" data-fw="0">Thin</button>
-          <button class="opt-pill" data-fw="1">Slim</button>
-          <button class="opt-pill active" data-fw="2">Medium</button>
-          <button class="opt-pill" data-fw="3">Wide</button>
-          <button class="opt-pill" data-fw="4">Bold</button>
-        </div>
-      </div>
-      <div class="ctrl-panel" id="tab-lighting">
-        <div class="light-preset-row">
-          <button class="lp-btn active" data-lp="gallery"><span class="lp-icon">🏛</span><span class="lp-name">Gallery</span></button>
-          <button class="lp-btn" data-lp="dramatic"><span class="lp-icon">🎭</span><span class="lp-name">Dramatic</span></button>
-          <button class="lp-btn" data-lp="warm"><span class="lp-icon">🕯</span><span class="lp-name">Warm</span></button>
-          <button class="lp-btn" data-lp="cool"><span class="lp-icon">🌙</span><span class="lp-name">Cool</span></button>
-        </div>
-        <div class="slider-grid">
-          <div class="slider-item">
-            <div class="slider-top"><span class="slider-name">Intensity</span><span class="slider-num" id="val-int">1.2</span></div>
-            <input type="range" id="sl-int" min="0.1" max="3" step="0.1" value="1.2"/>
-          </div>
-          <div class="slider-item">
-            <div class="slider-top"><span class="slider-name">Warmth</span><span class="slider-num" id="val-warm">50</span></div>
-            <input type="range" id="sl-warm" min="0" max="100" step="1" value="50"/>
-          </div>
-          <div class="slider-item">
-            <div class="slider-top"><span class="slider-name">Spot Angle</span><span class="slider-num" id="val-ang">45°</span></div>
-            <input type="range" id="sl-ang" min="10" max="80" step="1" value="45"/>
-          </div>
-        </div>
-      </div>
-      <div class="ctrl-panel" id="tab-environment">
-        <div class="opt-row">
-          <button class="opt-pill active" data-env="gallery">Gallery White</button>
-          <button class="opt-pill" data-env="studio">Studio Grey</button>
-          <button class="opt-pill" data-env="warm">Warm Linen</button>
-          <button class="opt-pill" data-env="dark">Dark Room</button>
-        </div>
-      </div>
-    </div>
+    <button class="ctrl-btn active" data-material="wood">Wood</button>
+    <button class="ctrl-btn" data-material="metal">Metal</button>
+    <button class="ctrl-btn" data-material="dark">Dark Wood</button>
+    <button class="ctrl-btn" data-color="gold">Gold Frame</button>
   </div>
 </div>
 
 <script>
-// FIXED: RELIABLE IMAGES using Picsum (always works) + canvas fallback
-const PAINTINGS = [
-  { title: "Golden Hour Fields", artist: "Nature Series", imgId: "1015", keyword: "mountain" },
-  { title: "Serene Waters", artist: "Reflections", imgId: "104", keyword: "lake" },
-  { title: "Abstract Bloom", artist: "Botanical", imgId: "112", keyword: "flower" },
-  { title: "Ocean Drift", artist: "Coastal", imgId: "106", keyword: "ocean" },
-  { title: "Forest Light", artist: "Woodland", imgId: "146", keyword: "forest" },
-  { title: "Desert Silence", artist: "Landscape", imgId: "107", keyword: "desert" }
+// ========== LIGHTWEIGHT GALLERY WITH RELIABLE IMAGES ==========
+const artworks = [
+  { title: "Golden Hour", artist: "Nature Series", imgId: "1015", color: "#c4a35a" },
+  { title: "Serene Waters", artist: "Reflections", imgId: "104", color: "#4a90c4" },
+  { title: "Abstract Bloom", artist: "Botanical", imgId: "112", color: "#c45a7a" },
+  { title: "Ocean Drift", artist: "Coastal", imgId: "106", color: "#2c6e9e" },
+  { title: "Forest Light", artist: "Woodland", imgId: "146", color: "#5a8a3a" },
+  { title: "Desert Silence", artist: "Landscape", imgId: "107", color: "#d4a05a" }
 ];
 
-// Get reliable image URLs
-function getImageUrl(p, isThumb = false) {
+// Get reliable image URL
+function getArtImage(id, isThumb = false) {
   const size = isThumb ? "400/300" : "800/600";
-  // Picsum is 100% reliable
-  return `https://picsum.photos/id/${p.imgId}/${size}`;
-}
-
-// Canvas placeholder generator (solid color + text)
-function createCanvasPlaceholder(title, width = 800, height = 600) {
-  const canvas = document.createElement('canvas');
-  canvas.width = width;
-  canvas.height = height;
-  const ctx = canvas.getContext('2d');
-  
-  // Elegant gradient background
-  const grad = ctx.createLinearGradient(0, 0, width, height);
-  grad.addColorStop(0, '#f5f0e8');
-  grad.addColorStop(1, '#e8e0d5');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, width, height);
-  
-  // Decorative border
-  ctx.strokeStyle = '#b8962e';
-  ctx.lineWidth = 3;
-  ctx.strokeRect(20, 20, width - 40, height - 40);
-  
-  // Title text
-  ctx.fillStyle = '#8a8278';
-  ctx.font = `500 ${Math.floor(height * 0.05)}px 'Playfair Display', serif`;
-  ctx.textAlign = 'center';
-  ctx.fillText(title || 'Artwork', width/2, height/2);
-  
-  ctx.font = `${Math.floor(height * 0.03)}px 'Jost', sans-serif`;
-  ctx.fillStyle = '#b8962e';
-  ctx.fillText('Art Compulsions', width/2, height - 80);
-  
-  return canvas;
+  return `https://picsum.photos/id/${id}/${size}`;
 }
 
 // Build gallery
-const grid2 = document.getElementById('paintings-grid');
-PAINTINGS.forEach((p, idx) => {
+const gridContainer = document.getElementById('galleryGrid');
+artworks.forEach((art, idx) => {
   const card = document.createElement('div');
-  card.className = 'p-card fade-in';
-  const imgUrl = getImageUrl(p, true);
-  
+  card.className = 'art-card fade-up';
   card.innerHTML = `
-    <div class="p-card-img">
-      <img src="${imgUrl}" alt="${p.title}" loading="lazy" style="background:#ede8df"/>
-      <div class="p-card-overlay"><button class="p-card-cta">View in 3D →</button></div>
+    <div class="art-card-img">
+      <img src="${getArtImage(art.imgId, true)}" alt="${art.title}" loading="lazy">
     </div>
-    <div class="p-card-body">
-      <div class="p-card-title">${p.title}</div>
-      <div class="p-card-artist">${p.artist}</div>
-    </div>`;
-  
-  const img = card.querySelector('img');
-  img.onerror = () => {
-    const placeholder = createCanvasPlaceholder(p.title, 400, 300);
-    img.src = placeholder.toDataURL();
-  };
-  
-  card.addEventListener('click', () => openViewer(idx));
-  grid2.appendChild(card);
+    <div class="art-card-info">
+      <h3>${art.title}</h3>
+      <p>${art.artist}</p>
+    </div>
+  `;
+  card.addEventListener('click', () => open3DViewer(idx));
+  gridContainer.appendChild(card);
 });
 
-// Intersection Observer
-const io2 = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+// ========== SCROLL ANIMATIONS ==========
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add('visible');
+  });
 }, { threshold: 0.1 });
-document.querySelectorAll('.fade-in').forEach(el => io2.observe(el));
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
-// Nav scroll
-const mainNav2 = document.getElementById('main-nav');
+// Nav scroll effect
 window.addEventListener('scroll', () => {
-  mainNav2.classList.toggle('scrolled', window.scrollY > 40);
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
 });
 
-// Mobile nav
-const hamburger2 = document.getElementById('hamburger');
-const mobileNav2 = document.getElementById('mobile-nav');
-hamburger2.addEventListener('click', () => mobileNav2.classList.toggle('open'));
-function closeMobileNav() { mobileNav2.classList.remove('open'); }
-
-// ========== THREE.JS - FIXED FRAME THAT STAYS TOGETHER ==========
-const canvasEl2 = document.getElementById('three-canvas');
-const canvasWrap2 = document.getElementById('canvas-wrap');
-const renderer2 = new THREE.WebGLRenderer({ canvas: canvasEl2, antialias: true, alpha: false });
-renderer2.setSize(canvasWrap2.clientWidth, canvasWrap2.clientHeight);
-renderer2.setPixelRatio(window.devicePixelRatio);
-renderer2.shadowMap.enabled = true;
-
-const scene2 = new THREE.Scene();
-scene2.background = new THREE.Color(0xf0ece4);
-scene2.fog = new THREE.FogExp2(0xf0ece4, 0.008);
-
-// Camera
-const camera2 = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
-camera2.position.set(0, 0, 5.5);
-
-// ========== LIGHTS ==========
-const ambientLight = new THREE.AmbientLight(0xfff8ee, 0.6);
-scene2.add(ambientLight);
-
-const mainLight = new THREE.DirectionalLight(0xfff5e0, 1.2);
-mainLight.position.set(2, 3, 4);
-mainLight.castShadow = true;
-mainLight.receiveShadow = false;
-mainLight.shadow.mapSize.width = 1024;
-mainLight.shadow.mapSize.height = 1024;
-scene2.add(mainLight);
-
-const fillLight = new THREE.PointLight(0xdde8ff, 0.3);
-fillLight.position.set(-2, 1, 3);
-scene2.add(fillLight);
-
-const backLight = new THREE.PointLight(0xffcc88, 0.2);
-backLight.position.set(0, 1, -2);
-scene2.add(backLight);
-
-// ========== MAIN GROUP (everything rotates together) ==========
-const artGroup2 = new THREE.Group();
-scene2.add(artGroup2);
-
-// Frame configurations
-const frameWidths = [0.045, 0.07, 0.105, 0.145, 0.185];
-const materialProps = {
-  wood: { roughness: 0.85, metalness: 0.02, color: null },
-  plastic: { roughness: 0.35, metalness: 0.02, color: null },
-  steel: { roughness: 0.22, metalness: 0.88, color: null }
-};
-
-let currentFrame = {
-  color: '#5c3a1e',
-  material: 'wood',
-  widthIdx: 2,
-  paintingWidth: 3.2,
-  paintingHeight: 2.2
-};
-
+// ========== 3D VIEWER - LIGHTWEIGHT WITH PROPER CLEANUP ==========
+let scene3d, camera3d, renderer3d, artGroup3d, frameGroup3d;
 let currentTexture = null;
-let currentPaintingId = 0;
+let isViewerActive = false;
+let animationId = null;
 
-// ========== BUILD COMPLETE FRAME (ONE SOLID UNIT) ==========
-function buildCompleteFrame(texture, paintingId) {
-  // Clear group
-  while (artGroup2.children.length) {
-    const child = artGroup2.children[0];
+// Touch zoom variables
+let lastDistance = 0;
+let targetZoom = 5;
+let currentZoom = 5;
+let targetRotX = 0, targetRotY = 0, currentRotX = 0, currentRotY = 0;
+let isDragging = false;
+let lastTouchX = 0, lastTouchY = 0;
+
+function init3DViewer() {
+  const container = document.getElementById('canvasContainer');
+  const canvas = document.getElementById('canvas3d');
+  
+  // Setup scene
+  scene3d = new THREE.Scene();
+  scene3d.background = new THREE.Color(0x1a1a1a);
+  scene3d.fog = new THREE.FogExp2(0x1a1a1a, 0.02);
+  
+  // Camera
+  const width = container.clientWidth;
+  const height = container.clientHeight;
+  camera3d = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+  camera3d.position.set(0, 0, 5);
+  
+  // Renderer
+  renderer3d = new THREE.WebGLRenderer({ canvas, alpha: false, antialias: true });
+  renderer3d.setSize(width, height);
+  renderer3d.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer3d.shadowMap.enabled = true;
+  renderer3d.shadowMap.type = THREE.PCFSoftShadowMap;
+  
+  // Lighting
+  const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+  scene3d.add(ambientLight);
+  
+  const mainLight = new THREE.DirectionalLight(0xfff5e0, 1.2);
+  mainLight.position.set(2, 3, 4);
+  mainLight.castShadow = true;
+  mainLight.receiveShadow = false;
+  mainLight.shadow.mapSize.width = 512;
+  mainLight.shadow.mapSize.height = 512;
+  scene3d.add(mainLight);
+  
+  const fillLight = new THREE.PointLight(0x4466aa, 0.3);
+  fillLight.position.set(-2, 1, 3);
+  scene3d.add(fillLight);
+  
+  const backLight = new THREE.PointLight(0xffaa66, 0.2);
+  backLight.position.set(0, 1, -2);
+  scene3d.add(backLight);
+  
+  // Ground shadow catcher (simple plane)
+  const groundPlane = new THREE.Mesh(
+    new THREE.PlaneGeometry(8, 6),
+    new THREE.ShadowMaterial({ opacity: 0.4, color: 0x000000, transparent: true, side: THREE.DoubleSide })
+  );
+  groundPlane.rotation.x = -Math.PI / 2;
+  groundPlane.position.y = -1.5;
+  groundPlane.receiveShadow = true;
+  scene3d.add(groundPlane);
+  
+  // Group for the art piece
+  artGroup3d = new THREE.Group();
+  scene3d.add(artGroup3d);
+}
+
+function createFrameWithArt(texture, width, height, frameColor = '#5c3a1e', frameMaterial = 'wood') {
+  // Clear previous
+  while (artGroup3d.children.length) {
+    const child = artGroup3d.children[0];
     if (child.isMesh) {
       if (child.material) {
         if (child.material.map) child.material.map.dispose();
@@ -818,215 +738,90 @@ function buildCompleteFrame(texture, paintingId) {
       }
       if (child.geometry) child.geometry.dispose();
     }
-    artGroup2.remove(child);
+    artGroup3d.remove(child);
   }
   
-  const PW = currentFrame.paintingWidth;
-  const PH = currentFrame.paintingHeight;
-  const frameW = frameWidths[currentFrame.widthIdx];
-  const frameDepth = 0.12;
-  const canvasDepth = 0.025;
-  const backDepth = 0.045;
+  const frameW = 0.08;
+  const frameDepth = 0.08;
+  const canvasDepth = 0.02;
+  const backDepth = 0.03;
   
-  const frameColor = new THREE.Color(currentFrame.color);
-  const matProps = materialProps[currentFrame.material];
-  const frameMaterial = new THREE.MeshStandardMaterial({
-    color: frameColor,
+  // Material settings
+  let frameColorHex = frameColor;
+  let matProps = { roughness: 0.7, metalness: 0.1 };
+  if (frameMaterial === 'metal') {
+    matProps = { roughness: 0.3, metalness: 0.85 };
+  } else if (frameMaterial === 'dark') {
+    frameColorHex = '#2a1a0e';
+    matProps = { roughness: 0.8, metalness: 0.05 };
+  }
+  
+  const frameMat = new THREE.MeshStandardMaterial({
+    color: frameColorHex,
     roughness: matProps.roughness,
-    metalness: matProps.metalness,
-    emissive: currentFrame.material === 'steel' ? 0x221100 : 0x000000,
-    emissiveIntensity: currentFrame.material === 'steel' ? 0.15 : 0
+    metalness: matProps.metalness
   });
   
-  // 1. PAINTING CANVAS (with texture or white)
-  let canvasMaterial;
-  if (texture) {
-    canvasMaterial = new THREE.MeshStandardMaterial({ map: texture, roughness: 0.65, metalness: 0.02, color: 0xffffff });
-  } else {
-    // Create a simple colored canvas as fallback
-    canvasMaterial = new THREE.MeshStandardMaterial({ color: 0xf5f0ea, roughness: 0.7 });
-  }
+  // Canvas (painting)
+  const canvasMat = new THREE.MeshStandardMaterial({
+    map: texture,
+    color: 0xffffff,
+    roughness: 0.5,
+    metalness: 0.02
+  });
   
-  const canvasGeo = new THREE.BoxGeometry(PW, PH, canvasDepth);
-  const canvasMesh = new THREE.Mesh(canvasGeo, canvasMaterial);
+  const canvasGeo = new THREE.BoxGeometry(width, height, canvasDepth);
+  const canvasMesh = new THREE.Mesh(canvasGeo, canvasMat);
   canvasMesh.position.z = (frameDepth - canvasDepth) / 2;
   canvasMesh.castShadow = true;
   canvasMesh.receiveShadow = false;
-  artGroup2.add(canvasMesh);
+  artGroup3d.add(canvasMesh);
   
-  // Add a subtle canvas texture grain effect via side materials
-  const sideMat = new THREE.MeshStandardMaterial({ color: 0xe8e0d5, roughness: 0.9 });
-  // Replace side materials (indices 0-3 are sides, 4 is front, 5 is back)
-  for (let i = 0; i < 4; i++) {
-    canvasMesh.material[i] = sideMat;
-  }
-  canvasMesh.material[5] = sideMat; // back
+  // Frame bars
+  const barLengthH = width + frameW * 2;
+  const barLengthV = height + frameW * 2;
   
-  // 2. FRAME BARS (4 sides as ONE visual piece)
-  const barLengthH = PW + frameW * 2;
-  const barLengthV = PH + frameW * 2;
-  
-  // Top bar
-  const topBar = new THREE.Mesh(new THREE.BoxGeometry(barLengthH, frameW, frameDepth), frameMaterial);
-  topBar.position.set(0, PH/2 + frameW/2, 0);
+  const topBar = new THREE.Mesh(new THREE.BoxGeometry(barLengthH, frameW, frameDepth), frameMat);
+  topBar.position.set(0, height/2 + frameW/2, 0);
   topBar.castShadow = true;
-  artGroup2.add(topBar);
+  artGroup3d.add(topBar);
   
-  // Bottom bar
-  const bottomBar = new THREE.Mesh(new THREE.BoxGeometry(barLengthH, frameW, frameDepth), frameMaterial);
-  bottomBar.position.set(0, -PH/2 - frameW/2, 0);
+  const bottomBar = new THREE.Mesh(new THREE.BoxGeometry(barLengthH, frameW, frameDepth), frameMat);
+  bottomBar.position.set(0, -height/2 - frameW/2, 0);
   bottomBar.castShadow = true;
-  artGroup2.add(bottomBar);
+  artGroup3d.add(bottomBar);
   
-  // Left bar
-  const leftBar = new THREE.Mesh(new THREE.BoxGeometry(frameW, barLengthV, frameDepth), frameMaterial);
-  leftBar.position.set(-PW/2 - frameW/2, 0, 0);
+  const leftBar = new THREE.Mesh(new THREE.BoxGeometry(frameW, barLengthV, frameDepth), frameMat);
+  leftBar.position.set(-width/2 - frameW/2, 0, 0);
   leftBar.castShadow = true;
-  artGroup2.add(leftBar);
+  artGroup3d.add(leftBar);
   
-  // Right bar
-  const rightBar = new THREE.Mesh(new THREE.BoxGeometry(frameW, barLengthV, frameDepth), frameMaterial);
-  rightBar.position.set(PW/2 + frameW/2, 0, 0);
+  const rightBar = new THREE.Mesh(new THREE.BoxGeometry(frameW, barLengthV, frameDepth), frameMat);
+  rightBar.position.set(width/2 + frameW/2, 0, 0);
   rightBar.castShadow = true;
-  artGroup2.add(rightBar);
+  artGroup3d.add(rightBar);
   
-  // 3. BACKING BOARD (solid, covers entire back)
-  const backBoardGeo = new THREE.BoxGeometry(PW + frameW * 2, PH + frameW * 2, backDepth);
-  const backMaterial = new THREE.MeshStandardMaterial({ color: 0x2a2218, roughness: 0.95, metalness: 0.0 });
-  const backBoard = new THREE.Mesh(backBoardGeo, backMaterial);
+  // Backing
+  const backMat = new THREE.MeshStandardMaterial({ color: 0x2a2218, roughness: 0.9 });
+  const backBoard = new THREE.Mesh(new THREE.BoxGeometry(width + frameW * 2, height + frameW * 2, backDepth), backMat);
   backBoard.position.z = -frameDepth/2 - backDepth/2;
   backBoard.castShadow = true;
-  artGroup2.add(backBoard);
+  artGroup3d.add(backBoard);
   
-  // 4. CORNER CONNECTORS (small cubes at corners to make it look solid)
-  const cornerMat = new THREE.MeshStandardMaterial({ color: frameColor, roughness: matProps.roughness, metalness: matProps.metalness });
-  const cornerSize = frameW * 0.8;
-  const corners = [
-    { x: PW/2 + frameW/2, y: PH/2 + frameW/2 },
-    { x: -PW/2 - frameW/2, y: PH/2 + frameW/2 },
-    { x: PW/2 + frameW/2, y: -PH/2 - frameW/2 },
-    { x: -PW/2 - frameW/2, y: -PH/2 - frameW/2 }
-  ];
-  corners.forEach(pos => {
-    const corner = new THREE.Mesh(new THREE.BoxGeometry(cornerSize, cornerSize, frameDepth), cornerMat);
-    corner.position.set(pos.x, pos.y, 0);
-    corner.castShadow = true;
-    artGroup2.add(corner);
-  });
+  // Add a subtle floating shadow effect (small platform)
+  const shadowPlate = new THREE.Mesh(
+    new THREE.BoxGeometry(width + 0.2, 0.05, 0.2),
+    new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.8, metalness: 0.1 })
+  );
+  shadowPlate.position.y = -height/2 - 0.15;
+  shadowPlate.receiveShadow = true;
+  shadowPlate.castShadow = true;
+  artGroup3d.add(shadowPlate);
 }
 
-// Update only frame properties (keep texture)
-function updateFrame() {
-  buildCompleteFrame(currentTexture, currentPaintingId);
-}
-
-// ========== INTERACTION (rotate the GROUP) ==========
-let targetRotX = 0, targetRotY = 0, currentRotX = 0, currentRotY = 0;
-let targetZoom = 5.5, currentZoom = 5.5;
-let isDragging = false, lastX = 0, lastY = 0;
-
-canvasWrap2.addEventListener('mousedown', (e) => {
-  isDragging = true;
-  lastX = e.clientX;
-  lastY = e.clientY;
-  canvasWrap2.style.cursor = 'grabbing';
-  hideHint2();
-});
-
-window.addEventListener('mouseup', () => {
-  isDragging = false;
-  canvasWrap2.style.cursor = '';
-});
-
-window.addEventListener('mousemove', (e) => {
-  if (!isDragging) return;
-  const deltaX = e.clientX - lastX;
-  const deltaY = e.clientY - lastY;
-  targetRotY += deltaX * 0.008;
-  targetRotX += deltaY * 0.008;
-  targetRotX = Math.max(-0.8, Math.min(0.8, targetRotX));
-  lastX = e.clientX;
-  lastY = e.clientY;
-});
-
-canvasWrap2.addEventListener('wheel', (e) => {
-  e.preventDefault();
-  targetZoom += e.deltaY * 0.008;
-  targetZoom = Math.max(2.5, Math.min(8, targetZoom));
-  hideHint2();
-}, { passive: false });
-
-let hintHidden2 = false;
-function hideHint2() {
-  if (hintHidden2) return;
-  hintHidden2 = true;
-  document.getElementById('drag-hint').classList.add('hidden');
-}
-
-// Touch support
-canvasWrap2.addEventListener('touchstart', (e) => {
-  if (e.touches.length === 1) {
-    isDragging = true;
-    lastX = e.touches[0].clientX;
-    lastY = e.touches[0].clientY;
-    hideHint2();
-  }
-});
-canvasWrap2.addEventListener('touchmove', (e) => {
-  if (isDragging && e.touches.length === 1) {
-    e.preventDefault();
-    const deltaX = e.touches[0].clientX - lastX;
-    const deltaY = e.touches[0].clientY - lastY;
-    targetRotY += deltaX * 0.008;
-    targetRotX += deltaY * 0.008;
-    targetRotX = Math.max(-0.8, Math.min(0.8, targetRotX));
-    lastX = e.touches[0].clientX;
-    lastY = e.touches[0].clientY;
-  }
-});
-canvasWrap2.addEventListener('touchend', () => { isDragging = false; });
-
-// Resize handler
-function resizeViewer() {
-  const w = canvasWrap2.clientWidth;
-  const h = canvasWrap2.clientHeight;
-  if (w === 0 || h === 0) return;
-  renderer2.setSize(w, h);
-  camera2.aspect = w / h;
-  camera2.updateProjectionMatrix();
-}
-new ResizeObserver(() => resizeViewer()).observe(canvasWrap2);
-resizeViewer();
-
-// ========== ENVIRONMENT ==========
-let currentWall = null, currentFloor = null;
-function setEnvironment(type) {
-  if (currentWall) scene2.remove(currentWall);
-  if (currentFloor) scene2.remove(currentFloor);
-  
-  const wallColors = { gallery: 0xf8f5f0, studio: 0xe8e8e8, warm: 0xf5ede0, dark: 0x1a1714 };
-  const floorColors = { gallery: 0xede9e2, studio: 0xd8d8d8, warm: 0xeae0d0, dark: 0x0f0e0c };
-  
-  currentWall = new THREE.Mesh(new THREE.PlaneGeometry(16, 12), new THREE.MeshStandardMaterial({ color: wallColors[type] || 0xf8f5f0, roughness: 0.95 }));
-  currentWall.position.set(0, 0, -1.2);
-  currentWall.receiveShadow = true;
-  scene2.add(currentWall);
-  
-  currentFloor = new THREE.Mesh(new THREE.PlaneGeometry(16, 10), new THREE.MeshStandardMaterial({ color: floorColors[type] || 0xede9e2, roughness: 0.7, metalness: 0.05 }));
-  currentFloor.rotation.x = -Math.PI / 2;
-  currentFloor.position.set(0, -2.5, 1.5);
-  currentFloor.receiveShadow = true;
-  scene2.add(currentFloor);
-}
-setEnvironment('gallery');
-
-// ========== TEXTURE LOADER WITH RELIABLE FALLBACK ==========
-const textureLoader = new THREE.TextureLoader();
-
-function loadPaintingTexture(painting, idx, callback) {
-  const imgUrl = getImageUrl(painting, false);
-  
-  textureLoader.load(imgUrl, 
+function loadTexture(url, callback) {
+  const loader = new THREE.TextureLoader();
+  loader.load(url, 
     (texture) => {
       texture.wrapS = THREE.RepeatWrapping;
       texture.wrapT = THREE.RepeatWrapping;
@@ -1034,8 +829,24 @@ function loadPaintingTexture(painting, idx, callback) {
     },
     undefined,
     () => {
-      // Fallback: create canvas texture
-      const canvas = createCanvasPlaceholder(painting.title, 800, 600);
+      // Fallback: create colored canvas texture
+      const canvas = document.createElement('canvas');
+      canvas.width = 512;
+      canvas.height = 512;
+      const ctx = canvas.getContext('2d');
+      const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      grad.addColorStop(0, '#e8dcc8');
+      grad.addColorStop(1, '#d4c8b4');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.strokeStyle = '#c4a35a';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
+      ctx.fillStyle = '#8a7a64';
+      ctx.font = 'bold 24px serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Art Compulsions', canvas.width/2, canvas.height/2);
+      
       const fallbackTexture = new THREE.Texture(canvas);
       fallbackTexture.needsUpdate = true;
       callback(fallbackTexture);
@@ -1043,188 +854,238 @@ function loadPaintingTexture(painting, idx, callback) {
   );
 }
 
-// ========== OPEN VIEWER ==========
-function openViewer(idx) {
-  const painting = PAINTINGS[idx];
-  currentPaintingId = idx;
+let currentFrameMaterial = 'wood';
+let currentFrameColor = '#5c3a1e';
+
+function updateFrameMaterial() {
+  if (artGroup3d && currentTexture) {
+    createFrameWithArt(currentTexture, 2.4, 1.8, currentFrameColor, currentFrameMaterial);
+  }
+}
+
+function open3DViewer(idx) {
+  const art = artworks[idx];
+  document.getElementById('viewerTitle').textContent = art.title;
+  document.getElementById('viewerArtist').textContent = art.artist;
   
-  document.getElementById('vp-name').textContent = painting.title;
-  document.getElementById('vp-artist').textContent = '— ' + painting.artist;
-  
-  // Reset rotation and zoom
-  targetRotX = 0; targetRotY = 0; currentRotX = 0; currentRotY = 0;
-  targetZoom = 5.5; currentZoom = 5.5;
-  hintHidden2 = false;
-  document.getElementById('drag-hint').classList.remove('hidden');
+  // Reset camera and rotation
+  targetZoom = 5;
+  currentZoom = 5;
+  targetRotX = 0;
+  targetRotY = 0;
+  currentRotX = 0;
+  currentRotY = 0;
+  if (camera3d) camera3d.position.set(0, 0, 5);
+  if (artGroup3d) artGroup3d.rotation.set(0, 0, 0);
   
   // Show viewer
   document.getElementById('viewer').classList.add('active');
   document.body.style.overflow = 'hidden';
+  isViewerActive = true;
   
-  // Create white canvas placeholder while loading
-  const placeholderCanvas = createCanvasPlaceholder('Loading...', 800, 600);
-  const placeholderTexture = new THREE.Texture(placeholderCanvas);
-  placeholderTexture.needsUpdate = true;
-  currentTexture = placeholderTexture;
-  buildCompleteFrame(placeholderTexture, idx);
+  // Hide hint after 3 seconds
+  setTimeout(() => {
+    const hint = document.getElementById('hint');
+    if (hint) hint.style.opacity = '0';
+  }, 3000);
   
-  // Load actual texture
-  loadPaintingTexture(painting, idx, (texture) => {
+  // Initialize 3D if not already
+  if (!renderer3d) {
+    init3DViewer();
+    resize3DViewer();
+  }
+  
+  // Load texture and create frame
+  const imgUrl = getArtImage(art.imgId, false);
+  loadTexture(imgUrl, (texture) => {
     currentTexture = texture;
-    // Adjust aspect ratio based on texture
-    const img = texture.image;
-    if (img && img.width && img.height) {
-      const aspect = img.width / img.height;
-      currentFrame.paintingHeight = 2.2;
-      currentFrame.paintingWidth = 2.2 * aspect;
-    }
-    buildCompleteFrame(texture, idx);
+    createFrameWithArt(texture, 2.4, 1.8, currentFrameColor, currentFrameMaterial);
   });
   
   // Start animation loop
-  if (!animationRunning) startAnimation();
+  if (animationId) cancelAnimationFrame(animationId);
+  animate3D();
 }
 
-// Close viewer
-document.getElementById('btn-back').addEventListener('click', () => {
+function close3DViewer() {
   document.getElementById('viewer').classList.remove('active');
   document.body.style.overflow = '';
-});
-
-// ========== UI CONTROLS ==========
-document.querySelectorAll('.ctrl-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.ctrl-tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.ctrl-panel').forEach(p => p.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
-  });
-});
-
-// Material
-document.getElementById('tab-frame-mat').addEventListener('click', (e) => {
-  const btn = e.target.closest('.opt-pill');
-  if (!btn || !btn.dataset.mat) return;
-  document.querySelectorAll('#tab-frame-mat .opt-pill').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  currentFrame.material = btn.dataset.mat;
-  updateFrame();
-});
-
-// Color
-document.getElementById('tab-frame-color').addEventListener('click', (e) => {
-  const swatch = e.target.closest('.swatch');
-  if (swatch && swatch.dataset.hex) {
-    document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
-    swatch.classList.add('active');
-    currentFrame.color = swatch.dataset.hex;
-    document.getElementById('custom-color').value = swatch.dataset.hex;
-    updateFrame();
+  isViewerActive = false;
+  
+  // Cleanup 3D resources
+  if (animationId) {
+    cancelAnimationFrame(animationId);
+    animationId = null;
   }
-});
-document.getElementById('custom-color').addEventListener('input', (e) => {
-  document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
-  currentFrame.color = e.target.value;
-  updateFrame();
-});
-
-// Frame width
-document.getElementById('tab-frame-size').addEventListener('click', (e) => {
-  const btn = e.target.closest('.opt-pill');
-  if (!btn || btn.dataset.fw === undefined) return;
-  document.querySelectorAll('#tab-frame-size .opt-pill').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  currentFrame.widthIdx = parseInt(btn.dataset.fw);
-  updateFrame();
-});
-
-// Lighting presets
-const lightPresets = {
-  gallery: { int: 1.2, warm: 50, ang: 45, col: 0xfff5e0 },
-  dramatic: { int: 2.2, warm: 25, ang: 25, col: 0xffecd0 },
-  warm: { int: 1.6, warm: 85, ang: 55, col: 0xffcc88 },
-  cool: { int: 1.0, warm: 10, ang: 50, col: 0xc8d8ff }
-};
-
-function applyLightPreset(preset) {
-  const p = lightPresets[preset];
-  mainLight.intensity = p.int;
-  mainLight.color.setHex(p.col);
-  const warmth = p.warm;
-  const r = Math.min(1, warmth / 50);
-  const g = Math.min(1, warmth / 60);
-  const b = Math.min(1, (100 - warmth) / 50);
-  fillLight.color.setRGB(r, g, b);
+  if (renderer3d) {
+    renderer3d.dispose();
+    renderer3d = null;
+  }
+  if (scene3d) {
+    // Cleanup textures
+    if (currentTexture) {
+      currentTexture.dispose();
+      currentTexture = null;
+    }
+    scene3d = null;
+  }
+  camera3d = null;
+  artGroup3d = null;
 }
 
-document.querySelectorAll('.lp-btn').forEach(btn => {
+function resize3DViewer() {
+  if (!renderer3d || !camera3d) return;
+  const container = document.getElementById('canvasContainer');
+  const width = container.clientWidth;
+  const height = container.clientHeight;
+  renderer3d.setSize(width, height);
+  camera3d.aspect = width / height;
+  camera3d.updateProjectionMatrix();
+}
+
+// Touch and mouse controls with pinch zoom
+function setupControls() {
+  const container = document.getElementById('canvasContainer');
+  
+  // Mouse controls
+  container.addEventListener('mousedown', (e) => {
+    if (!isViewerActive) return;
+    isDragging = true;
+    lastTouchX = e.clientX;
+    lastTouchY = e.clientY;
+    container.style.cursor = 'grabbing';
+  });
+  
+  window.addEventListener('mouseup', () => {
+    isDragging = false;
+    if (container) container.style.cursor = '';
+  });
+  
+  window.addEventListener('mousemove', (e) => {
+    if (!isDragging || !isViewerActive) return;
+    const deltaX = e.clientX - lastTouchX;
+    const deltaY = e.clientY - lastTouchY;
+    targetRotY += deltaX * 0.008;
+    targetRotX += deltaY * 0.008;
+    targetRotX = Math.max(-0.6, Math.min(0.6, targetRotX));
+    lastTouchX = e.clientX;
+    lastTouchY = e.clientY;
+  });
+  
+  // Touch controls with pinch zoom
+  container.addEventListener('touchstart', (e) => {
+    if (!isViewerActive) return;
+    e.preventDefault();
+    if (e.touches.length === 1) {
+      isDragging = true;
+      lastTouchX = e.touches[0].clientX;
+      lastTouchY = e.touches[0].clientY;
+    } else if (e.touches.length === 2) {
+      isDragging = false;
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      lastDistance = Math.hypot(dx, dy);
+    }
+  });
+  
+  container.addEventListener('touchmove', (e) => {
+    if (!isViewerActive) return;
+    e.preventDefault();
+    if (e.touches.length === 1 && isDragging) {
+      const deltaX = e.touches[0].clientX - lastTouchX;
+      const deltaY = e.touches[0].clientY - lastTouchY;
+      targetRotY += deltaX * 0.008;
+      targetRotX += deltaY * 0.008;
+      targetRotX = Math.max(-0.6, Math.min(0.6, targetRotX));
+      lastTouchX = e.touches[0].clientX;
+      lastTouchY = e.touches[0].clientY;
+    } else if (e.touches.length === 2) {
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      const distance = Math.hypot(dx, dy);
+      if (lastDistance > 0) {
+        const delta = distance - lastDistance;
+        targetZoom -= delta * 0.01;
+        targetZoom = Math.max(2.5, Math.min(7, targetZoom));
+      }
+      lastDistance = distance;
+    }
+  });
+  
+  container.addEventListener('touchend', () => {
+    isDragging = false;
+    lastDistance = 0;
+  });
+  
+  // Wheel zoom
+  container.addEventListener('wheel', (e) => {
+    if (!isViewerActive) return;
+    e.preventDefault();
+    targetZoom += e.deltaY * 0.005;
+    targetZoom = Math.max(2.5, Math.min(7, targetZoom));
+  }, { passive: false });
+}
+
+function animate3D() {
+  if (!isViewerActive || !renderer3d || !scene3d || !camera3d) return;
+  
+  // Smooth interpolation
+  currentRotX += (targetRotX - currentRotX) * 0.1;
+  currentRotY += (targetRotY - currentRotY) * 0.1;
+  currentZoom += (targetZoom - currentZoom) * 0.1;
+  
+  if (artGroup3d) {
+    artGroup3d.rotation.x = currentRotX;
+    artGroup3d.rotation.y = currentRotY;
+  }
+  camera3d.position.z = currentZoom;
+  
+  renderer3d.render(scene3d, camera3d);
+  
+  animationId = requestAnimationFrame(animate3D);
+}
+
+// Control buttons
+document.querySelectorAll('.ctrl-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.lp-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.ctrl-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    applyLightPreset(btn.dataset.lp);
+    
+    if (btn.dataset.material) {
+      currentFrameMaterial = btn.dataset.material;
+      if (btn.dataset.material === 'metal') currentFrameColor = '#8a8a8a';
+      else if (btn.dataset.material === 'dark') currentFrameColor = '#2a1a0e';
+      else currentFrameColor = '#5c3a1e';
+      updateFrameMaterial();
+    } else if (btn.dataset.color === 'gold') {
+      currentFrameColor = '#c4a35a';
+      updateFrameMaterial();
+    }
   });
 });
 
-// Manual sliders
-document.getElementById('sl-int').addEventListener('input', (e) => {
-  const v = parseFloat(e.target.value);
-  document.getElementById('val-int').textContent = v.toFixed(1);
-  mainLight.intensity = v;
-});
-document.getElementById('sl-warm').addEventListener('input', (e) => {
-  const v = parseInt(e.target.value);
-  document.getElementById('val-warm').textContent = v;
-  const r = Math.min(1, v / 50);
-  const g = Math.min(1, v / 60);
-  const b = Math.min(1, (100 - v) / 50);
-  fillLight.color.setRGB(r, g, b);
-});
-document.getElementById('sl-ang').addEventListener('input', (e) => {
-  const v = parseInt(e.target.value);
-  document.getElementById('val-ang').textContent = v + '°';
-  // Angle affects spot light cone - not using spot anymore but keeping for consistency
+// Close viewer
+document.getElementById('closeViewer').addEventListener('click', close3DViewer);
+
+// Resize handler
+window.addEventListener('resize', () => {
+  resize3DViewer();
 });
 
-// Environment
-document.getElementById('tab-environment').addEventListener('click', (e) => {
-  const btn = e.target.closest('.opt-pill');
-  if (!btn || !btn.dataset.env) return;
-  document.querySelectorAll('#tab-environment .opt-pill').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  setEnvironment(btn.dataset.env);
+// Setup controls after page load
+window.addEventListener('load', () => {
+  setupControls();
+  // Hide loading
+  setTimeout(() => {
+    document.getElementById('loading').classList.add('hidden');
+  }, 800);
 });
 
-// ========== ANIMATION LOOP ==========
-let animationRunning = false;
-
-function startAnimation() {
-  if (animationRunning) return;
-  animationRunning = true;
-  
-  function animate() {
-    if (!animationRunning) return;
-    requestAnimationFrame(animate);
-    
-    // Smooth interpolation
-    currentRotX += (targetRotX - currentRotX) * 0.1;
-    currentRotY += (targetRotY - currentRotY) * 0.1;
-    currentZoom += (targetZoom - currentZoom) * 0.1;
-    
-    artGroup2.rotation.x = currentRotX;
-    artGroup2.rotation.y = currentRotY;
-    camera2.position.z = currentZoom;
-    
-    renderer2.render(scene2, camera2);
-  }
-  
-  animate();
-}
-
-// Start animation initially (viewer starts hidden but we need the loop)
-startAnimation();
-
-// Loading screen
-setTimeout(() => { document.getElementById('loading').classList.add('done'); }, 800);
+// Mobile menu
+document.getElementById('menuBtn')?.addEventListener('click', () => {
+  const links = document.querySelector('.nav-links');
+  if (links) links.style.display = links.style.display === 'flex' ? 'none' : 'flex';
+});
 </script>
 </body>
 </html>
